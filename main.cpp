@@ -1,48 +1,38 @@
-#include <iostream>
+#include "player.hpp"
+#include <memory>
 #include <raylib.h>
 
-float width = 16;
-float height = 16;
-Vector2 pos = Vector2{250, 150};
+class Game {
+  private:
+    std::unique_ptr<Player> player;
 
-void Update() {
-  if (IsKeyDown(KEY_W)) {
-    pos.y -= 5;
-  } else if (IsKeyDown(KEY_S)) {
-    pos.y += 5;
-  } else if (IsKeyDown(KEY_D)) {
-    pos.x += 5;
-  } else if (IsKeyDown(KEY_A)) {
-    pos.x -= 5;
-  }
-}
-
-void Drawing(Texture2D img) {
-   BeginDrawing();
-   ClearBackground(WHITE);
-   Rectangle src = Rectangle{0, 0, width, height};
-   Rectangle dst = Rectangle{pos.x, pos.y, width*3, height*3};
-   Vector2 origin = Vector2{0,0};
-
-   DrawText("Hello world", 100, 100, 50, BLACK);
-   DrawTexturePro(img, src, dst, origin, 0.0f, WHITE);
-
-   std::cout << "game sedang berjalan: " << std::endl;
-   EndDrawing();
-}
+  public:
+    Game(float x, float y) {
+      player = std::make_unique<Player>(x, y);
+    }
+    void Update() {
+      player->Update();
+    }
+    void Drawing() {
+      BeginDrawing();
+      ClearBackground(WHITE);
+      DrawText("Hello world", 100, 100, 50, BLACK);
+      player->Drawing();
+      EndDrawing();
+    }
+};
 
 int main() {
   InitWindow(600, 400, "Test game");
   SetTargetFPS(60);
 
-  Texture2D idle = LoadTexture("assets/16x16idle.png");
-  
+  Game g = Game(100, 100);
+ 
   while (!WindowShouldClose()) {
-    Update();
-    Drawing(idle);
+    g.Update();
+    g.Drawing();
   }
 
-  UnloadTexture(idle);
   CloseWindow();
 
   return 0;
