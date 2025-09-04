@@ -1,22 +1,18 @@
 #include "player.hpp"
 #include <memory>
 #include <raylib.h>
+#include <vector>
 
 class Button {
   private:
     const char* text;
     int x, y, w, h, fontsize;
-    Texture2D img;
+    Texture2D& img;
 
   public:
-    Button(int x, int y, int fontsize, const char* text) : x(x), y(y), fontsize(fontsize), text(text) {
-      img = LoadTexture("assets/button.png");
+    Button(int x, int y, int fontsize, const char* text, Texture2D& img) : x(x), y(y), fontsize(fontsize), text(text), img(img) {
       w = img.width;
       h = img.height;
-    }
-
-    ~Button() {
-      UnloadTexture(img);
     }
 
     void Draw() {
@@ -38,11 +34,18 @@ class Button {
 class Game {
   private:
     std::unique_ptr<Player> player;
-    Button test;
+    Texture2D buttonTexture;
+    std::vector<Button> buttons;
+
 
   public:
-    Game(float x, float y, Button b) : test(b) {
+    Game(float x, float y) : buttonTexture(LoadTexture("assets/button.png")) {
       player = std::make_unique<Player>(x, y);
+      buttons.push_back(Button(200, 200, 20, "start", buttonTexture));
+      buttons.push_back(Button(200, 230, 20, "exit",buttonTexture));
+      }
+    ~Game() {
+      UnloadTexture(buttonTexture);
     }
     void Update() {
       player->Update();
@@ -50,10 +53,14 @@ class Game {
     void Drawing() {
       BeginDrawing();
       ClearBackground(WHITE);
-      test.Draw();
+      for (auto &b : buttons) {
+        b.Draw();
+      }
       player->Drawing();
-      if (test.isClicked()) {
-        TraceLog(LOG_INFO, "button di click");
+      for (auto &b : buttons) {
+        if (b.isClicked()) {
+          TraceLog(LOG_INFO, "button di click");
+        }
       }
       EndDrawing();
     }
@@ -63,9 +70,7 @@ int main() {
   InitWindow(600, 400, "Test game");
   SetTargetFPS(60);
 
-  Button test = Button(200, 200, 20, "test button");
-
-  Game* g = new Game(100, 100, test);
+  Game* g = new Game(100, 100);
  
   while (!WindowShouldClose()) {
     g->Update();
