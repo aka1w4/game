@@ -1,5 +1,4 @@
 #include "player.hpp"
-#include <iostream>
 #include <raylib.h>
 
 float width = 16;
@@ -59,6 +58,4 @@ void Player::Drawing() {
    Vector2 origin = Vector2{0,0};
 
    DrawTexturePro(img[ms], src, dst, origin, 0.0f, WHITE);
-
-   std::cout << "game sedang berjalan: " << std::endl;
 }
