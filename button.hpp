@@ -14,6 +14,19 @@ class Button {
     void Draw();
     bool isClicked();
     virtual void Action();
+    virtual ~Button() = default;
+};
+
+class StartButton : public Button {
+  public:
+    using Button::Button;
+    void Action() override;
+};
+
+class ExitButton : public Button {
+  public:
+    using Button::Button;
+    void Action() override;
 };
 
 #endif // !BUTTON

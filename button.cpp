@@ -24,3 +24,11 @@ bool Button::isClicked() {
 void Button::Action() {
   TraceLog(LOG_INFO, "button di click");
 }
+
+void StartButton::Action() {
+  TraceLog(LOG_INFO, "button start di click");
+}
+
+void ExitButton::Action() {
+  TraceLog(LOG_INFO, "button exit di click");
+}

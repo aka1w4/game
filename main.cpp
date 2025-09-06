@@ -8,14 +8,14 @@ class Game {
   private:
     std::unique_ptr<Player> player;
     Texture2D buttonTexture;
-    std::vector<Button> buttons;
+    std::vector<std::unique_ptr<Button>> buttons;
 
 
   public:
     Game(float x, float y) : buttonTexture(LoadTexture("assets/button.png")) {
       player = std::make_unique<Player>(x, y);
-      buttons.push_back(Button(200, 200, 20, "start", buttonTexture));
-      buttons.push_back(Button(200, 230, 20, "exit",buttonTexture));
+      buttons.push_back(std::make_unique<StartButton>(200, 200, 20, "start", buttonTexture));
+      buttons.push_back(std::make_unique<ExitButton>(200, 230, 20, "exit", buttonTexture));
       }
     ~Game() {
       UnloadTexture(buttonTexture);
@@ -27,12 +27,12 @@ class Game {
       BeginDrawing();
       ClearBackground(WHITE);
       for (auto &b : buttons) {
-        b.Draw();
+        b->Draw();
       }
       player->Drawing();
       for (auto &b : buttons) {
-        if (b.isClicked()) {
-          b.Action();
+        if (b->isClicked()) {
+          b->Action();
         }
       }
       EndDrawing();
