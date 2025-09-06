@@ -1,35 +1,8 @@
-#include "player.hpp"
 #include <memory>
 #include <raylib.h>
 #include <vector>
-
-class Button {
-  private:
-    const char* text;
-    int x, y, w, h, fontsize;
-    Texture2D& img;
-
-  public:
-    Button(int x, int y, int fontsize, const char* text, Texture2D& img) : x(x), y(y), fontsize(fontsize), text(text), img(img) {
-      w = img.width;
-      h = img.height;
-    }
-
-    void Draw() {
-      int textW = MeasureText(text, fontsize);
-      int textH = fontsize;
-      int textX = x + (w - textW) / 2;
-      int textY = y + (h - textH) / 2;
-
-      DrawTexture(img, x, y, WHITE);
-
-      DrawText(text, textX, textY, fontsize, WHITE);
-    }
-
-    bool isClicked() {
-      return IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(GetMousePosition(), Rectangle{float(x), float(y), float(w), float(h)});
-    }
-};
+#include "player.hpp"
+#include "button.hpp"
 
 class Game {
   private:
@@ -59,7 +32,7 @@ class Game {
       player->Drawing();
       for (auto &b : buttons) {
         if (b.isClicked()) {
-          TraceLog(LOG_INFO, "button di click");
+          b.Action();
         }
       }
       EndDrawing();
