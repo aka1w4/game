@@ -13,7 +13,7 @@ class Button {
     Button(int x, int y, int fontsize, const char* text, Texture2D& img);
     void Draw();
     bool isClicked();
-    virtual void Action();
+    virtual void Action() = 0;
     virtual ~Button() = default;
 };
 

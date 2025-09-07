@@ -21,10 +21,6 @@ bool Button::isClicked() {
     CheckCollisionPointRec(GetMousePosition(), Rectangle{float(x), float(y), float(w), float(h)});
 }
 
-void Button::Action() {
-  TraceLog(LOG_INFO, "button di click");
-}
-
 void StartButton::Action() {
   TraceLog(LOG_INFO, "button start di click");
 }

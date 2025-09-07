@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -Werror -std=c++17 -I./src
-SRC = main.cpp player.cpp button.cpp
+SRC = main.cpp player.cpp button.cpp game.cpp
 OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
 LIBS = -lraylib -lm -ldl -lpthread -lGL -lrt -lX11
 OUTPUT_DIR = build
