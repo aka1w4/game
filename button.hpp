@@ -1,32 +1,31 @@
 #ifndef BUTTON
 #define BUTTON
 
+#include <functional>
 #include <raylib.h>
+
+enum typeButton {
+  ExitGame,
+  Exit,
+  Start,
+  Create,
+  Setting,
+  Resume,
+};
 
 class Button {
   private:
     const char* text;
     int x, y, w, h, fontsize;
     Texture2D& img;
+    std::function<void()> action;
 
   public:
-    Button(int x, int y, int fontsize, const char* text, Texture2D& img);
+    Button(int x, int y, int fontsize, const char* text, Texture2D& img, std::function<void()> action);
     void Draw();
     bool isClicked();
-    virtual void Action() = 0;
+    void Action();
     virtual ~Button() = default;
-};
-
-class StartButton : public Button {
-  public:
-    using Button::Button;
-    void Action() override;
-};
-
-class ExitButton : public Button {
-  public:
-    using Button::Button;
-    void Action() override;
 };
 
 #endif // !BUTTON

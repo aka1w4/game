@@ -5,18 +5,25 @@
 #include <memory>
 #include "player.hpp"
 #include "button.hpp"
-#include <vector>
+
+enum GameState {
+  MenuState,
+  WorldState,
+  CreateWorldState,
+  PlayState,
+};
 
 class Game {
   private:
     bool quit = false;
-    std::unique_ptr<Player> player;
+    GameState gs = MenuState;
+    std::unique_ptr<Player> player = nullptr;
     Texture2D buttonTexture;
-    std::vector<std::unique_ptr<Button>> buttons;
-
+    std::unique_ptr<Button> startButton;
+    std::unique_ptr<Button> exitButton;
 
   public:
-    Game(float x, float y);
+    Game();
     ~Game();
     void Update();
     void Drawing();

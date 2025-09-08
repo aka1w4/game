@@ -1,7 +1,8 @@
+#include <functional>
 #include <raylib.h>
 #include "button.hpp"
 
-Button::Button(int x, int y, int fontsize, const char* text, Texture2D& img) : x(x), y(y), fontsize(fontsize), text(text), img(img) {
+Button::Button(int x, int y, int fontsize, const char* text, Texture2D& img, std::function<void()> action) : x(x), y(y), fontsize(fontsize), text(text), img(img), action(action){
   w = img.width;
   h = img.height;
 }
@@ -21,10 +22,7 @@ bool Button::isClicked() {
     CheckCollisionPointRec(GetMousePosition(), Rectangle{float(x), float(y), float(w), float(h)});
 }
 
-void StartButton::Action() {
-  TraceLog(LOG_INFO, "button start di click");
-}
-
-void ExitButton::Action() {
-  TraceLog(LOG_INFO, "button exit di click");
+void Button::Action() {
+  if(action) action();
+  TraceLog(LOG_INFO, "button di click");
 }

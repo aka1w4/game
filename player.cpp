@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include <iostream>
 #include <raylib.h>
 
 float width = 16;
@@ -6,8 +7,13 @@ float height = 32;
 int frameCount = 4;
 
 Player::Player(float x, float y) : pos(Vector2{x, y}) {
+  std::cout << "x: " << x << " y: " << y << std::endl;
    img[0] = LoadTexture("assets/16x32idle.png");
    img[1] = LoadTexture("assets/16x32walk.png");
+
+   for (auto &i : img) {
+     std::cout << "id: " << i.id << std::endl;
+   }
 }
 
 Player::~Player() {

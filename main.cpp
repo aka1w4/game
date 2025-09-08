@@ -5,7 +5,7 @@ int main() {
   InitWindow(600, 400, "Test game");
   SetTargetFPS(60);
 
-  Game* g = new Game(100, 100);
+  Game* g = new Game();
  
   g->Run();
 
