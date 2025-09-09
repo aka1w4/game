@@ -1,4 +1,3 @@
-#include <iostream>
 #include <raylib.h>
 #include <memory>
 #include "player.hpp"
@@ -7,7 +6,6 @@
 
 Game::Game() : buttonTexture(LoadTexture("assets/button.png")), player(std::make_unique<Player>(100, 100)),
   startButton(std::make_unique<Button>(200, 200, 20, "start", buttonTexture, [this]() {
-        //player = std::make_unique<Player>(100, 100); // bikin player baru
         gs = PlayState;
         })), 
   exitButton(std::make_unique<Button>(200, 230, 20, "exit", buttonTexture, [this]() {
@@ -35,12 +33,13 @@ void Game::Update() {
         exitButton->Action();
       }
       break;
-    case CreateWorldState:
+    /*case CreateWorldState:
       std::cout << "sekarang berada di state create new world" << std::endl;
       break;
     case WorldState:
       std::cout << "sekarang berada di state world list" << std::endl;
       break;
+      */
   }
 }
 
@@ -57,12 +56,13 @@ void Game::Drawing() {
       startButton->Draw();
       exitButton->Draw();
       break;
-    case CreateWorldState:
+    /*case CreateWorldState:
       std::cout << "sekarang berada di update state create new world" << std::endl;
       break;
     case WorldState:
       std::cout << "sekarang berada di update state world list" << std::endl;
       break;
+      */
   }
   EndDrawing();
 }

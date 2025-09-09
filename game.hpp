@@ -8,8 +8,6 @@
 
 enum GameState {
   MenuState,
-  WorldState,
-  CreateWorldState,
   PlayState,
 };
 

@@ -2,10 +2,6 @@
 #include <iostream>
 #include <raylib.h>
 
-float width = 16;
-float height = 32;
-int frameCount = 4;
-
 Player::Player(float x, float y) : pos(Vector2{x, y}) {
   std::cout << "x: " << x << " y: " << y << std::endl;
    img[0] = LoadTexture("assets/16x32idle.png");
@@ -53,14 +49,14 @@ void Player::Update() {
 }
 
 void Player::Drawing() {
-  int x0 = (count / 8) % frameCount * width;
+  int x0 = (count / 8) % frameCount * frameWidth;
   if (facingright) {
-    width = -16;
+    frameWidth = -16;
   } else {
-    width = 16;
+    frameWidth = 16;
   }
-   Rectangle src = Rectangle{(float)x0, height*f, width, height};
-   Rectangle dst = Rectangle{pos.x, pos.y, width*3, height*3};
+   Rectangle src = Rectangle{(float)x0, (float)frameHeight*f, (float)frameWidth, (float)frameHeight};
+   Rectangle dst = Rectangle{pos.x, pos.y, (float)frameWidth*3, (float)frameHeight*3};
    Vector2 origin = Vector2{0,0};
 
    DrawTexturePro(img[ms], src, dst, origin, 0.0f, WHITE);

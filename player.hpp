@@ -23,6 +23,9 @@ class Player {
     Focus f = Down;
     MoveState ms;
     bool facingright; 
+    int frameCount = 4;
+    int frameWidth = 16;
+    int frameHeight = 32;
 
   public:
     Player(float x, float y);
