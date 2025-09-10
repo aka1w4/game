@@ -3,6 +3,7 @@
 
 int main() {
   InitWindow(600, 400, "Test game");
+  SetExitKey(KEY_NULL);
   SetTargetFPS(60);
 
   Game* g = new Game();
