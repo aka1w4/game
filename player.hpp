@@ -28,11 +28,13 @@ class Player {
     int frameHeight = 32;
 
   public:
-    Player(float x, float y);
+    Player();
     ~Player();
     void Update();
     void Drawing();
     void Move(float dx, float dy, Focus df, bool right);
+    void writebinary();
+    void readbinary();
 };
 
 #endif // !PLAYER

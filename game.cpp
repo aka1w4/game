@@ -9,7 +9,7 @@ Game::Game() : buttonTexture(LoadTexture("assets/button.png")),
   startButton(std::make_unique<Button>(200, 200, 20, "start", buttonTexture, [this]() 
         {
         gs = PlayState;
-        player = std::make_unique<Player>(100, 100);
+        player = std::make_unique<Player>();
         })), 
   closeButton(std::make_unique<Button>(200, 230, 20, "close", buttonTexture, [this]()
         {
@@ -19,6 +19,7 @@ Game::Game() : buttonTexture(LoadTexture("assets/button.png")),
         {
         pauseGame = false;
         gs = MenuState;
+        player->writebinary();
         player.reset();
         })),
   resumeButton(std::make_unique<Button>(200, 200, 20, "resume", buttonTexture, [this]()

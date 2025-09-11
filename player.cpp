@@ -1,15 +1,45 @@
 #include "player.hpp"
+#include <filesystem>
 #include <raylib.h>
+#include <fstream>
+#include <iostream>
 
-Player::Player(float x, float y) : pos(Vector2{x, y}) {
+Player::Player() {
   img[0] = LoadTexture("assets/16x32idle.png");
   img[1] = LoadTexture("assets/16x32walk.png");
+
+  if (!std::filesystem::exists("bin/player.bin")) {
+    std::filesystem::create_directories("bin");
+    pos = Vector2{100, 100};
+  } else {
+    readbinary();
+  }
 }
 
 Player::~Player() {
   for (auto &i : img) {
     UnloadTexture(i);
   }
+
+  writebinary();
+}
+
+void Player::writebinary() {
+  std::ofstream out("bin/player.bin", std::ios::binary);
+  out.write(reinterpret_cast<char*>(&pos), sizeof(pos));
+  out.write(reinterpret_cast<char*>(&f), sizeof(f));
+  out.write(reinterpret_cast<char*>(&facingright), sizeof(facingright));
+  out.close();
+}
+
+void Player::readbinary() {
+  std::ifstream in("bin/player.bin", std::ios::binary);
+  in.read(reinterpret_cast<char*>(&pos), sizeof(pos));
+  in.read(reinterpret_cast<char*>(&f), sizeof(f));
+  in.read(reinterpret_cast<char*>(&facingright), sizeof(facingright));
+  in.close();
+
+  std::cout << "x: " << pos.x << " y: " << pos.y << std::endl;
 }
 
 void Player::Move(float dx, float dy, Focus df, bool right) {
