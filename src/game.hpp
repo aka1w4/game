@@ -4,8 +4,8 @@
 #include <raylib.h>
 #include <memory>
 #include <chrono>
-#include "player.hpp"
-#include "button.hpp"
+#include "player/player.hpp"
+#include "ui/button.hpp"
 
 enum GameState {
   MenuState,

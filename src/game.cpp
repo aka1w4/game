@@ -2,8 +2,8 @@
 #include <iostream>
 #include <raylib.h>
 #include <memory>
-#include "player.hpp"
-#include "button.hpp"
+#include "player/player.hpp"
+#include "ui/button.hpp"
 #include "game.hpp"
 
 Game::Game() : buttonTexture(LoadTexture("assets/button.png")), 
@@ -52,7 +52,7 @@ void Game::Update() {
           exitButton->Action();
         }
       }
-      if (std::chrono::duration_cast<std::chrono::seconds>(now - lastSave).count() >= 300) {
+      if (std::chrono::duration_cast<std::chrono::minutes>(now - lastSave).count() >= 5) {
         std::cout << "save data ke " << std::endl;
         player->writebinary();
         lastSave = now;
