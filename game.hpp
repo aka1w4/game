@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 #include <memory>
+#include <chrono>
 #include "player.hpp"
 #include "button.hpp"
 
@@ -18,6 +19,7 @@ class Game {
     std::unique_ptr<Player> player = nullptr;
     Texture2D buttonTexture;
     bool pauseGame = false;
+    std::chrono::time_point<std::chrono::steady_clock> lastSave;
     std::unique_ptr<Button> startButton;
     std::unique_ptr<Button> closeButton;
     std::unique_ptr<Button> exitButton;

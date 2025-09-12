@@ -1,4 +1,5 @@
-#include <cstdlib>
+#include <chrono>
+#include <iostream>
 #include <raylib.h>
 #include <memory>
 #include "player.hpp"
@@ -18,12 +19,14 @@ Game::Game() : buttonTexture(LoadTexture("assets/button.png")),
   exitButton(std::make_unique<Button>(200, 230, 20, "exit", buttonTexture, [this]()
         {
         pauseGame = false;
+        lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
         gs = MenuState;
         player->writebinary();
         player.reset();
         })),
   resumeButton(std::make_unique<Button>(200, 200, 20, "resume", buttonTexture, [this]()
         {
+        lastSave = std::chrono::steady_clock::now();
         pauseGame = false;        
         })) {}
 // player(std::make_unique<Player>(x, y)), 
@@ -32,10 +35,12 @@ Game::~Game() {
 }
 
 void Game::Update() {
+  auto now = std::chrono::steady_clock::now();
   switch (gs) {
     case PlayState:
       if (IsKeyDown(KEY_ESCAPE)) {
         pauseGame = true;
+        lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
       }
       if (!pauseGame) {
         player->Update();
@@ -46,6 +51,11 @@ void Game::Update() {
         if (exitButton->isClicked()) {
           exitButton->Action();
         }
+      }
+      if (std::chrono::duration_cast<std::chrono::seconds>(now - lastSave).count() >= 300) {
+        std::cout << "save data ke " << std::endl;
+        player->writebinary();
+        lastSave = now;
       }
       break;
     case MenuState:
