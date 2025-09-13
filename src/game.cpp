@@ -9,8 +9,8 @@
 Game::Game() : buttonTexture(LoadTexture("assets/button.png")), 
   startButton(std::make_unique<Button>(200, 200, 20, "start", buttonTexture, [this]() 
         {
-        gs = PlayState;
-        player = std::make_unique<Player>();
+        gs = WorldListState;
+        //player = std::make_unique<Player>();
         })), 
   closeButton(std::make_unique<Button>(200, 230, 20, "close", buttonTexture, [this]()
         {
@@ -30,7 +30,24 @@ Game::Game() : buttonTexture(LoadTexture("assets/button.png")),
         {
         //lastSave = std::chrono::steady_clock::now();
         pauseGame = false;        
-        })) {}
+        })),
+  BackButton(std::make_unique<Button>(200, 230, 20, "back", buttonTexture, [this]()
+        {
+        if (gs == WorldListState) {
+        gs = MenuState;
+        } else if (gs == CreateWorldState) {
+        gs = CreateWorldState;
+        }
+        })), 
+  NewWorldButton(std::make_unique<Button>(200, 200, 20, "new world", buttonTexture, [this]()
+        {
+        gs = CreateWorldState;
+        })), 
+  CreateWorldButton(std::make_unique<Button>(200, 200, 20, "create", buttonTexture, [this]()
+        {
+        gs = PlayState;
+        player = std::make_unique<Player>();
+        })){}
 // player(std::make_unique<Player>(x, y)), 
 Game::~Game() {
   UnloadTexture(buttonTexture);
@@ -44,16 +61,19 @@ void Game::Update() {
         pauseGame = true;
         //lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
       }
+
       if (!pauseGame) {
         if (player) player->Update();
       } else {
         if (resumeButton->isClicked()) {
           resumeButton->Action();
         }
+
         if (exitButton->isClicked()) {
           exitButton->Action();
         }
       }
+
       if (std::chrono::duration_cast<std::chrono::minutes>(now - lastSave).count() >= 5) {
         std::cout << "save data ke " << std::endl;
         if (player) player->writebinary();
@@ -64,17 +84,29 @@ void Game::Update() {
       if (startButton->isClicked()) {
         startButton->Action();
       }
+
       if (closeButton->isClicked()) {
         closeButton->Action();
       }
       break;
-    /*case CreateWorldState:
-      std::cout << "sekarang berada di state create new world" << std::endl;
+    case WorldListState:
+      if (NewWorldButton->isClicked()) {
+        NewWorldButton->Action();
+      }
+
+      if (BackButton->isClicked()) {
+        BackButton->Action();
+      }
       break;
-    case WorldState:
-      std::cout << "sekarang berada di state world list" << std::endl;
+    case CreateWorldState:
+      if (CreateWorldButton->isClicked()) {
+        CreateWorldButton->Action();
+      }
+
+      if (BackButton->isClicked()) {
+        BackButton->Action();
+      }
       break;
-      */
   }
 }
 
@@ -93,13 +125,14 @@ void Game::Drawing() {
       startButton->Draw();
       closeButton->Draw();
       break;
-    /*case CreateWorldState:
-      std::cout << "sekarang berada di update state create new world" << std::endl;
+    case WorldListState:
+      NewWorldButton->Draw();
+      BackButton->Draw();
       break;
-    case WorldState:
-      std::cout << "sekarang berada di update state world list" << std::endl;
+    case CreateWorldState:
+      CreateWorldButton->Draw();
+      BackButton->Draw();
       break;
-      */
   }
   EndDrawing();
 }

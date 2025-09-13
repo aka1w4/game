@@ -2,7 +2,7 @@
 #include <raylib.h>
 #include "button.hpp"
 
-Button::Button(int x, int y, int fontsize, const char* text, Texture2D& img, std::function<void()> action) : x(x), y(y), fontsize(fontsize), text(text), img(img), action(action){
+Button::Button(int x, int y, int fontsize, const char* text, Texture2D& img, std::function<void()> action) : x(x), y(y), fontsize(fontsize), text(text), img(&img), action(action){
   w = img.width;
   h = img.height;
 }
@@ -13,7 +13,7 @@ void Button::Draw() {
   int textX = x + (w - textW) / 2;
   int textY = y + (h - textH) / 2;
 
-  DrawTexture(img, x, y, WHITE);
+  DrawTexture(*img, x, y, WHITE);
   DrawText(text, textX, textY, fontsize, WHITE);
 }
 

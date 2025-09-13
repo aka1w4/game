@@ -10,6 +10,8 @@
 enum GameState {
   MenuState,
   PlayState,
+  WorldListState,
+  CreateWorldState,
 };
 
 class Game {
@@ -24,6 +26,9 @@ class Game {
     std::unique_ptr<Button> closeButton;
     std::unique_ptr<Button> exitButton;
     std::unique_ptr<Button> resumeButton;
+    std::unique_ptr<Button> BackButton;
+    std::unique_ptr<Button> NewWorldButton;
+    std::unique_ptr<Button> CreateWorldButton;
 
   public:
     Game();

@@ -17,7 +17,7 @@ class Button {
   private:
     const char* text;
     int x, y, w, h, fontsize;
-    Texture2D& img;
+    Texture2D* img;
     std::function<void()> action;
 
   public:

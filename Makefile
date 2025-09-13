@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Werror -std=c++17 -I./src
+CXXFLAGS = -Werror -std=c++17 -I./src  #-fsanitize=address -g
 SRC = src/main.cpp src/player/player.cpp src/ui/button.cpp src/game.cpp
 OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
 LIBS = -lraylib -lm -ldl -lpthread -lGL -lrt -lX11
