@@ -18,15 +18,17 @@ Game::Game() : buttonTexture(LoadTexture("assets/button.png")),
         })), 
   exitButton(std::make_unique<Button>(200, 230, 20, "exit", buttonTexture, [this]()
         {
-        pauseGame = false;
-        lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
-        gs = MenuState;
+        //lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
+        if (player) {
         player->writebinary();
         player.reset();
+        }
+        gs = MenuState;
+        pauseGame = false;
         })),
   resumeButton(std::make_unique<Button>(200, 200, 20, "resume", buttonTexture, [this]()
         {
-        lastSave = std::chrono::steady_clock::now();
+        //lastSave = std::chrono::steady_clock::now();
         pauseGame = false;        
         })) {}
 // player(std::make_unique<Player>(x, y)), 
@@ -40,10 +42,10 @@ void Game::Update() {
     case PlayState:
       if (IsKeyDown(KEY_ESCAPE)) {
         pauseGame = true;
-        lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
+        //lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
       }
       if (!pauseGame) {
-        player->Update();
+        if (player) player->Update();
       } else {
         if (resumeButton->isClicked()) {
           resumeButton->Action();
@@ -54,7 +56,7 @@ void Game::Update() {
       }
       if (std::chrono::duration_cast<std::chrono::minutes>(now - lastSave).count() >= 5) {
         std::cout << "save data ke " << std::endl;
-        player->writebinary();
+        if (player) player->writebinary();
         lastSave = now;
       }
       break;
@@ -62,7 +64,7 @@ void Game::Update() {
       if (startButton->isClicked()) {
         startButton->Action();
       }
-      if (exitButton->isClicked()) {
+      if (closeButton->isClicked()) {
         closeButton->Action();
       }
       break;
@@ -81,8 +83,7 @@ void Game::Drawing() {
   ClearBackground(WHITE);
   switch (gs) {
     case PlayState:
-      player->Drawing();
-
+      if (player) player->Drawing();
       if (pauseGame) {
         resumeButton->Draw();
         exitButton->Draw();
