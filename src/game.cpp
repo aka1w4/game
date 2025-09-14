@@ -1,4 +1,5 @@
 #include <chrono>
+#include <functional>
 #include <iostream>
 #include <raylib.h>
 #include <memory>
@@ -7,16 +8,15 @@
 #include "game.hpp"
 
 Game::Game() : buttonTexture(LoadTexture("assets/buttontest.png")),
-  startButton(std::make_unique<Button>(200, 200, 183, 29, 20, "start", buttonTexture, [this]() 
+  startButton(MakeButton(200, 200, 183, 29, 20, "start", [this]()
         {
         gs = WorldListState;
-        //player = std::make_unique<Player>();
-        })), 
-  closeButton(std::make_unique<Button>(200, 230, 183, 29, 20, "close", buttonTexture, [this]()
+        })),
+  closeButton(MakeButton(200, 230, 183, 29, 20, "close", [this]()
         {
         quit = true;
         })), 
-  exitButton(std::make_unique<Button>(200, 230, 20, 183, 29, "exit", buttonTexture, [this]()
+  exitButton(MakeButton(200, 230, 20, 183, 29, "exit",  [this]()
         {
         //lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
         if (player) {
@@ -26,12 +26,12 @@ Game::Game() : buttonTexture(LoadTexture("assets/buttontest.png")),
         gs = MenuState;
         pauseGame = false;
         })),
-  resumeButton(std::make_unique<Button>(200, 200, 183, 29, 20, "resume", buttonTexture, [this]()
+  resumeButton(MakeButton(200, 200, 183, 29, 20, "resume", [this]()
         {
         //lastSave = std::chrono::steady_clock::now();
         pauseGame = false;        
         })),
-  BackButton(std::make_unique<Button>(200, 230, 183, 29, 20, "back", buttonTexture, [this]()
+  BackButton(MakeButton(200, 230, 183, 29, 20, "back", [this]()
         {
         if (gs == WorldListState) {
         gs = MenuState;
@@ -39,18 +39,22 @@ Game::Game() : buttonTexture(LoadTexture("assets/buttontest.png")),
         gs = CreateWorldState;
         }
         })), 
-  NewWorldButton(std::make_unique<Button>(200, 200, 183, 29, 20, "new world", buttonTexture, [this]()
+  NewWorldButton(MakeButton(200, 200, 183, 29, 20, "new world", [this]()
         {
         gs = CreateWorldState;
         })), 
-  CreateWorldButton(std::make_unique<Button>(200, 200, 183, 29, 20, "create", buttonTexture, [this]()
+  CreateWorldButton(MakeButton(200, 200, 183, 29, 20, "create", [this]()
         {
         gs = PlayState;
         player = std::make_unique<Player>();
         })){}
-// player(std::make_unique<Player>(x, y)), 
+
 Game::~Game() {
   UnloadTexture(buttonTexture);
+}
+
+std::unique_ptr<Button> Game::MakeButton(int x, int y, int width, int height, int fontsize, const char* text,std::function<void()> action) {
+  return std::make_unique<Button>(x, y, width, height, fontsize, text, buttonTexture, action);
 }
 
 void Game::Update() {

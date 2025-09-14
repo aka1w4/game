@@ -1,6 +1,7 @@
 #ifndef GAME
 #define GAME
 
+#include <functional>
 #include <raylib.h>
 #include <memory>
 #include <chrono>
@@ -36,6 +37,7 @@ class Game {
     void Update();
     void Drawing();
     void Run();
+    std::unique_ptr<Button> MakeButton(int x, int y, int width, int height, int fontsize, const char* text, std::function<void()> action);
 };
 
 #endif // !GAME
