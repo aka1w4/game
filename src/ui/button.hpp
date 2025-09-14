@@ -21,7 +21,7 @@ class Button {
     std::function<void()> action;
 
   public:
-    Button(int x, int y, int fontsize, const char* text, Texture2D& img, std::function<void()> action);
+    Button(int x, int y, int w, int h, int fontsize, const char* text, Texture2D& img, std::function<void()> action);
     void Draw();
     bool isClicked();
     void Action();
