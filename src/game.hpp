@@ -7,6 +7,7 @@
 #include <chrono>
 #include "player/player.hpp"
 #include "ui/button.hpp"
+#include "ui/textinput.hpp"
 
 enum GameState {
   MenuState,
@@ -21,6 +22,7 @@ class Game {
     GameState gs = MenuState;
     std::unique_ptr<Player> player = nullptr;
     Texture2D buttonTexture;
+    Texture2D inputTextTexture;
     bool pauseGame = false;
     std::chrono::time_point<std::chrono::steady_clock> lastSave;
     std::unique_ptr<Button> startButton;
@@ -30,6 +32,7 @@ class Game {
     std::unique_ptr<Button> BackButton;
     std::unique_ptr<Button> NewWorldButton;
     std::unique_ptr<Button> CreateWorldButton;
+    std::unique_ptr<Textinput> testTextinput;
 
   public:
     Game();
@@ -38,6 +41,7 @@ class Game {
     void Drawing();
     void Run();
     std::unique_ptr<Button> MakeButton(int x, int y, int width, int height, int fontsize, const char* text, std::function<void()> action);
+    std::unique_ptr<Textinput> MakeTextinput(int x, int y, int width, int height, int fontsize);
 };
 
 #endif // !GAME

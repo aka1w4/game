@@ -7,7 +7,9 @@
 #include "ui/button.hpp"
 #include "game.hpp"
 
-Game::Game() : buttonTexture(LoadTexture("assets/buttontest.png")),
+Game::Game() : 
+  buttonTexture(LoadTexture("assets/button.png")),
+  inputTextTexture(LoadTexture("assets/inputtext.png")),
   startButton(MakeButton(200, 200, 183, 29, 20, "start", [this]()
         {
         gs = WorldListState;
@@ -16,7 +18,7 @@ Game::Game() : buttonTexture(LoadTexture("assets/buttontest.png")),
         {
         quit = true;
         })), 
-  exitButton(MakeButton(200, 230, 20, 183, 29, "exit",  [this]()
+  exitButton(MakeButton(200, 230, 183, 29, 20, "exit",  [this]()
         {
         //lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
         if (player) {
@@ -47,14 +49,20 @@ Game::Game() : buttonTexture(LoadTexture("assets/buttontest.png")),
         {
         gs = PlayState;
         player = std::make_unique<Player>();
-        })){}
+        })),
+  testTextinput(MakeTextinput(200, 300, 183, 29, 20)){}
 
 Game::~Game() {
   UnloadTexture(buttonTexture);
+  UnloadTexture(inputTextTexture);
 }
 
 std::unique_ptr<Button> Game::MakeButton(int x, int y, int width, int height, int fontsize, const char* text,std::function<void()> action) {
   return std::make_unique<Button>(x, y, width, height, fontsize, text, buttonTexture, action);
+}
+
+std::unique_ptr<Textinput> Game::MakeTextinput(int x, int y, int width, int height, int fontsize) {
+  return std::make_unique<Textinput>(x, y, width, height, fontsize, inputTextTexture);
 }
 
 void Game::Update() {
@@ -85,8 +93,13 @@ void Game::Update() {
       }
       break;
     case MenuState:
+      testTextinput->checkPos();
       if (startButton->isClicked()) {
         startButton->Action();
+      }
+
+      if (testTextinput->inTextInput()) {
+        testTextinput->EditInputText();
       }
 
       if (closeButton->isClicked()) {
@@ -127,6 +140,7 @@ void Game::Drawing() {
       break;
     case MenuState:
       startButton->Draw();
+      testTextinput->Draw();
       closeButton->Draw();
       break;
     case WorldListState:
