@@ -1,13 +1,13 @@
 #ifndef GAME
 #define GAME
 
-#include <functional>
 #include <raylib.h>
 #include <memory>
 #include <chrono>
 #include "player/player.hpp"
 #include "ui/button.hpp"
-#include "ui/textinput.hpp"
+//#include "ui/textinput.hpp"
+#include "world/world.hpp"
 
 enum GameState {
   MenuState,
@@ -31,8 +31,9 @@ class Game {
     std::unique_ptr<Button> resumeButton;
     std::unique_ptr<Button> BackButton;
     std::unique_ptr<Button> NewWorldButton;
-    std::unique_ptr<Button> CreateWorldButton;
-    std::unique_ptr<Textinput> testTextinput;
+    std::unique_ptr<NewWorld> newworld;
+    //std::unique_ptr<Button> CreateWorldButton;
+    //std::unique_ptr<Textinput> testTextinput;
 
   public:
     Game();
@@ -40,8 +41,6 @@ class Game {
     void Update();
     void Drawing();
     void Run();
-    std::unique_ptr<Button> MakeButton(int x, int y, int width, int height, int fontsize, const char* text, std::function<void()> action);
-    std::unique_ptr<Textinput> MakeTextinput(int x, int y, int width, int height, int fontsize);
 };
 
 #endif // !GAME

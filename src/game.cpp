@@ -1,24 +1,24 @@
 #include <chrono>
-#include <functional>
 #include <iostream>
 #include <raylib.h>
 #include <memory>
 #include "player/player.hpp"
 #include "ui/button.hpp"
+#include "world/world.hpp"
 #include "game.hpp"
 
 Game::Game() : 
   buttonTexture(LoadTexture("assets/button.png")),
   inputTextTexture(LoadTexture("assets/inputtext.png")),
-  startButton(MakeButton(200, 200, 183, 29, 20, "start", [this]()
+  startButton(std::make_unique<Button>(200, 200, 183, 29, 20, "start", buttonTexture, [this]()
         {
         gs = WorldListState;
         })),
-  closeButton(MakeButton(200, 230, 183, 29, 20, "close", [this]()
+  closeButton(std::make_unique<Button>(200, 230, 183, 29, 20, "close", buttonTexture, [this]()
         {
         quit = true;
         })), 
-  exitButton(MakeButton(200, 230, 183, 29, 20, "exit",  [this]()
+  exitButton(std::make_unique<Button>(200, 230, 183, 29, 20, "exit",  buttonTexture, [this]()
         {
         //lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
         if (player) {
@@ -28,41 +28,34 @@ Game::Game() :
         gs = MenuState;
         pauseGame = false;
         })),
-  resumeButton(MakeButton(200, 200, 183, 29, 20, "resume", [this]()
+  resumeButton(std::make_unique<Button>(200, 200, 183, 29, 20, "resume", buttonTexture,[this]()
         {
         //lastSave = std::chrono::steady_clock::now();
         pauseGame = false;        
         })),
-  BackButton(MakeButton(200, 230, 183, 29, 20, "back", [this]()
+  BackButton(std::make_unique<Button>(200, 230, 183, 29, 20, "back", buttonTexture,[this]()
         {
         if (gs == WorldListState) {
         gs = MenuState;
         } else if (gs == CreateWorldState) {
-        gs = CreateWorldState;
+        gs = WorldListState;
         }
-        })), 
-  NewWorldButton(MakeButton(200, 200, 183, 29, 20, "new world", [this]()
+        })),
+  NewWorldButton(std::make_unique<Button>(200, 200, 183, 29, 20, "new world", buttonTexture,[this]()
         {
         gs = CreateWorldState;
-        })), 
-  CreateWorldButton(MakeButton(200, 200, 183, 29, 20, "create", [this]()
+        })),
+  newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture))
+  /*CreateWorldButton(std::make_unique<Button>(200, 200, 183, 29, 20, "create", buttonTexture, [this]()
         {
         gs = PlayState;
         player = std::make_unique<Player>();
         })),
-  testTextinput(MakeTextinput(200, 300, 183, 29, 20)){}
+  testTextinput(std::make_unique<Textinput>(200, 300, 183, 29, 20, inputTextTexture))*/ {}
 
 Game::~Game() {
   UnloadTexture(buttonTexture);
   UnloadTexture(inputTextTexture);
-}
-
-std::unique_ptr<Button> Game::MakeButton(int x, int y, int width, int height, int fontsize, const char* text,std::function<void()> action) {
-  return std::make_unique<Button>(x, y, width, height, fontsize, text, buttonTexture, action);
-}
-
-std::unique_ptr<Textinput> Game::MakeTextinput(int x, int y, int width, int height, int fontsize) {
-  return std::make_unique<Textinput>(x, y, width, height, fontsize, inputTextTexture);
 }
 
 void Game::Update() {
@@ -93,14 +86,14 @@ void Game::Update() {
       }
       break;
     case MenuState:
-      testTextinput->checkPos();
+      //testTextinput->checkPos();
       if (startButton->isClicked()) {
         startButton->Action();
       }
 
-      if (testTextinput->inTextInput()) {
+      /*if (testTextinput->inTextInput()) {
         testTextinput->EditInputText();
-      }
+      } */
 
       if (closeButton->isClicked()) {
         closeButton->Action();
@@ -116,9 +109,11 @@ void Game::Update() {
       }
       break;
     case CreateWorldState:
-      if (CreateWorldButton->isClicked()) {
+      /*if (CreateWorldButton->isClicked()) {
         CreateWorldButton->Action();
-      }
+      } */
+
+      newworld->Update();
 
       if (BackButton->isClicked()) {
         BackButton->Action();
@@ -140,7 +135,7 @@ void Game::Drawing() {
       break;
     case MenuState:
       startButton->Draw();
-      testTextinput->Draw();
+      //testTextinput->Draw();
       closeButton->Draw();
       break;
     case WorldListState:
@@ -148,7 +143,8 @@ void Game::Drawing() {
       BackButton->Draw();
       break;
     case CreateWorldState:
-      CreateWorldButton->Draw();
+      //CreateWorldButton->Draw();
+      newworld->Draw();
       BackButton->Draw();
       break;
   }

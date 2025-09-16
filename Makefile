@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -Werror -std=c++17 -I./src #-fsanitize=address,undefined -fno-omit-frame-pointer -g
-SRC = src/main.cpp src/player/player.cpp src/ui/button.cpp src/ui/textinput.cpp src/game.cpp
+SRC = src/main.cpp src/player/player.cpp src/ui/button.cpp src/ui/textinput.cpp src/world/world.cpp src/game.cpp
 OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
 LIBS = -lraylib -lm -ldl -lpthread -lGL -lrt -lX11
 OUTPUT_DIR = build
