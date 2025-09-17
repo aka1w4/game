@@ -56,3 +56,7 @@ void Textinput::EditInputText() {
 std::string Textinput::GetText() {
   return text;
 }
+
+void Textinput::ClearText() {
+  text.clear();
+}

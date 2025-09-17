@@ -17,6 +17,7 @@ class NewWorld {
     NewWorld(Texture2D& inputT, Texture2D& buttonT);
     void Draw();
     void Update();
+    void ClearText();
 };
 
 #endif // !WORLD

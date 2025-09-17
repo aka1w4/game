@@ -1,10 +1,10 @@
 #include "world.hpp"
 #include "../ui/button.hpp"
 #include "../ui/textinput.hpp"
-//#include "../db/db.hpp"
+#include "../db/db.hpp"
 #include <memory>
 #include <raylib.h>
-//#include <filesystem>
+#include <filesystem>
 
 NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT) : 
   textinput_name(std::make_unique<Textinput>(200, 170, 183, 29, 20, inputT)), 
@@ -12,12 +12,12 @@ NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT) :
         {
         TraceLog(LOG_INFO, "dibuat");
 
-        //createNewWorld(textinput_name->GetText(), 1);
+        createNewWorld(textinput_name->GetText(), 1);
         })) 
   {
-    //if(!std::filesystem::exists("world")) {
-    //  std::filesystem::create_directories("world");
-    //}
+    if(!std::filesystem::exists("world")) {
+      std::filesystem::create_directories("world");
+    }
   }
 
 void NewWorld::Update() {
@@ -37,4 +37,8 @@ void NewWorld::Update() {
 void NewWorld::Draw() {
   textinput_name->Draw();
   submit->Draw();
+}
+
+void NewWorld::ClearText() {
+  textinput_name->ClearText();
 }

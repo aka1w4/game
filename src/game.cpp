@@ -38,6 +38,7 @@ Game::Game() :
         if (gs == WorldListState) {
         gs = MenuState;
         } else if (gs == CreateWorldState) {
+        newworld->ClearText();
         gs = WorldListState;
         }
         })),

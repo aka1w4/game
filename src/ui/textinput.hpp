@@ -18,6 +18,7 @@ class Textinput {
     bool inTextInput();
     void EditInputText();
     std::string GetText();
+    void ClearText();
 };
 
 #endif // !TEXTINPUT
