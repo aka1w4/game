@@ -6,7 +6,7 @@
 #include <chrono>
 #include "player/player.hpp"
 #include "ui/button.hpp"
-//#include "ui/textinput.hpp"
+#include "db/db.hpp"
 #include "world/world.hpp"
 
 enum GameState {
@@ -24,6 +24,7 @@ class Game {
     Texture2D buttonTexture;
     Texture2D inputTextTexture;
     bool pauseGame = false;
+    readWorldlist ws;
     std::chrono::time_point<std::chrono::steady_clock> lastSave;
     std::unique_ptr<Button> startButton;
     std::unique_ptr<Button> closeButton;

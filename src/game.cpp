@@ -2,6 +2,7 @@
 #include <iostream>
 #include <raylib.h>
 #include <memory>
+#include "db/db.hpp"
 #include "player/player.hpp"
 #include "ui/button.hpp"
 #include "world/world.hpp"
@@ -13,6 +14,7 @@ Game::Game() :
   startButton(std::make_unique<Button>(200, 200, 183, 29, 20, "start", buttonTexture, [this]()
         {
         gs = WorldListState;
+        ws.readFolderWorld();
         })),
   closeButton(std::make_unique<Button>(200, 230, 183, 29, 20, "close", buttonTexture, [this]()
         {
@@ -142,6 +144,11 @@ void Game::Drawing() {
     case WorldListState:
       NewWorldButton->Draw();
       BackButton->Draw();
+       for (auto &d : ws.datas) {
+        WorldInfo wi = ws.readLevelWorld(d.c_str());
+        //std::cout << d.data() << std::endl;
+        std::cout << "name world: " << wi.name << " version: " << wi.version << std::endl;
+      }
       break;
     case CreateWorldState:
       //CreateWorldButton->Draw();
