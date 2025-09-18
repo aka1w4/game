@@ -1,6 +1,5 @@
 #include <functional>
 #include <raylib.h>
-#include <iostream>
 #include "button.hpp"
 
 Button::Button(int x, int y, int w, int h, int fontsize, const char* text, Texture2D& img, std::function<void()> action) : x(x), y(y), w(w), h(h), fontsize(fontsize), img(&img), text(text), action(action) {}
@@ -16,8 +15,6 @@ void Button::Draw() {
   screenY = (screenHeight - h2) / 2 + y;
   int textX = screenX + (w2 - textW) / 2;
   int textY = screenY + (h2 - textH) / 2;
-  std::cout << "width: " << w << " height: " << h << std::endl; 
-  std::cout << "width2: " << w2 << " height2: " << h2 << std::endl; 
   bool inPos = CheckCollisionPointRec(GetMousePosition(), Rectangle{float(screenX), float(screenY), float(w2), float(h2)});
 
   Rectangle src = inPos 
