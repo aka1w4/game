@@ -6,17 +6,21 @@
 Textinput::Textinput(int x, int y, int w, int h, int fontsize,Texture2D& img) : x(x), y(y), w(w), h(h), fontsize(fontsize), img(&img) {}
 
 void Textinput::Draw() {
+  int screenWidth = GetScreenWidth();
+  int screenHeight = GetScreenHeight();
   int maxWidth = w - 20;
   const char* display = text.c_str();
   while (MeasureText(display, fontsize) > maxWidth && *display) {
     display++;
   }
+  screenX = (screenWidth - w) / 2 + x;
+  screenY = (screenHeight - h) / 2 + y; 
   int textW = MeasureText(text.c_str(), fontsize);
   int textH = fontsize;
-  int textX = x + 10;
-  int textY = y + (h - textH) / 2;
+  int textX = screenX + 10;
+  int textY = screenY + (h - textH) / 2;
 
-  DrawTexture(*img, x, y, WHITE);
+  DrawTexture(*img, screenX, screenY, WHITE);
   if (text.size() >= 32) {
     DrawText(display, textX, textY, fontsize, RED);
   } else {
@@ -25,7 +29,7 @@ void Textinput::Draw() {
 }
 
 void Textinput::checkPos() {
-  if ( IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(GetMousePosition(), Rectangle{float(x), float(y), float(w+10), float(h+10)})) {
+  if ( IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(GetMousePosition(), Rectangle{float(screenX), float(screenY), float(w+10), float(h+10)})) {
     inTextinput = true;
   }
 }

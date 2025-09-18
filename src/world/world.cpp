@@ -7,7 +7,7 @@
 #include <filesystem>
 
 NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT) : 
-  textinput_name(std::make_unique<Textinput>(0, 30, 183, 29, 20, inputT)), 
+  textinput_name(std::make_unique<Textinput>(0, -30, 183, 29, 20, inputT)), 
   submit(std::make_unique<Button>(0, 0, 183, 29, 20, "submit", buttonT, [this]()
         {
         TraceLog(LOG_INFO, "dibuat");

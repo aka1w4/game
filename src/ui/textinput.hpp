@@ -6,7 +6,7 @@
 
 class Textinput {
   private:
-    int x, y, w, h, fontsize;
+    int x, y, w, h, fontsize, screenX, screenY;
     std::string text;
     bool inTextinput = false;
     Texture2D* img;
