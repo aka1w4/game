@@ -1,26 +1,32 @@
 #include <functional>
 #include <raylib.h>
+#include <iostream>
 #include "button.hpp"
 
-Button::Button(int x, int y, int w, int h, int fontsize, const char* text, Texture2D& img, std::function<void()> action) : x(x), y(y), w(w), h(h), fontsize(fontsize), img(&img), text(text), action(action){
-}
+Button::Button(int x, int y, int w, int h, int fontsize, const char* text, Texture2D& img, std::function<void()> action) : x(x), y(y), w(w), h(h), fontsize(fontsize), img(&img), text(text), action(action) {}
 
 void Button::Draw() {
   int screenWidth = GetScreenWidth();
   int screenHeight = GetScreenHeight();
+  int w2 = w * 2;
+  int h2 = h * 2;
   int textW = MeasureText(text, fontsize);
   int textH = fontsize;
-  screenX = (screenWidth - w) / 2 + x;
-  screenY = (screenHeight - h) / 2 + y;
-  int textX = screenX + (w - textW) / 2;
-  int textY = screenY + (h - textH) / 2;
+  screenX = (screenWidth - w2) / 2 + x;
+  screenY = (screenHeight - h2) / 2 + y;
+  int textX = screenX + (w2 - textW) / 2;
+  int textY = screenY + (h2 - textH) / 2;
+  std::cout << "width: " << w << " height: " << h << std::endl; 
+  std::cout << "width2: " << w2 << " height2: " << h2 << std::endl; 
+  bool inPos = CheckCollisionPointRec(GetMousePosition(), Rectangle{float(screenX), float(screenY), float(w2), float(h2)});
 
-  bool inPos = CheckCollisionPointRec(GetMousePosition(), Rectangle{float(screenX), float(screenY), float(w), float(h)});
-  if (inPos) {
-    DrawTextureRec(*img, Rectangle{0, 31, float(w), float(h)}, Vector2{float(screenX), float(screenY)}, WHITE);
-  } else {
-    DrawTextureRec(*img, Rectangle{0, 0, float(w), float(h)}, Vector2{float(screenX), float(screenY)}, WHITE);
-  }
+  Rectangle src = inPos 
+    ? Rectangle{0, 31, float(w), float(h)}
+    : Rectangle{0, 0, float(w), float(h)};
+
+  Rectangle dst = Rectangle{float(screenX), float(screenY), float(w2), float(h2)};
+
+  DrawTexturePro(*img, src, dst, Vector2{0,0}, 0.0f, WHITE);
 
   //DrawTextureRec(*img, Rectangle{0, 31, float(w), float(h)}, Vector2{float(x), float(y)}, WHITE);
   DrawText(text, textX, textY, fontsize, WHITE);
@@ -28,7 +34,7 @@ void Button::Draw() {
 
 bool Button::isClicked() {
   return IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && 
-    CheckCollisionPointRec(GetMousePosition(), Rectangle{float(screenX), float(screenY), float(w), float(h)});
+    CheckCollisionPointRec(GetMousePosition(), Rectangle{float(screenX), float(screenY), float(w * 2), float(h * 2)});
 }
 
 void Button::Action() {

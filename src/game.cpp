@@ -11,16 +11,16 @@
 Game::Game() : 
   buttonTexture(LoadTexture("assets/button.png")),
   inputTextTexture(LoadTexture("assets/inputtext.png")),
-  startButton(std::make_unique<Button>(0, 0, 183, 29, 20, "start", buttonTexture, [this]()
+  startButton(std::make_unique<Button>(0, 0, 183, 29, 40, "start", buttonTexture, [this]()
         {
         gs = WorldListState;
         ws.readFolderWorld();
         })),
-  closeButton(std::make_unique<Button>(0, 30, 183, 29, 20, "close", buttonTexture, [this]()
+  closeButton(std::make_unique<Button>(0, 60, 183, 29, 40, "close", buttonTexture, [this]()
         {
         quit = true;
         })), 
-  exitButton(std::make_unique<Button>(0, 30, 183, 29, 20, "exit",  buttonTexture, [this]()
+  exitButton(std::make_unique<Button>(0, 60, 183, 29, 40, "exit",  buttonTexture, [this]()
         {
         //lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
         if (player) {
@@ -30,12 +30,12 @@ Game::Game() :
         gs = MenuState;
         pauseGame = false;
         })),
-  resumeButton(std::make_unique<Button>(0, 0, 183, 29, 20, "resume", buttonTexture,[this]()
+  resumeButton(std::make_unique<Button>(0, 0, 183, 29, 40, "resume", buttonTexture,[this]()
         {
         //lastSave = std::chrono::steady_clock::now();
         pauseGame = false;        
         })),
-  BackButton(std::make_unique<Button>(0, 30, 183, 29, 20, "back", buttonTexture,[this]()
+  BackButton(std::make_unique<Button>(0, 60, 183, 29, 40, "back", buttonTexture,[this]()
         {
         if (gs == WorldListState) {
         gs = MenuState;
@@ -44,7 +44,7 @@ Game::Game() :
         gs = WorldListState;
         }
         })),
-  NewWorldButton(std::make_unique<Button>(0, 0, 183, 29, 20, "new world", buttonTexture,[this]()
+  NewWorldButton(std::make_unique<Button>(0, 0, 183, 29, 40, "new world", buttonTexture,[this]()
         {
         gs = CreateWorldState;
         })),
