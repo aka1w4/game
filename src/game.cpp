@@ -11,16 +11,16 @@
 Game::Game() : 
   buttonTexture(LoadTexture("assets/button.png")),
   inputTextTexture(LoadTexture("assets/inputtext.png")),
-  startButton(std::make_unique<Button>(200, 200, 183, 29, 20, "start", buttonTexture, [this]()
+  startButton(std::make_unique<Button>(0, 0, 183, 29, 20, "start", buttonTexture, [this]()
         {
         gs = WorldListState;
         ws.readFolderWorld();
         })),
-  closeButton(std::make_unique<Button>(200, 230, 183, 29, 20, "close", buttonTexture, [this]()
+  closeButton(std::make_unique<Button>(0, 30, 183, 29, 20, "close", buttonTexture, [this]()
         {
         quit = true;
         })), 
-  exitButton(std::make_unique<Button>(200, 230, 183, 29, 20, "exit",  buttonTexture, [this]()
+  exitButton(std::make_unique<Button>(0, 30, 183, 29, 20, "exit",  buttonTexture, [this]()
         {
         //lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
         if (player) {
@@ -30,12 +30,12 @@ Game::Game() :
         gs = MenuState;
         pauseGame = false;
         })),
-  resumeButton(std::make_unique<Button>(200, 200, 183, 29, 20, "resume", buttonTexture,[this]()
+  resumeButton(std::make_unique<Button>(0, 0, 183, 29, 20, "resume", buttonTexture,[this]()
         {
         //lastSave = std::chrono::steady_clock::now();
         pauseGame = false;        
         })),
-  BackButton(std::make_unique<Button>(200, 230, 183, 29, 20, "back", buttonTexture,[this]()
+  BackButton(std::make_unique<Button>(0, 30, 183, 29, 20, "back", buttonTexture,[this]()
         {
         if (gs == WorldListState) {
         gs = MenuState;
@@ -44,7 +44,7 @@ Game::Game() :
         gs = WorldListState;
         }
         })),
-  NewWorldButton(std::make_unique<Button>(200, 200, 183, 29, 20, "new world", buttonTexture,[this]()
+  NewWorldButton(std::make_unique<Button>(0, 0, 183, 29, 20, "new world", buttonTexture,[this]()
         {
         gs = CreateWorldState;
         })),
@@ -61,31 +61,30 @@ Game::~Game() {
   UnloadTexture(inputTextTexture);
 }
 
-void Game::Update() {
-  auto now = std::chrono::steady_clock::now();
+void Game::Update() { 
   switch (gs) {
     case PlayState:
-      if (IsKeyDown(KEY_ESCAPE)) {
-        pauseGame = true;
-        //lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
-      }
-
-      if (!pauseGame) {
-        if (player) player->Update();
-      } else {
-        if (resumeButton->isClicked()) {
-          resumeButton->Action();
+      {
+        auto now = std::chrono::steady_clock::now();
+        if (IsKeyDown(KEY_ESCAPE)) {
+          pauseGame = true;
+          //lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
         }
-
-        if (exitButton->isClicked()) {
-          exitButton->Action();
+        if (!pauseGame) {
+          if (player) player->Update();
+        } else {
+          if (resumeButton->isClicked()) {
+            resumeButton->Action();
+          }
+          if (exitButton->isClicked()) {
+            exitButton->Action();
+          }
         }
-      }
-
-      if (std::chrono::duration_cast<std::chrono::minutes>(now - lastSave).count() >= 5) {
-        std::cout << "save data ke " << std::endl;
-        if (player) player->writebinary();
-        lastSave = now;
+        if (std::chrono::duration_cast<std::chrono::minutes>(now - lastSave).count() >= 5) {
+          std::cout << "save data ke " << std::endl;
+          if (player) player->writebinary();
+          lastSave = now;
+        }
       }
       break;
     case MenuState:

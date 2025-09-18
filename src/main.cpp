@@ -2,7 +2,7 @@
 #include "game.hpp"
 
 int main() {
-  InitWindow(600, 400, "Test game");
+  InitWindow(GetScreenWidth(), GetScreenHeight(), "Test game");
   SetExitKey(KEY_NULL);
   SetTargetFPS(60);
 

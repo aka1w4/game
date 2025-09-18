@@ -6,16 +6,20 @@ Button::Button(int x, int y, int w, int h, int fontsize, const char* text, Textu
 }
 
 void Button::Draw() {
-  bool inPos = CheckCollisionPointRec(GetMousePosition(), Rectangle{float(x), float(y), float(w), float(h)});
+  int screenWidth = GetScreenWidth();
+  int screenHeight = GetScreenHeight();
   int textW = MeasureText(text, fontsize);
   int textH = fontsize;
-  int textX = x + (w - textW) / 2;
-  int textY = y + (h - textH) / 2;
+  screenX = (screenWidth - w) / 2 + x;
+  screenY = (screenHeight - h) / 2 + y;
+  int textX = screenX + (w - textW) / 2;
+  int textY = screenY + (h - textH) / 2;
 
+  bool inPos = CheckCollisionPointRec(GetMousePosition(), Rectangle{float(screenX), float(screenY), float(w), float(h)});
   if (inPos) {
-    DrawTextureRec(*img, Rectangle{0, 31, float(w), float(h)}, Vector2{float(x), float(y)}, WHITE);
+    DrawTextureRec(*img, Rectangle{0, 31, float(w), float(h)}, Vector2{float(screenX), float(screenY)}, WHITE);
   } else {
-    DrawTextureRec(*img, Rectangle{0, 0, float(w), float(h)}, Vector2{float(x), float(y)}, WHITE);
+    DrawTextureRec(*img, Rectangle{0, 0, float(w), float(h)}, Vector2{float(screenX), float(screenY)}, WHITE);
   }
 
   //DrawTextureRec(*img, Rectangle{0, 31, float(w), float(h)}, Vector2{float(x), float(y)}, WHITE);
@@ -24,7 +28,7 @@ void Button::Draw() {
 
 bool Button::isClicked() {
   return IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && 
-    CheckCollisionPointRec(GetMousePosition(), Rectangle{float(x), float(y), float(w), float(h)});
+    CheckCollisionPointRec(GetMousePosition(), Rectangle{float(screenX), float(screenY), float(w), float(h)});
 }
 
 void Button::Action() {

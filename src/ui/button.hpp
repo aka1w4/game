@@ -16,7 +16,7 @@ enum typeButton {
 class Button {
   private:
     const char* text;
-    int x, y, w, h, fontsize;
+    int x, y, w, h, fontsize, screenX, screenY;
     Texture2D* img;
     std::function<void()> action;
 
