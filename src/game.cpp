@@ -8,6 +8,8 @@
 #include "world/world.hpp"
 #include "game.hpp"
 
+const int scroll = 10;
+
 Game::Game() : 
   buttonTexture(LoadTexture("assets/button.png")),
   inputTextTexture(LoadTexture("assets/inputtext.png")),
@@ -15,7 +17,7 @@ Game::Game() :
         {
         gs = WorldListState;
         ws.readLevelWorld();
-        int y = 60;
+        int y = -120;
         for (const auto& d : ws.datas) {
         y += 60;
         wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, d, [this](const WorldInfo& wi) {
@@ -42,7 +44,7 @@ Game::Game() :
         //lastSave = std::chrono::steady_clock::now();
         pauseGame = false;        
         })),
-  BackButton(std::make_unique<Button>(0, 60, 183, 29, 40, "back", buttonTexture,[this]()
+  BackButton(std::make_unique<Button>(240, -240, 183, 29, 40, "back", buttonTexture,[this]()
         {
         if (gs == WorldListState) {
         gs = MenuState;
@@ -51,7 +53,7 @@ Game::Game() :
         gs = WorldListState;
         }
         })),
-  NewWorldButton(std::make_unique<Button>(0, 0, 183, 29, 40, "new world", buttonTexture,[this]()
+  NewWorldButton(std::make_unique<Button>(-240, -240, 183, 29, 40, "new world", buttonTexture,[this]()
         {
         gs = CreateWorldState;
         })),
@@ -104,18 +106,17 @@ void Game::Update() {
       }
       break;
     case WorldListState:
+      for (auto &wb : wbs) {
+        if (wb->isClicked()) {
+          wb->Action();
+        }
+      }
       if (NewWorldButton->isClicked()) {
         NewWorldButton->Action();
       }
 
       if (BackButton->isClicked()) {
         BackButton->Action();
-      }
-
-      for (auto &wb : wbs) {
-        if (wb->isClicked()) {
-          wb->Action();
-        }
       }
       break;
     case CreateWorldState:
@@ -148,11 +149,17 @@ void Game::Drawing() {
       closeButton->Draw();
       break;
     case WorldListState:
+      scrollofset -= (int)GetMouseWheelMove() * scroll;
+      if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) {
+        scrollofset -= scroll;
+      } else if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) {
+        scrollofset += scroll;
+      }
+      for (auto &wb : wbs) {
+        wb->Draw(scrollofset);
+      }
       NewWorldButton->Draw();
       BackButton->Draw();
-      for (auto &wb : wbs) {
-        wb->Draw();
-      }
       break;
     case CreateWorldState:
       //CreateWorldButton->Draw();

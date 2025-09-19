@@ -26,6 +26,7 @@ class Game {
     Texture2D inputTextTexture;
     bool pauseGame = false;
     readWorldlist ws;
+    int scrollofset = 0;
     std::vector<std::unique_ptr<WorldButton>> wbs;
     std::chrono::time_point<std::chrono::steady_clock> lastSave;
     std::unique_ptr<Button> startButton;

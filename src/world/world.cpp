@@ -7,8 +7,8 @@
 #include <filesystem>
 
 NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT) : 
-  textinput_name(std::make_unique<Textinput>(0, -60, 183, 29, 40, inputT)), 
-  submit(std::make_unique<Button>(0, 0, 183, 29, 40, "submit", buttonT, [this]()
+  textinput_name(std::make_unique<Textinput>(240, 60, 183, 29, 40, inputT)), 
+  submit(std::make_unique<Button>(240,120, 183, 29, 40, "submit", buttonT, [this]()
         {
 
         createNewWorld(textinput_name->GetText(), 1);

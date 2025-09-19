@@ -23,7 +23,7 @@ class Button {
 
   public:
     Button(int x, int y, int w, int h, int fontsize, const char* text, Texture2D& img, std::function<void()> action);
-    void Draw();
+    void Draw(int offScrollY = 0);
     bool isClicked();
     void Action();
     virtual ~Button() = default;

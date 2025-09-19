@@ -4,7 +4,7 @@
 
 Button::Button(int x, int y, int w, int h, int fontsize, const char* text, Texture2D& img, std::function<void()> action) : x(x), y(y), w(w), h(h), fontsize(fontsize), img(&img), text(text), action(action) {}
 
-void Button::Draw() {
+void Button::Draw(int offScrollY) {
   int screenWidth = GetScreenWidth();
   int screenHeight = GetScreenHeight();
   int w2 = w * 2;
@@ -12,7 +12,7 @@ void Button::Draw() {
   int textW = MeasureText(text, fontsize);
   int textH = fontsize;
   screenX = (screenWidth - w2) / 2 + x;
-  screenY = (screenHeight - h2) / 2 + y;
+  screenY = (screenHeight - h2) / 2 + y + offScrollY;
   int textX = screenX + (w2 - textW) / 2;
   int textY = screenY + (h2 - textH) / 2;
   bool inPos = CheckCollisionPointRec(GetMousePosition(), Rectangle{float(screenX), float(screenY), float(w2), float(h2)});
