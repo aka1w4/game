@@ -14,7 +14,7 @@ Game::Game() :
   startButton(std::make_unique<Button>(0, 0, 183, 29, 40, "start", buttonTexture, [this]()
         {
         gs = WorldListState;
-        ws.readFolderWorld();
+        ws.readLevelWorld();
         })),
   closeButton(std::make_unique<Button>(0, 60, 183, 29, 40, "close", buttonTexture, [this]()
         {
@@ -144,9 +144,8 @@ void Game::Drawing() {
       NewWorldButton->Draw();
       BackButton->Draw();
        for (auto &d : ws.datas) {
-        WorldInfo wi = ws.readLevelWorld(d.c_str());
         //std::cout << d.data() << std::endl;
-        std::cout << "name world: " << wi.name << " version: " << wi.version << std::endl;
+        std::cout << "name world: " << d.name << " version: " << d.version << std::endl;
       }
       break;
     case CreateWorldState:

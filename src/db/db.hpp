@@ -13,9 +13,8 @@ struct WorldInfo {
 };
 
 struct readWorldlist {
-  std::vector<std::string> datas;
-  void readFolderWorld();
-  WorldInfo readLevelWorld(const char*);
+  std::vector<WorldInfo> datas;
+  void readLevelWorld();
 }; 
 
 #endif // !DB

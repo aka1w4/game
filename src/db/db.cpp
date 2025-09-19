@@ -16,7 +16,7 @@ void createNewWorld(const std::string& name, unsigned int version) {
   out.close();
 }
 
-void readWorldlist::readFolderWorld() {
+ void readWorldlist::readLevelWorld() {
   datas.clear();
 
   if (std::filesystem::exists(WORLD_NAME) && std::filesystem::is_directory(WORLD_NAME)) {
@@ -24,7 +24,18 @@ void readWorldlist::readFolderWorld() {
       if (std::filesystem::is_directory(dirEntry)) {
         for (const auto& fileEntry : std::filesystem::directory_iterator(dirEntry)) {
           if (std::filesystem::is_regular_file(fileEntry) && fileEntry.path().filename() == "level.dat") {
-            datas.push_back(fileEntry.path().string().c_str());
+            std::ifstream in(fileEntry.path().string(), std::ios::binary);
+            if (!in) {
+              throw std::runtime_error("gagal membaca");
+            }
+            uint32_t len;
+            in.read(reinterpret_cast<char*>(&len), sizeof(len));
+            std::string name(len, '\0');
+            unsigned int version;
+            in.read(name.data(), len);
+            in.read(reinterpret_cast<char*>(&version), sizeof(version));
+            in.close();
+            datas.push_back(WorldInfo{name, version});
           }
         }
       }
@@ -32,19 +43,4 @@ void readWorldlist::readFolderWorld() {
   } else {
     std::filesystem::create_directories(WORLD_NAME);
   } 
-}
-
-WorldInfo readWorldlist::readLevelWorld(const char* read_name) {
-  uint32_t len;
-  std::ifstream in(read_name, std::ios::binary);
-  if (!in) {
-    throw std::runtime_error("gagal membaca");
-  }
-  in.read(reinterpret_cast<char*>(&len), sizeof(len));
-  std::string name(len, '\0');
-  unsigned int version;
-  in.read(name.data(), len);
-  in.read(reinterpret_cast<char*>(&version), sizeof(version));
-  in.close();
-  return WorldInfo{name, version};
 }
