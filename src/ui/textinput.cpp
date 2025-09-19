@@ -1,4 +1,3 @@
-#include <iostream>
 #include <raylib.h>
 #include <string>
 #include "textinput.hpp"
@@ -22,7 +21,6 @@ void Textinput::Draw() {
   int textX = screenX + 10;
   int textY = screenY + (h2 - textH) / 2;
 
-  //DrawTexture(*img, screenX, screenY, WHITE);
   Rectangle src = Rectangle{0, 0, float(w), float(h)};
   Rectangle dst = Rectangle{float(screenX), float(screenY), float(w2), float(h2)};
   DrawTexturePro(*img, src, dst, Vector2{0,0}, 0.0f, WHITE);
@@ -49,7 +47,6 @@ void Textinput::EditInputText() {
     if ((key >= 32) && (key <= 125) && (text.size() < 32)) {
       text.push_back((char)key);
     }
-    std::cout << "Char pressed: " << (char)key << " (" << key << ")\n";
     key = GetCharPressed();
   }
 

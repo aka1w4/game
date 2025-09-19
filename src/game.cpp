@@ -15,6 +15,13 @@ Game::Game() :
         {
         gs = WorldListState;
         ws.readLevelWorld();
+        int y = 60;
+        for (const auto& d : ws.datas) {
+        y += 60;
+        wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, d, [this](const WorldInfo& wi) {
+              std::cout << "world name " << wi.name << " version: " << wi.version << std::endl;
+              }));
+        }
         })),
   closeButton(std::make_unique<Button>(0, 60, 183, 29, 40, "close", buttonTexture, [this]()
         {
@@ -53,8 +60,8 @@ Game::Game() :
         {
         gs = PlayState;
         player = std::make_unique<Player>();
-        })),
-  testTextinput(std::make_unique<Textinput>(200, 300, 183, 29, 20, inputTextTexture))*/ {}
+        })), */
+  {}
 
 Game::~Game() {
   UnloadTexture(buttonTexture);
@@ -88,14 +95,9 @@ void Game::Update() {
       }
       break;
     case MenuState:
-      //testTextinput->checkPos();
       if (startButton->isClicked()) {
         startButton->Action();
       }
-
-      /*if (testTextinput->inTextInput()) {
-        testTextinput->EditInputText();
-      } */
 
       if (closeButton->isClicked()) {
         closeButton->Action();
@@ -108,6 +110,12 @@ void Game::Update() {
 
       if (BackButton->isClicked()) {
         BackButton->Action();
+      }
+
+      for (auto &wb : wbs) {
+        if (wb->isClicked()) {
+          wb->Action();
+        }
       }
       break;
     case CreateWorldState:
@@ -137,15 +145,13 @@ void Game::Drawing() {
       break;
     case MenuState:
       startButton->Draw();
-      //testTextinput->Draw();
       closeButton->Draw();
       break;
     case WorldListState:
       NewWorldButton->Draw();
       BackButton->Draw();
-       for (auto &d : ws.datas) {
-        //std::cout << d.data() << std::endl;
-        std::cout << "name world: " << d.name << " version: " << d.version << std::endl;
+      for (auto &wb : wbs) {
+        wb->Draw();
       }
       break;
     case CreateWorldState:

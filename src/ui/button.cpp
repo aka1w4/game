@@ -24,8 +24,6 @@ void Button::Draw() {
   Rectangle dst = Rectangle{float(screenX), float(screenY), float(w2), float(h2)};
 
   DrawTexturePro(*img, src, dst, Vector2{0,0}, 0.0f, WHITE);
-
-  //DrawTextureRec(*img, Rectangle{0, 31, float(w), float(h)}, Vector2{float(x), float(y)}, WHITE);
   DrawText(text, textX, textY, fontsize, WHITE);
 }
 
@@ -36,5 +34,4 @@ bool Button::isClicked() {
 
 void Button::Action() {
   if(action) action();
-  TraceLog(LOG_INFO, "button di click");
 }

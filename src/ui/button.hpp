@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <raylib.h>
+#include "../db/db.hpp"
 
 enum typeButton {
   ExitGame,
@@ -28,4 +29,13 @@ class Button {
     virtual ~Button() = default;
 };
 
+class WorldButton : public Button {
+  private:
+    WorldInfo wi;
+
+  public:
+    WorldButton(int x, int y, int w, int h, int fontsize, Texture2D& img, const WorldInfo& wi, std::function<void(const WorldInfo&)> action) : 
+      Button(x, y, w, h, fontsize, wi.name.c_str(), img, [=](){action(wi); }), 
+      wi(wi) {}
+};
 #endif // !BUTTON

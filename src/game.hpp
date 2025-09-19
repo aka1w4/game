@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <memory>
 #include <chrono>
+#include <vector>
 #include "player/player.hpp"
 #include "ui/button.hpp"
 #include "db/db.hpp"
@@ -25,6 +26,7 @@ class Game {
     Texture2D inputTextTexture;
     bool pauseGame = false;
     readWorldlist ws;
+    std::vector<std::unique_ptr<WorldButton>> wbs;
     std::chrono::time_point<std::chrono::steady_clock> lastSave;
     std::unique_ptr<Button> startButton;
     std::unique_ptr<Button> closeButton;
@@ -34,7 +36,6 @@ class Game {
     std::unique_ptr<Button> NewWorldButton;
     std::unique_ptr<NewWorld> newworld;
     //std::unique_ptr<Button> CreateWorldButton;
-    //std::unique_ptr<Textinput> testTextinput;
 
   public:
     Game();
