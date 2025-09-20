@@ -22,6 +22,8 @@ Game::Game() :
         y += 60;
         wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, d, [this](const WorldInfo& wi) {
               std::cout << "world name " << wi.name << " version: " << wi.version << " path: " << wi.path << std::endl;
+              SavePlayer ps = readbinaryPlayer(wi.path);
+              std::cout << "x: " << ps.pos.x << " y: " << ps.pos.y << std::endl;
               }));
         }
         })),

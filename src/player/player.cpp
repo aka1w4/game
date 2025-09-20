@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-Player::Player() {
+Player::Player(Vector2 pos, Focus f, bool facingright) : pos(pos), f(f), facingright(facingright) {
   img[0] = LoadTexture("assets/16x32idle.png");
   img[1] = LoadTexture("assets/16x32walk.png");
 

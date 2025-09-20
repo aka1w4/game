@@ -8,6 +8,7 @@
 inline std::string_view WORLD_NAME = "world/";
 void createNewWorld(const std::string&, unsigned int version);
 void writeBinPlayer(const std::string&, SavePlayer& sp);
+SavePlayer readbinaryPlayer(const std::string& path);
 
 struct WorldInfo {
     std::string name;

@@ -34,7 +34,7 @@ class Player {
     int frameHeight = 32;
 
   public:
-    Player();
+    Player(Vector2 pos, Focus f, bool facingright);
     ~Player();
     void Update();
     void Drawing();

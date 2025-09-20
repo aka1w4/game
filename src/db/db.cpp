@@ -47,7 +47,7 @@ void writeBinPlayer(const std::string& name, SavePlayer& sp) {
             in.read(name.data(), len);
             in.read(reinterpret_cast<char*>(&version), sizeof(version));
             in.close();
-            datas.push_back(WorldInfo{name, version, fileEntry.path().string()});
+            datas.push_back(WorldInfo{name, version, dirEntry.path().string()});
           }
         }
       }
@@ -55,4 +55,18 @@ void writeBinPlayer(const std::string& name, SavePlayer& sp) {
   } else {
     std::filesystem::create_directories(WORLD_NAME);
   } 
+}
+
+SavePlayer readbinaryPlayer(const std::string& path) {
+  SavePlayer ps;
+  std::ifstream in(std::string(path) + "/db/db.bin", std::ios::binary);
+  if (!in) {
+     throw std::runtime_error("gagal membaca");
+  }
+  in.read(reinterpret_cast<char*>(&ps.pos), sizeof(ps.pos));
+  in.read(reinterpret_cast<char*>(&ps.f), sizeof(ps.f));
+  in.read(reinterpret_cast<char*>(&ps.facingright), sizeof(ps.facingright));
+  in.close();
+
+  return ps;
 }
