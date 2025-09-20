@@ -1,6 +1,6 @@
-#include <iostream>
 #include <raylib.h>
 #include <memory>
+#include <string>
 #include "db/db.hpp"
 #include "player/player.hpp"
 #include "ui/button.hpp"
@@ -20,9 +20,8 @@ Game::Game() :
         for (const auto& d : ws.datas) {
         y += 60;
         wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, d, [this](const WorldInfo& wi) {
-              std::cout << "world name " << wi.name << " version: " << wi.version << " path: " << wi.path << std::endl;
-              SavePlayer ps = readbinaryPlayer(wi.path);
-              world = std::make_unique<World>(ps, wi.path);
+              SavePlayer sp = readbinaryPlayer(wi.path);
+              world = std::make_unique<World>(sp, wi.path);
               gs = PlayState;
               }));
         }
@@ -57,7 +56,11 @@ Game::Game() :
         {
         gs = CreateWorldState;
         })),
-  newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture)) {}
+  newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture, [this](const SavePlayer& sp, const std::string& text)
+        {
+        world = std::make_unique<World>(sp, std::string(WORLD_NAME) + "/" +text);
+        gs = PlayState;
+        })) {}
 
 Game::~Game() {
   UnloadTexture(buttonTexture);
@@ -147,7 +150,6 @@ void Game::Drawing() {
       BackButton->Draw();
       break;
     case CreateWorldState:
-      //CreateWorldButton->Draw();
       newworld->Draw();
       BackButton->Draw();
       break;

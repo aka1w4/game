@@ -14,9 +14,10 @@ class NewWorld {
     std::string name;
     std::unique_ptr<Textinput> textinput_name;
     std::unique_ptr<Button> submit;
+    std::function<void(const SavePlayer&, const std::string&)> play;
 
   public:
-    NewWorld(Texture2D& inputT, Texture2D& buttonT);
+    NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(const SavePlayer&, const std::string&)> play);
     void Draw();
     void Update();
     void ClearText();
