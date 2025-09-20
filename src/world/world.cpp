@@ -2,6 +2,7 @@
 #include "../ui/button.hpp"
 #include "../ui/textinput.hpp"
 #include "../db/db.hpp"
+#include "../player/player.hpp"
 #include <memory>
 #include <raylib.h>
 #include <filesystem>
@@ -10,8 +11,9 @@ NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT) :
   textinput_name(std::make_unique<Textinput>(240, 60, 183, 29, 40, inputT)), 
   submit(std::make_unique<Button>(240,120, 183, 29, 40, "submit", buttonT, [this]()
         {
-
+        SavePlayer sp = SavePlayer{Vector2{100, 100}, Down, false};
         createNewWorld(textinput_name->GetText(), 1);
+        writeBinPlayer(textinput_name->GetText(), sp);
         })) 
   {
     if(!std::filesystem::exists("world")) {

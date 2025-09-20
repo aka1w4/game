@@ -3,13 +3,16 @@
 
 #include <string>
 #include <vector>
+#include "../player/player.hpp"
 
 inline std::string_view WORLD_NAME = "world/";
 void createNewWorld(const std::string&, unsigned int version);
+void writeBinPlayer(const std::string&, SavePlayer& sp);
 
 struct WorldInfo {
     std::string name;
     unsigned int version;
+    std::string path;
 };
 
 struct readWorldlist {

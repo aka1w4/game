@@ -16,6 +16,18 @@ void createNewWorld(const std::string& name, unsigned int version) {
   out.close();
 }
 
+void writeBinPlayer(const std::string& name, SavePlayer& sp) {
+  std::filesystem::create_directories(std::string(WORLD_NAME) + name + "/db");
+  std::ofstream out(std::string(WORLD_NAME) + name + "/db/db.bin", std::ios::binary);
+  if (!out) {
+     throw std::runtime_error("gagal membuat");
+  }
+  out.write(reinterpret_cast<char*>(&sp.pos), sizeof(sp.pos));
+  out.write(reinterpret_cast<char*>(&sp.f), sizeof(sp.f));
+  out.write(reinterpret_cast<char*>(&sp.facingright), sizeof(sp.facingright));
+  out.close();
+}
+
  void readWorldlist::readLevelWorld() {
   datas.clear();
 
@@ -35,7 +47,7 @@ void createNewWorld(const std::string& name, unsigned int version) {
             in.read(name.data(), len);
             in.read(reinterpret_cast<char*>(&version), sizeof(version));
             in.close();
-            datas.push_back(WorldInfo{name, version});
+            datas.push_back(WorldInfo{name, version, fileEntry.path().string()});
           }
         }
       }

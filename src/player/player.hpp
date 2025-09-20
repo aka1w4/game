@@ -15,6 +15,12 @@ enum MoveState {
   isWalk,
 };
 
+struct SavePlayer {
+  Vector2 pos;
+  Focus f;
+  bool facingright;
+};
+
 class Player {
   private:
     Vector2 pos;
