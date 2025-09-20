@@ -3,29 +3,27 @@
 #include <string>
 #include <filesystem>
 
-void createNewWorld(const std::string& name, unsigned int version) {
+void createNewWorld(const std::string& name, unsigned int version, SavePlayer& sp) {
   std::filesystem::create_directories(std::string(WORLD_NAME) + name);
-  std::ofstream out(std::string(WORLD_NAME) + name + "/level.dat", std::ios::binary);
-  if (!out) {
+  std::ofstream levelfile(std::string(WORLD_NAME) + name + "/level.dat", std::ios::binary);
+  if (!levelfile) {
     throw std::runtime_error("gagal menulis level.dat");
   }
   uint32_t len = static_cast<uint32_t>(name.size());
-  out.write(reinterpret_cast<char*>(&len), sizeof(len));
-  out.write(name.c_str(), len);
-  out.write(reinterpret_cast<char*>(&version), sizeof(version));
-  out.close();
-}
+  levelfile.write(reinterpret_cast<char*>(&len), sizeof(len));
+  levelfile.write(name.c_str(), len);
+  levelfile.write(reinterpret_cast<char*>(&version), sizeof(version));
+  levelfile.close();
 
-void writeBinPlayer(const std::string& name, SavePlayer& sp) {
   std::filesystem::create_directories(std::string(WORLD_NAME) + name + "/db");
-  std::ofstream out(std::string(WORLD_NAME) + name + "/db/db.bin", std::ios::binary);
-  if (!out) {
-     throw std::runtime_error("gagal membuat");
+  std::ofstream dbfile(std::string(WORLD_NAME) + name + "/db/db.bin", std::ios::binary);
+  if (!dbfile) {
+     throw std::runtime_error("gagal menulis db file");
   }
-  out.write(reinterpret_cast<char*>(&sp.pos), sizeof(sp.pos));
-  out.write(reinterpret_cast<char*>(&sp.f), sizeof(sp.f));
-  out.write(reinterpret_cast<char*>(&sp.facingright), sizeof(sp.facingright));
-  out.close();
+  dbfile.write(reinterpret_cast<char*>(&sp.pos), sizeof(sp.pos));
+  dbfile.write(reinterpret_cast<char*>(&sp.f), sizeof(sp.f));
+  dbfile.write(reinterpret_cast<char*>(&sp.facingright), sizeof(sp.facingright));
+  dbfile.close();
 }
 
  void readWorldlist::readLevelWorld() {
@@ -69,4 +67,15 @@ SavePlayer readbinaryPlayer(const std::string& path) {
   in.close();
 
   return ps;
+}
+
+void writeBinaryPlayer(const std::string& path, SavePlayer& sp) {
+  std::ofstream out(path + "/db/db.bin", std::ios::binary);
+  if (!out) {
+     throw std::runtime_error("gagal simpan");
+  }
+  out.write(reinterpret_cast<char*>(&sp.pos), sizeof(sp.pos));
+  out.write(reinterpret_cast<char*>(&sp.f), sizeof(sp.f));
+  out.write(reinterpret_cast<char*>(&sp.facingright), sizeof(sp.facingright));
+  out.close();
 }

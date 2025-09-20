@@ -37,10 +37,9 @@ class Player {
     Player(Vector2 pos, Focus f, bool facingright);
     ~Player();
     void Update();
-    void Drawing();
+    void Draw();
     void Move(float dx, float dy, Focus df, bool right);
-    void writebinary();
-    void readbinary();
+    SavePlayer GetPlayer();
 };
 
 #endif // !PLAYER

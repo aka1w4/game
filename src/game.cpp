@@ -1,4 +1,3 @@
-#include <chrono>
 #include <iostream>
 #include <raylib.h>
 #include <memory>
@@ -23,7 +22,8 @@ Game::Game() :
         wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, d, [this](const WorldInfo& wi) {
               std::cout << "world name " << wi.name << " version: " << wi.version << " path: " << wi.path << std::endl;
               SavePlayer ps = readbinaryPlayer(wi.path);
-              std::cout << "x: " << ps.pos.x << " y: " << ps.pos.y << std::endl;
+              world = std::make_unique<World>(ps, wi.path);
+              gs = PlayState;
               }));
         }
         })),
@@ -33,17 +33,15 @@ Game::Game() :
         })), 
   exitButton(std::make_unique<Button>(0, 60, 183, 29, 40, "exit",  buttonTexture, [this]()
         {
-        //lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
-        if (player) {
-        player->writebinary();
-        player.reset();
+        if (world) {
+        world->WriteWorld();
+        world.reset();
         }
         gs = MenuState;
         pauseGame = false;
         })),
   resumeButton(std::make_unique<Button>(0, 0, 183, 29, 40, "resume", buttonTexture,[this]()
         {
-        //lastSave = std::chrono::steady_clock::now();
         pauseGame = false;        
         })),
   BackButton(std::make_unique<Button>(240, -240, 183, 29, 40, "back", buttonTexture,[this]()
@@ -59,13 +57,7 @@ Game::Game() :
         {
         gs = CreateWorldState;
         })),
-  newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture))
-  /*CreateWorldButton(std::make_unique<Button>(200, 200, 183, 29, 20, "create", buttonTexture, [this]()
-        {
-        gs = PlayState;
-        player = std::make_unique<Player>();
-        })), */
-  {}
+  newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture)) {}
 
 Game::~Game() {
   UnloadTexture(buttonTexture);
@@ -76,25 +68,19 @@ void Game::Update() {
   switch (gs) {
     case PlayState:
       {
-        auto now = std::chrono::steady_clock::now();
         if (IsKeyDown(KEY_ESCAPE)) {
           pauseGame = true;
-          //lastSave = std::chrono::time_point<std::chrono::steady_clock>{};
         }
-        if (!pauseGame) {
-          if (player) player->Update();
-        } else {
+
+        if(world) world->Update(pauseGame);
+
+        if (pauseGame) {
           if (resumeButton->isClicked()) {
             resumeButton->Action();
           }
           if (exitButton->isClicked()) {
             exitButton->Action();
           }
-        }
-        if (std::chrono::duration_cast<std::chrono::minutes>(now - lastSave).count() >= 5) {
-          std::cout << "save data ke " << std::endl;
-          if (player) player->writebinary();
-          lastSave = now;
         }
       }
       break;
@@ -122,9 +108,6 @@ void Game::Update() {
       }
       break;
     case CreateWorldState:
-      /*if (CreateWorldButton->isClicked()) {
-        CreateWorldButton->Action();
-      } */
 
       newworld->Update();
 
@@ -140,7 +123,7 @@ void Game::Drawing() {
   ClearBackground(WHITE);
   switch (gs) {
     case PlayState:
-      if (player) player->Drawing();
+      if (world) world->Draw();
       if (pauseGame) {
         resumeButton->Draw();
         exitButton->Draw();

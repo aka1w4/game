@@ -3,7 +3,9 @@
 
 #include "../ui/textinput.hpp"
 #include "../ui/button.hpp"
+#include "../player/player.hpp"
 #include <memory>
+#include <chrono>
 #include <raylib.h>
 #include <string>
 
@@ -18,6 +20,20 @@ class NewWorld {
     void Draw();
     void Update();
     void ClearText();
+};
+
+class World {
+  private:
+    std::unique_ptr<Player> player;
+    std::string path;
+    std::chrono::time_point<std::chrono::steady_clock> lastSave;
+
+  public:
+    World(SavePlayer sp, const std::string& path);
+    ~World();
+    void Update(bool& pauseGame);
+    void Draw();
+    void WriteWorld();
 };
 
 #endif // !WORLD

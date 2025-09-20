@@ -6,8 +6,8 @@
 #include "../player/player.hpp"
 
 inline std::string_view WORLD_NAME = "world/";
-void createNewWorld(const std::string&, unsigned int version);
-void writeBinPlayer(const std::string&, SavePlayer& sp);
+void createNewWorld(const std::string&, unsigned int version, SavePlayer& sp);
+void writeBinaryPlayer(const std::string&, SavePlayer& sp);
 SavePlayer readbinaryPlayer(const std::string& path);
 
 struct WorldInfo {
