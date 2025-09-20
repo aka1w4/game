@@ -27,6 +27,7 @@ class World {
   private:
     std::unique_ptr<Player> player;
     std::string path;
+    Camera2D cam;
     std::chrono::time_point<std::chrono::steady_clock> lastSave;
 
   public:

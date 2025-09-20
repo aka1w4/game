@@ -16,6 +16,10 @@ SavePlayer Player::GetPlayer() {
   return SavePlayer{pos, f, facingright};
 }
 
+const Vector2& Player::GetPlayerpos() {
+  return pos;
+}
+
 void Player::Move(float dx, float dy, Focus df, bool right) {
   if (dx != 0 || dy != 0) {
     if (ms == isIdle) {
@@ -33,13 +37,13 @@ void Player::Move(float dx, float dy, Focus df, bool right) {
 
 void Player::Update() {
   count++;
-  if (IsKeyDown(KEY_W)) {
+  if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
     Move(0, -5, Up, false);
-  } else if (IsKeyDown(KEY_S)) {
+  } else if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
     Move(0, 5, Down, false);
-  } else if (IsKeyDown(KEY_D)) {
+  } else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
     Move(5, 0, Left, true);
-  } else if (IsKeyDown(KEY_A)) {
+  } else if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
     Move(-5, 0, Left, false);
   } else {
     ms = isIdle;

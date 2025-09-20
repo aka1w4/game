@@ -51,6 +51,7 @@ void NewWorld::ClearText() {
 World::World(SavePlayer sp, const std::string& path) : path(path){
   player = std::make_unique<Player>(sp.pos, sp.f, sp.facingright);
   lastSave = std::chrono::steady_clock::now();
+  cam = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 1.0f};
 }
 
 World::~World() {
@@ -59,6 +60,7 @@ World::~World() {
 
 void World::Update(bool& pauseGame) {
   auto now = std::chrono::steady_clock::now();
+  cam.target = player->GetPlayerpos();
   if (!pauseGame) player->Update();
   if (std::chrono::duration_cast<std::chrono::minutes>(now - lastSave).count() >= 5) {
     WriteWorld();
@@ -67,7 +69,9 @@ void World::Update(bool& pauseGame) {
 }
 
 void World::Draw() {
-  player->Draw();
+  BeginMode2D(cam);
+    player->Draw();
+  EndMode2D();
 }
 
 void World::WriteWorld() {
