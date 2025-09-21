@@ -40,6 +40,7 @@ class Game {
     void Update();
     void Drawing();
     void Run();
+    void CreateButtonReadWorld();
 };
 
 #endif // !GAME

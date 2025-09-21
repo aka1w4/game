@@ -14,17 +14,8 @@ Game::Game() :
   inputTextTexture(LoadTexture("assets/inputtext.png")),
   startButton(std::make_unique<Button>(0, 0, 183, 29, 40, "start", buttonTexture, [this]()
         {
+        CreateButtonReadWorld();
         gs = WorldListState;
-        ws.readLevelWorld();
-        int y = -120;
-        for (const auto& d : ws.datas) {
-        y += 60;
-        wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, d, [this](const WorldInfo& wi) {
-              SavePlayer sp = readbinaryPlayer(wi.path);
-              world = std::make_unique<World>(sp, wi.path);
-              gs = PlayState;
-              }));
-        }
         })),
   closeButton(std::make_unique<Button>(0, 60, 183, 29, 40, "close", buttonTexture, [this]()
         {
@@ -36,7 +27,7 @@ Game::Game() :
         world->WriteWorld();
         world.reset();
         }
-        gs = MenuState;
+        gs = WorldListState;
         pauseGame = false;
         })),
   resumeButton(std::make_unique<Button>(0, 0, 183, 29, 40, "resume", buttonTexture,[this]()
@@ -49,6 +40,7 @@ Game::Game() :
         gs = MenuState;
         } else if (gs == CreateWorldState) {
         newworld->ClearText();
+        CreateButtonReadWorld();
         gs = WorldListState;
         }
         })),
@@ -161,5 +153,19 @@ void Game::Run() {
   while (!quit && !WindowShouldClose()) {
     Update();
     Drawing();
+  }
+}
+
+void Game::CreateButtonReadWorld() {
+  wbs.clear();
+  ws.readLevelWorld();
+  int y = -120;
+  for (const auto& d : ws.datas) {
+    y += 60;
+    wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, d, [this](const WorldInfo& wi) {
+          SavePlayer sp = readbinaryPlayer(wi.path);
+          world = std::make_unique<World>(sp, wi.path);
+          gs = PlayState;
+          }));
   }
 }
