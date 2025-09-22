@@ -83,10 +83,12 @@ void Map::Draw() {
             int tileX = (tileId - 1) % tm.columns;
             int tileY = (tileId - 1) / tm.columns;
 
+            Rectangle src = Rectangle{(float)tileX * tm.tilewidth, (float)tileY * tm.tileheight, (float)tm.tilewidth, (float)tm.tileheight};
+            Vector2 pos = Vector2{(float)x * tm.tilewidth, (float)y * tm.tileheight};
             DrawTextureRec(
                 tm.image, 
-                Rectangle{(float)tileX * tm.tilewidth, (float)tileY * tm.tileheight, (float)tm.tilewidth, (float)tm.tileheight},
-                Vector2{(float)x * tm.tilewidth, (float)y * tm.tileheight},
+                src,
+                pos, 
                 WHITE);
           } 
         }
