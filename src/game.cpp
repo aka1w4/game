@@ -27,6 +27,7 @@ Game::Game() :
         world->WriteWorld();
         world.reset();
         }
+        CreateButtonReadWorld();
         gs = WorldListState;
         pauseGame = false;
         })),
