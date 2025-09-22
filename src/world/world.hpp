@@ -4,6 +4,7 @@
 #include "../ui/textinput.hpp"
 #include "../ui/button.hpp"
 #include "../player/player.hpp"
+#include "map.hpp"
 #include <memory>
 #include <chrono>
 #include <raylib.h>
@@ -28,6 +29,7 @@ class World {
     std::unique_ptr<Player> player;
     std::string path;
     Camera2D cam;
+    std::unique_ptr<Map> m;
     std::chrono::time_point<std::chrono::steady_clock> lastSave;
 
   public:

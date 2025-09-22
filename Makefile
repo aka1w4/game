@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -Werror -std=c++17 -I./src #-fsanitize=address,undefined -fno-omit-frame-pointer -g
-SRC = src/main.cpp src/player/player.cpp src/ui/button.cpp src/ui/textinput.cpp src/world/world.cpp src/db/db.cpp src/game.cpp
+CXXFLAGS = -Werror -std=c++17 -I./src -I./inlcude/ #-fsanitize=address,undefined -fno-omit-frame-pointer -g
+SRC = src/main.cpp src/player/player.cpp src/ui/button.cpp src/ui/textinput.cpp src/world/world.cpp src/world/map.cpp src/db/db.cpp src/game.cpp
 OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
 LIBS = -lraylib -lm -ldl -lpthread -lGL -lrt -lX11
 OUTPUT_DIR = build

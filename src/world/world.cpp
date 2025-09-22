@@ -1,4 +1,5 @@
 #include "world.hpp"
+//#include "map.hpp"
 #include "../ui/button.hpp"
 #include "../ui/textinput.hpp"
 #include "../db/db.hpp"
@@ -48,10 +49,14 @@ void NewWorld::ClearText() {
   textinput_name->ClearText();
 }
 
-World::World(SavePlayer sp, const std::string& path) : path(path){
+World::World(SavePlayer sp, const std::string& path) : 
+  path(path)
+{
+  m = std::make_unique<Map>("assets/map/map.json");
   player = std::make_unique<Player>(sp.pos, sp.f, sp.facingright);
   lastSave = std::chrono::steady_clock::now();
   cam = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 1.0f};
+  m->LoadResources();
 }
 
 World::~World() {
@@ -70,6 +75,8 @@ void World::Update(bool& pauseGame) {
 
 void World::Draw() {
   BeginMode2D(cam);
+    //DrawRectangle(100, 100, 100, 100, BLACK);
+    m->Draw();
     player->Draw();
   EndMode2D();
 }
