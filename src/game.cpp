@@ -49,9 +49,9 @@ Game::Game() :
         {
         gs = CreateWorldState;
         })),
-  newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture, [this](const SavePlayer& sp, const std::string& text)
+  newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture, [this](SavePlayer& sp, const std::string& text)
         {
-        world = std::make_unique<World>(sp, std::string(WORLD_NAME) + "/" +text);
+        world = std::make_unique<World>(sp, std::string(WORLD_NAME) + "/" + text);
         gs = PlayState;
         })) {}
 

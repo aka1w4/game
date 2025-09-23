@@ -1,10 +1,7 @@
 #include "player.hpp"
 #include <raylib.h>
 
-Player::Player(Vector2 pos, Focus f, bool facingright) : pos(pos), f(f), facingright(facingright) {
-  img[0] = LoadTexture("assets/16x32idle.png");
-  img[1] = LoadTexture("assets/16x32walk.png");
-}
+Player::Player(Vector2 pos, Focus f, bool facingright) : pos(pos), f(f), facingright(facingright) {}
 
 Player::~Player() {
   for (auto &i : img) {
@@ -62,4 +59,9 @@ void Player::Draw() {
    Vector2 origin = Vector2{0,0};
 
    DrawTexturePro(img[ms], src, dst, origin, 0.0f, WHITE);
+}
+
+void Player::LoadResourcesPlayer() {
+  img[0] = LoadTexture("assets/16x32idle.png");
+  img[1] = LoadTexture("assets/16x32walk.png");
 }

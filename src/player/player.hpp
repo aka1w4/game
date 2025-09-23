@@ -41,6 +41,7 @@ class Player {
     void Move(float dx, float dy, Focus df, bool right);
     SavePlayer GetPlayer();
     const Vector2& GetPlayerpos();
+    void LoadResourcesPlayer();
 };
 
 #endif // !PLAYER

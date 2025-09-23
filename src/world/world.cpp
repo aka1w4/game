@@ -1,15 +1,17 @@
 #include "world.hpp"
-//#include "map.hpp"
+#include "map.hpp"
 #include "../ui/button.hpp"
 #include "../ui/textinput.hpp"
 #include "../db/db.hpp"
 #include "../player/player.hpp"
+#include <functional>
 #include <memory>
 #include <raylib.h>
 #include <filesystem>
 #include <chrono>
+#include <thread>
 
-NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(const SavePlayer&, const std::string&)> play) : 
+NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(SavePlayer&, const std::string&)> play) : 
   play(play),
   textinput_name(std::make_unique<Textinput>(240, 60, 183, 29, 40, inputT)), 
   submit(std::make_unique<Button>(240,120, 183, 29, 40, "submit", buttonT, [this]()
@@ -49,14 +51,23 @@ void NewWorld::ClearText() {
   textinput_name->ClearText();
 }
 
-World::World(SavePlayer sp, const std::string& path) : 
+World::World(SavePlayer& sp, const std::string& path) : 
   path(path)
 {
-  m = std::make_unique<Map>("assets/map/map.json");
-  player = std::make_unique<Player>(sp.pos, sp.f, sp.facingright);
+  std::thread loadmap([this]() {
+       m = std::make_unique<Map>("assets/map/map.json");
+  });
+
+  std::thread loadplayer([this](SavePlayer& sp) {
+      player = std::make_unique<Player>(sp.pos, sp.f, sp.facingright);
+      cam = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 1.0f};
+  }, std::ref(sp));
+
+  loadplayer.join();
+  loadmap.join();
   lastSave = std::chrono::steady_clock::now();
-  cam = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 1.0f};
   m->LoadResources();
+  player->LoadResourcesPlayer();
 }
 
 World::~World() {
