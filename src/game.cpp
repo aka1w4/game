@@ -12,16 +12,16 @@ const int scroll = 10;
 Game::Game() : 
   buttonTexture(LoadTexture("assets/button.png")),
   inputTextTexture(LoadTexture("assets/inputtext.png")),
-  startButton(std::make_unique<Button>(0, 0, 183, 29, 40, "start", buttonTexture, [this]()
+  startButton(Button(0, 0, 183, 29, 40, "start", buttonTexture, [this]()
         {
         CreateButtonReadWorld();
         gs = WorldListState;
         })),
-  closeButton(std::make_unique<Button>(0, 60, 183, 29, 40, "close", buttonTexture, [this]()
+  closeButton(Button(0, 60, 183, 29, 40, "close", buttonTexture, [this]()
         {
         quit = true;
         })), 
-  exitButton(std::make_unique<Button>(0, 60, 183, 29, 40, "exit",  buttonTexture, [this]()
+  exitButton(Button(0, 60, 183, 29, 40, "exit",  buttonTexture, [this]()
         {
         if (world) {
         world->WriteWorld();
@@ -31,11 +31,11 @@ Game::Game() :
         gs = WorldListState;
         pauseGame = false;
         })),
-  resumeButton(std::make_unique<Button>(0, 0, 183, 29, 40, "resume", buttonTexture,[this]()
+  resumeButton(Button(0, 0, 183, 29, 40, "resume", buttonTexture,[this]()
         {
         pauseGame = false;        
         })),
-  BackButton(std::make_unique<Button>(240, -240, 183, 29, 40, "back", buttonTexture,[this]()
+  BackButton(Button(240, -240, 183, 29, 40, "back", buttonTexture,[this]()
         {
         if (gs == WorldListState) {
         gs = MenuState;
@@ -45,7 +45,7 @@ Game::Game() :
         gs = WorldListState;
         }
         })),
-  NewWorldButton(std::make_unique<Button>(-240, -240, 183, 29, 40, "new world", buttonTexture,[this]()
+  NewWorldButton(Button(-240, -240, 183, 29, 40, "new world", buttonTexture,[this]()
         {
         gs = CreateWorldState;
         })),
@@ -71,22 +71,22 @@ void Game::Update() {
         if(world) world->Update(pauseGame);
 
         if (pauseGame) {
-          if (resumeButton->isClicked()) {
-            resumeButton->Action();
+          if (resumeButton.isClicked()) {
+            resumeButton.Action();
           }
-          if (exitButton->isClicked()) {
-            exitButton->Action();
+          if (exitButton.isClicked()) {
+            exitButton.Action();
           }
         }
       }
       break;
     case MenuState:
-      if (startButton->isClicked()) {
-        startButton->Action();
+      if (startButton.isClicked()) {
+        startButton.Action();
       }
 
-      if (closeButton->isClicked()) {
-        closeButton->Action();
+      if (closeButton.isClicked()) {
+        closeButton.Action();
       }
       break;
     case WorldListState:
@@ -95,20 +95,20 @@ void Game::Update() {
           wb->Action();
         }
       }
-      if (NewWorldButton->isClicked()) {
-        NewWorldButton->Action();
+      if (NewWorldButton.isClicked()) {
+        NewWorldButton.Action();
       }
 
-      if (BackButton->isClicked()) {
-        BackButton->Action();
+      if (BackButton.isClicked()) {
+        BackButton.Action();
       }
       break;
     case CreateWorldState:
 
       newworld->Update();
 
-      if (BackButton->isClicked()) {
-        BackButton->Action();
+      if (BackButton.isClicked()) {
+        BackButton.Action();
       }
       break;
   }
@@ -121,13 +121,13 @@ void Game::Drawing() {
     case PlayState:
       if (world) world->Draw();
       if (pauseGame) {
-        resumeButton->Draw();
-        exitButton->Draw();
+        resumeButton.Draw();
+        exitButton.Draw();
       }
       break;
     case MenuState:
-      startButton->Draw();
-      closeButton->Draw();
+      startButton.Draw();
+      closeButton.Draw();
       break;
     case WorldListState:
       scrollofset -= (int)GetMouseWheelMove() * scroll;
@@ -139,12 +139,12 @@ void Game::Drawing() {
       for (auto &wb : wbs) {
         wb->Draw(scrollofset);
       }
-      NewWorldButton->Draw();
-      BackButton->Draw();
+      NewWorldButton.Draw();
+      BackButton.Draw();
       break;
     case CreateWorldState:
       newworld->Draw();
-      BackButton->Draw();
+      BackButton.Draw();
       break;
   }
   EndDrawing();

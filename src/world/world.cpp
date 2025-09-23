@@ -58,10 +58,10 @@ World::World(SavePlayer& sp, const std::string& path) :
        m = std::make_unique<Map>("assets/map/map.json");
   });
 
-  std::thread loadplayer([this](SavePlayer& sp) {
+  std::thread loadplayer([this, sp]() {
       player = std::make_unique<Player>(sp.pos, sp.f, sp.facingright);
       cam = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 1.0f};
-  }, std::ref(sp));
+  });
 
   loadplayer.join();
   loadmap.join();
