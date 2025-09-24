@@ -55,7 +55,7 @@ void Player::Draw() {
     frameWidth = 16;
   }
    Rectangle src = Rectangle{(float)x0, (float)frameHeight*f, (float)frameWidth, (float)frameHeight};
-   Rectangle dst = Rectangle{pos.x, pos.y, (float)frameWidth*2, (float)frameHeight*2};
+   dst = Rectangle{pos.x, pos.y, (float)frameWidth*2, (float)frameHeight*2};
    Vector2 origin = Vector2{0,0};
 
    DrawTexturePro(img[ms], src, dst, origin, 0.0f, WHITE);
@@ -64,4 +64,8 @@ void Player::Draw() {
 void Player::LoadResourcesPlayer() {
   img[0] = LoadTexture("assets/16x32idle.png");
   img[1] = LoadTexture("assets/16x32walk.png");
+}
+
+const Rectangle& Player::GetRec() {
+  return dst;
 }

@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(SavePlayer&, const std::string&)> play) : 
   play(play),
@@ -78,6 +79,12 @@ void World::Update(bool& pauseGame) {
   auto now = std::chrono::steady_clock::now();
   cam.target = player->GetPlayerpos();
   if (!pauseGame) player->Update();
+
+  for (const auto &c : m->collisions) {
+    if (CheckCollisionRecs(player->GetRec(), c.box)) {
+      std::cout << "tabrak" << std::endl;
+    }
+  }
   if (std::chrono::duration_cast<std::chrono::minutes>(now - lastSave).count() >= 5) {
     WriteWorld();
     lastSave = now;
