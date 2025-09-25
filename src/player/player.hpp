@@ -24,7 +24,6 @@ struct SavePlayer {
 class Player {
   private:
     Vector2 pos;
-    Rectangle dst;
     std::array<Texture2D, 2> img;
     unsigned int count;
     Focus f = Down;
@@ -42,8 +41,9 @@ class Player {
     void Move(float dx, float dy, Focus df, bool right);
     SavePlayer GetPlayer();
     const Vector2& GetPlayerpos();
-    const Rectangle& GetRec();
+    const Rectangle GetRec();
     void LoadResourcesPlayer();
+    void UpdatePos(Vector2 posNew);
 };
 
 #endif // !PLAYER

@@ -77,14 +77,31 @@ World::~World() {
 
 void World::Update(bool& pauseGame) {
   auto now = std::chrono::steady_clock::now();
-  cam.target = player->GetPlayerpos();
-  if (!pauseGame) player->Update();
 
+  Rectangle oldPos = player->GetRec();
+  if (!pauseGame) player->Update();
+  Rectangle newPos = player->GetRec();
+
+  std::cout << "old pos x: " << oldPos.x << " y: " << oldPos.y << std::endl;
+  Rectangle recX = oldPos;
+  recX.x = newPos.x;
   for (const auto &c : m->collisions) {
-    if (CheckCollisionRecs(player->GetRec(), c.box)) {
-      std::cout << "tabrak" << std::endl;
+    if (CheckCollisionRecs(recX, c.box)) {
+      newPos.x = oldPos.x;
     }
   }
+
+  Rectangle recY = oldPos;
+  recY.y = newPos.y;
+  for (const auto &c : m->collisions) {
+    if (CheckCollisionRecs(recY, c.box)) {
+      newPos.y = oldPos.y;
+    }
+  }
+  std::cout << "new pos x: " << newPos.x << " y: " << newPos.y << std::endl;
+
+  player->UpdatePos(Vector2{newPos.x, newPos.y});
+  cam.target = Vector2{newPos.x, newPos.y};
   if (std::chrono::duration_cast<std::chrono::minutes>(now - lastSave).count() >= 5) {
     WriteWorld();
     lastSave = now;
