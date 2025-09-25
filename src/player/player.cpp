@@ -56,7 +56,7 @@ void Player::Draw() {
     frameWidth = 16;
   }
    Rectangle src = Rectangle{(float)x0, (float)frameHeight*f, (float)frameWidth, (float)frameHeight};
-   Rectangle dst = Rectangle{pos.x, pos.y, (float)frameWidth*2, (float)frameHeight*2};
+   Rectangle dst = Rectangle{pos.x, pos.y, (float)frameWidth, (float)frameHeight};
    Vector2 origin = Vector2{0,0};
 
    DrawTexturePro(img[ms], src, dst, origin, 0.0f, WHITE);
@@ -71,8 +71,8 @@ const Rectangle Player::GetRec() {
   return Rectangle{
     pos.x,
     pos.y, 
-    (float)std::abs(frameWidth)*2,
-    (float)frameHeight*2,
+    (float)std::abs(frameWidth),
+    (float)frameHeight,
   };
 }
 

@@ -10,7 +10,6 @@
 #include <filesystem>
 #include <chrono>
 #include <thread>
-#include <iostream>
 
 NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(SavePlayer&, const std::string&)> play) : 
   play(play),
@@ -61,7 +60,7 @@ World::World(SavePlayer& sp, const std::string& path) :
 
   std::thread loadplayer([this, sp]() {
       player = std::make_unique<Player>(sp.pos, sp.f, sp.facingright);
-      cam = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 1.0f};
+      cam = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 2.0f};
   });
 
   loadplayer.join();
@@ -82,12 +81,12 @@ void World::Update(bool& pauseGame) {
   if (!pauseGame) player->Update();
   Rectangle newPos = player->GetRec();
 
-  std::cout << "old pos x: " << oldPos.x << " y: " << oldPos.y << std::endl;
   Rectangle recX = oldPos;
   recX.x = newPos.x;
   for (const auto &c : m->collisions) {
     if (CheckCollisionRecs(recX, c.box)) {
       newPos.x = oldPos.x;
+      break;
     }
   }
 
@@ -96,9 +95,9 @@ void World::Update(bool& pauseGame) {
   for (const auto &c : m->collisions) {
     if (CheckCollisionRecs(recY, c.box)) {
       newPos.y = oldPos.y;
+      break;
     }
   }
-  std::cout << "new pos x: " << newPos.x << " y: " << newPos.y << std::endl;
 
   player->UpdatePos(Vector2{newPos.x, newPos.y});
   cam.target = Vector2{newPos.x, newPos.y};
