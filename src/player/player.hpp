@@ -6,8 +6,10 @@
 
 enum Focus {
   Down,
-  Left = 2, 
-  Up = 4,
+  DownLeft,
+  Left,
+  UpLeft,
+  Up,
 };
 
 enum MoveState {

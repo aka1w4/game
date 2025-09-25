@@ -26,12 +26,7 @@ class Game {
     readWorldlist ws;
     int scrollofset = 0;
     std::vector<std::unique_ptr<WorldButton>> wbs;
-    Button startButton;
-    Button closeButton;
-    Button exitButton;
-    Button resumeButton;
-    Button BackButton;
-    Button NewWorldButton;
+    Button startButton, closeButton, exitButton, resumeButton, BackButton, NewWorldButton;
     std::unique_ptr<NewWorld> newworld;
 
   public:

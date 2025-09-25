@@ -35,14 +35,66 @@ void Player::Move(float dx, float dy, Focus df, bool right) {
 
 void Player::Update() {
   count++;
+  Focus fd;
+  bool frd = false;
+  float dx, dy;
   if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
-    Move(0, -5, Up, false);
+    dy = -2;
+    if (IsKeyDown(KEY_A)) {
+      fd = UpLeft;
+      dx = -2;
+    } else if (IsKeyDown(KEY_D)) {
+      fd = UpLeft;
+      frd = true;
+      dx = 2;
+    } else {
+      fd = Up;
+      dx = 0;
+    }
+    Move(dx, dy, fd, frd);
   } else if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
-    Move(0, 5, Down, false);
+    dy = 2;
+    if (IsKeyDown(KEY_A)) {
+      fd = DownLeft;
+      dx = -2;
+    } else if (IsKeyDown(KEY_D)) {
+      fd = DownLeft;
+      frd = true;
+      dx = 2;
+    } else {
+      fd = Down;
+      dx = 0;
+    }
+    Move(dx, dy, fd, frd);
   } else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
-    Move(5, 0, Left, true);
+    dx = 2;
+    if (IsKeyDown(KEY_W)) {
+      fd = UpLeft;
+      frd = true;
+      dy = -2;
+    } else if (IsKeyDown(KEY_S)) {
+      fd = DownLeft;
+      frd = true;
+      dy = 2;
+    } else {
+      fd = Left;
+      frd = true;
+      dy = 0;
+    }
+    Move(dx, dy, fd, frd);
   } else if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
-    Move(-5, 0, Left, false);
+    dx = -2;
+    if (IsKeyDown(KEY_W)) {
+      fd = UpLeft;
+      dy = -2;
+    } else if (IsKeyDown(KEY_S)) {
+      fd = DownLeft;
+      dy = 2;
+    } else {
+      fd = Left;
+      dy = 0;
+    }
+    Move(dx, dy, Left, frd);
   } else {
     ms = isIdle;
   }
