@@ -1,5 +1,5 @@
-#ifndef DB
-#define DB
+#ifndef GAME_DB
+#define GAME_DB
 
 #include <string>
 #include <vector>
@@ -21,4 +21,4 @@ struct readWorldlist {
   void readLevelWorld();
 }; 
 
-#endif // !DB
+#endif // !GAME_DB

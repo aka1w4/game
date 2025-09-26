@@ -1,13 +1,16 @@
 #include "db.hpp"
+#include <cstring>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <filesystem>
+#include "../../inlcude/leveldb/db.h"
 
 void createNewWorld(const std::string& name, unsigned int version, SavePlayer& sp) {
   std::filesystem::create_directories(std::string(WORLD_NAME) + name);
   std::ofstream levelfile(std::string(WORLD_NAME) + name + "/level.dat", std::ios::binary);
   if (!levelfile) {
-    throw std::runtime_error("gagal menulis level.dat");
+    std::cerr << "gagal membuat level.dat" << std::endl;
   }
   uint32_t len = static_cast<uint32_t>(name.size());
   levelfile.write(reinterpret_cast<char*>(&len), sizeof(len));
@@ -15,18 +18,23 @@ void createNewWorld(const std::string& name, unsigned int version, SavePlayer& s
   levelfile.write(reinterpret_cast<char*>(&version), sizeof(version));
   levelfile.close();
 
-  std::filesystem::create_directories(std::string(WORLD_NAME) + name + "/db");
-  std::ofstream dbfile(std::string(WORLD_NAME) + name + "/db/db.bin", std::ios::binary);
-  if (!dbfile) {
-     throw std::runtime_error("gagal menulis db file");
+  leveldb::DB* db;
+  leveldb::Options options;
+  options.create_if_missing = true;
+  leveldb::Status status = leveldb::DB::Open(options, std::string(WORLD_NAME) + name + "/db", &db);
+  if (!status.ok()) {
+    std::cerr << "gagal membuat db: " << status.ToString() << std::endl; 
   }
-  dbfile.write(reinterpret_cast<char*>(&sp.pos), sizeof(sp.pos));
-  dbfile.write(reinterpret_cast<char*>(&sp.f), sizeof(sp.f));
-  dbfile.write(reinterpret_cast<char*>(&sp.facingright), sizeof(sp.facingright));
-  dbfile.close();
+
+  status = db->Put(leveldb::WriteOptions(), "player", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
+  if (!status.ok()) {
+    std::cerr << "menyimpan player: " << status.ToString() << std::endl; 
+  }
+
+  delete db;
 }
 
- void readWorldlist::readLevelWorld() {
+void readWorldlist::readLevelWorld() {
   datas.clear();
 
   if (std::filesystem::exists(WORLD_NAME) && std::filesystem::is_directory(WORLD_NAME)) {
@@ -36,7 +44,7 @@ void createNewWorld(const std::string& name, unsigned int version, SavePlayer& s
           if (std::filesystem::is_regular_file(fileEntry) && fileEntry.path().filename() == "level.dat") {
             std::ifstream in(fileEntry.path().string(), std::ios::binary);
             if (!in) {
-              throw std::runtime_error("gagal membaca");
+              std::cerr << "gagal membaca" << std::endl;
             }
             uint32_t len;
             in.read(reinterpret_cast<char*>(&len), sizeof(len));
@@ -56,26 +64,39 @@ void createNewWorld(const std::string& name, unsigned int version, SavePlayer& s
 }
 
 SavePlayer readbinaryPlayer(const std::string& path) {
-  SavePlayer ps;
-  std::ifstream in(std::string(path) + "/db/db.bin", std::ios::binary);
-  if (!in) {
-     throw std::runtime_error("gagal membaca");
+  leveldb::DB* db;
+  leveldb::Options options;
+  leveldb::Status status = leveldb::DB::Open(options, std::string(path) + "/db", &db);
+  if (!status.ok()) {
+    std::cerr << "Gagal buka DB untuk read: " << status.ToString() << std::endl;
   }
-  in.read(reinterpret_cast<char*>(&ps.pos), sizeof(ps.pos));
-  in.read(reinterpret_cast<char*>(&ps.f), sizeof(ps.f));
-  in.read(reinterpret_cast<char*>(&ps.facingright), sizeof(ps.facingright));
-  in.close();
 
-  return ps;
+  std::string value;
+  status = db->Get(leveldb::ReadOptions(), "player", &value);
+  if (!status.ok()) {
+    std::cerr << "gagal membaca player: " << status.ToString() << std::endl;
+  }
+  SavePlayer sp;
+  if (value.size() == sizeof(sp)) {
+    memcpy(&sp, value.data(), sizeof(sp));
+  }
+
+  delete db;
+  return sp;
 }
 
 void writeBinaryPlayer(const std::string& path, SavePlayer& sp) {
-  std::ofstream out(path + "/db/db.bin", std::ios::binary);
-  if (!out) {
-     throw std::runtime_error("gagal simpan");
+  leveldb::DB* db;
+  leveldb::Options options;
+  leveldb::Status status = leveldb::DB::Open(options, std::string(path) + "/db", &db);
+  if (!status.ok()) {
+    std::cerr << "Gagal buka DB untuk write: " << status.ToString() << std::endl;
   }
-  out.write(reinterpret_cast<char*>(&sp.pos), sizeof(sp.pos));
-  out.write(reinterpret_cast<char*>(&sp.f), sizeof(sp.f));
-  out.write(reinterpret_cast<char*>(&sp.facingright), sizeof(sp.facingright));
-  out.close();
+
+  status = db->Put(leveldb::WriteOptions(), "player", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
+  if (!status.ok()) {
+    std::cerr << "menyimpan player: " << status.ToString() << std::endl; 
+  }
+
+  delete db;
 }

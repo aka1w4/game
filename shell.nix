@@ -4,6 +4,8 @@ pkgs.mkShell {
     pkgs.gcc
     pkgs.pkg-config
     pkgs.raylib
+    pkgs.leveldb
+    pkgs.leveldb.dev
   ];
 
   shellHook = ''
