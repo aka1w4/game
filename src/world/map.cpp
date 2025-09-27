@@ -13,10 +13,6 @@ Map::Map(const std::string& pathmap) {
   nlohmann::json j;
   file >> j;
 
-  /*l.datas = j["layers"].get<std::vector<Layer>>["data"].get<std::vector<int>>();
-  l.id = j["layers"][0]["id"];
-  l.width = j["layers"][0]["width"];
-  l.height = j["layers"][0]["height"]; */
   for (auto& jl : j["layers"]) {
     Layer l;
     l.id = jl["id"];
@@ -26,13 +22,6 @@ Map::Map(const std::string& pathmap) {
     l.datas = jl["data"].get<std::vector<int>>();
     ls.push_back(l);
   }
-
-  /*tm.columns = j["tilesets"][0]["columns"];
-  tm.firstgid = j["tilesets"][0]["firstgid"];
-  tm.pathimage = j["tilesets"][0]["image"];
-  tm.tilecount = j["tilesets"][0]["tilecount"];
-  tm.tilewidth = j["tilesets"][0]["tilewidth"];
-  tm.tileheight = j["tilesets"][0]["tileheight"]; */
 
   for (auto& jtm : j["tilesets"]) {
     Tilemap tm;

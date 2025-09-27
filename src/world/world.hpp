@@ -18,7 +18,7 @@ class NewWorld {
     std::function<void(SavePlayer&, const std::string&)> play;
 
   public:
-    NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(SavePlayer&, const std::string&)> play);
+    NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(SavePlayer&, const std::string&)> p);
     void Draw();
     void Update();
     void ClearText();
