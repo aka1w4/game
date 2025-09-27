@@ -2,6 +2,8 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <leveldb/status.h>
+#include <memory>
 #include <string>
 #include <filesystem>
 #include "../../inlcude/leveldb/db.h"
@@ -85,18 +87,20 @@ SavePlayer readbinaryPlayer(const std::string& path) {
   return sp;
 }
 
-void writeBinaryPlayer(const std::string& path, SavePlayer& sp) {
-  leveldb::DB* db;
+WriteBinary::WriteBinary(const std::string& path) : path(path) {
   leveldb::Options options;
-  leveldb::Status status = leveldb::DB::Open(options, std::string(path) + "/db", &db);
+  leveldb::DB* raw_db = nullptr;
+  leveldb::Status status = leveldb::DB::Open(options, std::string(path) + "/db", &raw_db);
   if (!status.ok()) {
     std::cerr << "Gagal buka DB untuk write: " << status.ToString() << std::endl;
   }
 
-  status = db->Put(leveldb::WriteOptions(), "player", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
+  dbs.reset(raw_db);
+}
+
+void WriteBinary::writeBinaryPlayer(SavePlayer& sp) {
+  leveldb::Status status = dbs->Put(leveldb::WriteOptions(), "player", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
   if (!status.ok()) {
     std::cerr << "menyimpan player: " << status.ToString() << std::endl; 
   }
-
-  delete db;
 }

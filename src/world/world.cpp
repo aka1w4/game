@@ -52,7 +52,7 @@ void NewWorld::ClearText() {
 }
 
 World::World(SavePlayer& sp, const std::string& path) : 
-  path(path)
+  wb(path)
 {
   std::thread loadmap([this]() {
        m = std::make_unique<Map>("assets/map/map.json");
@@ -117,5 +117,5 @@ void World::Draw() {
 
 void World::WriteWorld() {
   SavePlayer sp = player->GetPlayer();
-  writeBinaryPlayer(path, sp);
+  wb.writeBinaryPlayer(sp);
 }
