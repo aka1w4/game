@@ -3,15 +3,17 @@
 #include <string>
 #include "db/db.hpp"
 #include "player/player.hpp"
+#include "ui/background.hpp"
 #include "ui/button.hpp"
 #include "world/world.hpp"
 #include "game.hpp"
 
-const int scroll = 10;
-
 Game::Game() : 
   buttonTexture(LoadTexture("assets/button.png")),
   inputTextTexture(LoadTexture("assets/inputtext.png")),
+  b1(800, 800, false, Down, isIdle, Vector2{0, 0}, true),
+  b2(-10, -10, true, Left, isWalk, Vector2{50, 50}, true),
+  b3(500, -10, true, Up, isWalk, Vector2{0, 0}, false),
   startButton(Button(0, 0, 183, 29, 40, "start", buttonTexture, [this]()
         {
         CreateButtonReadWorld();
@@ -81,6 +83,9 @@ void Game::Update() {
       }
       break;
     case MenuState:
+      b1.Update();
+      b2.Update();
+      b3.Update();
       if (startButton.isClicked()) {
         startButton.Action();
       }
@@ -126,15 +131,18 @@ void Game::Drawing() {
       }
       break;
     case MenuState:
+      b1.Draw();
+      b2.Draw();
+      b3.Draw();
       startButton.Draw();
       closeButton.Draw();
       break;
     case WorldListState:
-      scrollofset -= (int)GetMouseWheelMove() * scroll;
+      scrollofset -= (int)GetMouseWheelMove() * 10;
       if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) {
-        scrollofset -= scroll;
+        scrollofset -= 10;
       } else if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) {
-        scrollofset += scroll;
+        scrollofset += 10;
       }
       for (auto &wb : wbs) {
         wb->Draw(scrollofset);
@@ -167,6 +175,6 @@ void Game::CreateButtonReadWorld() {
           SavePlayer sp = readbinaryPlayer(wi.path);
           world = std::make_unique<World>(sp, wi.path);
           gs = PlayState;
-          }));
+    }));
   }
 }

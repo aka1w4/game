@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <memory>
 #include <vector>
+#include "ui/background.hpp"
 #include "ui/button.hpp"
 #include "db/db.hpp"
 #include "world/world.hpp"
@@ -22,6 +23,7 @@ class Game {
     std::unique_ptr<World> world = nullptr;
     Texture2D buttonTexture;
     Texture2D inputTextTexture;
+    Background b1, b2, b3;
     bool pauseGame = false;
     readWorldlist ws;
     int scrollofset = 0;
