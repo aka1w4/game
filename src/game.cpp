@@ -3,7 +3,6 @@
 #include <string>
 #include "db/db.hpp"
 #include "player/player.hpp"
-#include "ui/background.hpp"
 #include "ui/button.hpp"
 #include "world/world.hpp"
 #include "game.hpp"
@@ -11,9 +10,6 @@
 Game::Game() : 
   buttonTexture(LoadTexture("assets/button.png")),
   inputTextTexture(LoadTexture("assets/inputtext.png")),
-  b1(800, 800, false, Down, isIdle, Vector2{0, 0}, true),
-  b2(-10, -10, true, Left, isWalk, Vector2{50, 50}, true),
-  b3(500, -10, true, Up, isWalk, Vector2{0, 0}, false),
   startButton(Button(0, 0, 183, 29, 40, "start", buttonTexture, [this]()
         {
         CreateButtonReadWorld();
@@ -53,13 +49,16 @@ Game::Game() :
         })),
   newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture, [this](SavePlayer& sp, const std::string& text)
         {
-        world = std::make_unique<World>(sp, std::string(WORLD_NAME) + text);
+        world = std::make_unique<World>(sp, std::string(WORLD_NAME) + text, playerTextures);
         gs = PlayState;
         })) {}
 
 Game::~Game() {
   UnloadTexture(buttonTexture);
   UnloadTexture(inputTextTexture);
+  for (auto &p : playerTextures) {
+    UnloadTexture(p);
+  }
 }
 
 void Game::Update() { 
@@ -83,9 +82,9 @@ void Game::Update() {
       }
       break;
     case MenuState:
-      b1.Update();
-      b2.Update();
-      b3.Update();
+      for (auto &b : bs) {
+        b.Update();
+      }
       if (startButton.isClicked()) {
         startButton.Action();
       }
@@ -131,9 +130,9 @@ void Game::Drawing() {
       }
       break;
     case MenuState:
-      b1.Draw();
-      b2.Draw();
-      b3.Draw();
+      for (auto &b : bs) {
+        b.Draw();
+      }
       startButton.Draw();
       closeButton.Draw();
       break;
@@ -173,7 +172,7 @@ void Game::CreateButtonReadWorld() {
     y += 60;
     wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, d, [this](const WorldInfo& wi) {
           SavePlayer sp = readbinaryPlayer(wi.path);
-          world = std::make_unique<World>(sp, wi.path);
+          world = std::make_unique<World>(sp, wi.path, playerTextures);
           gs = PlayState;
     }));
   }

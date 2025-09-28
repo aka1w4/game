@@ -2,16 +2,7 @@
 #include "background.hpp"
 #include "../player/player.hpp"
 
-Background::Background(int x, int y, bool sum, Focus f, MoveState ms, Vector2 origin, bool rotation) : x(x), y(y), sum(sum), pos(Vector2{(float)x, (float)y}), f(f), ms(ms), origin(origin), rotation(rotation) {
-  imgs[0] = LoadTexture("assets/16x32idle.png");
-  imgs[1] = LoadTexture("assets/16x32walk.png");
-}
-
-Background::~Background() {
-  for (auto &img : imgs) {
-    UnloadTexture(img);
-  }
-}
+Background::Background(int x, int y, bool sum, Focus f, MoveState ms, Vector2 origin, bool rotation, std::array<Texture2D, 2>& imgs) : x(x), y(y), sum(sum), pos(Vector2{(float)x, (float)y}), f(f), ms(ms), origin(origin), rotation(rotation), imgs(&imgs) {}
 
 void Background::Update() {
   count++;
@@ -39,8 +30,8 @@ void Background::Draw() {
   Rectangle dst = Rectangle{pos.x, pos.y, (float)frameWidth*3, (float)frameHeight*3};
   
   if (rotation) {
-    DrawTexturePro(imgs[ms], src, dst, origin, 1.0f + count, WHITE);
+    DrawTexturePro((*imgs)[ms], src, dst, origin, 1.0f + count, WHITE);
   } else {
-    DrawTexturePro(imgs[ms], src, dst, origin, 0.0f, WHITE);
+    DrawTexturePro((*imgs)[ms], src, dst, origin, 0.0f, WHITE);
   }
 }

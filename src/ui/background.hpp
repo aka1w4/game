@@ -15,11 +15,10 @@ class Background {
     bool rotation, sum;
     Focus f;
     MoveState ms;
-    std::array<Texture2D, 2> imgs;
+    std::array<Texture2D, 2>* imgs;
 
   public:
-    Background(int x, int y, bool sum, Focus f, MoveState ms,Vector2 origin, bool rotation);
-    ~Background();
+    Background(int x, int y, bool sum, Focus f, MoveState ms,Vector2 origin, bool rotation, std::array<Texture2D, 2>& imgs);
     void Update();
     void Draw();
 };

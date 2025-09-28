@@ -1,14 +1,9 @@
 #include "player.hpp"
+#include <array>
 #include <cstdlib>
 #include <raylib.h>
 
-Player::Player(Vector2 pos, Focus f, bool facingright) : pos(pos), f(f), facingright(facingright) {}
-
-Player::~Player() {
-  for (auto &i : img) {
-    UnloadTexture(i);
-  }
-}
+Player::Player(Vector2 pos, Focus f, bool facingright, std::array<Texture2D, 2>& imgs) : pos(pos), f(f), facingright(facingright), imgs(&imgs) {}
 
 SavePlayer Player::GetPlayer() {
   return SavePlayer{pos, f, facingright};
@@ -111,12 +106,7 @@ void Player::Draw() {
    Rectangle dst = Rectangle{pos.x, pos.y, (float)frameWidth, (float)frameHeight};
    Vector2 origin = Vector2{0,0};
 
-   DrawTexturePro(img[ms], src, dst, origin, 0.0f, WHITE);
-}
-
-void Player::LoadResourcesPlayer() {
-  img[0] = LoadTexture("assets/16x32idle.png");
-  img[1] = LoadTexture("assets/16x32walk.png");
+   DrawTexturePro((*imgs)[ms], src, dst, origin, 0.0f, WHITE);
 }
 
 const Rectangle Player::GetRec() {

@@ -51,15 +51,15 @@ void NewWorld::ClearText() {
   textinput_name->ClearText();
 }
 
-World::World(SavePlayer& sp, const std::string& path) : 
+World::World(SavePlayer& sp, const std::string& path, std::array<Texture2D, 2>& imgs) : 
   wb(path)
 {
   std::thread loadmap([this]() {
        m = std::make_unique<Map>("assets/map/map.json");
   });
 
-  std::thread loadplayer([this, sp]() {
-      player = std::make_unique<Player>(sp.pos, sp.f, sp.facingright);
+  std::thread loadplayer([this, sp, &imgs]() {
+      player = std::make_unique<Player>(sp.pos, sp.f, sp.facingright, imgs);
       cam = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 2.0f};
   });
 
@@ -67,7 +67,6 @@ World::World(SavePlayer& sp, const std::string& path) :
   loadmap.join();
   lastSave = std::chrono::steady_clock::now();
   m->LoadResources();
-  player->LoadResourcesPlayer();
 }
 
 World::~World() {

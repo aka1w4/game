@@ -33,7 +33,7 @@ class World {
     WriteBinary wb;
 
   public:
-    World(SavePlayer& sp, const std::string& path);
+    World(SavePlayer& sp, const std::string& path, std::array<Texture2D, 2>& imgs);
     ~World();
     void Update(bool& pauseGame);
     void Draw();
