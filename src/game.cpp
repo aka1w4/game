@@ -10,6 +10,7 @@
 Game::Game() : 
   buttonTexture(LoadTexture("assets/button.png")),
   inputTextTexture(LoadTexture("assets/inputtext.png")),
+  iconTexture(LoadTexture("assets/ui.png")),
   startButton(Button(0, 0, 183, 29, 40, "start", buttonTexture, [this]()
         {
         CreateButtonReadWorld();
@@ -56,6 +57,7 @@ Game::Game() :
 Game::~Game() {
   UnloadTexture(buttonTexture);
   UnloadTexture(inputTextTexture);
+  UnloadTexture(iconTexture);
   for (auto &p : playerTextures) {
     UnloadTexture(p);
   }
@@ -97,6 +99,10 @@ void Game::Update() {
       for (auto &wb : wbs) {
         if (wb->isClicked()) {
           wb->Action();
+        }
+
+        if (wb->isClickedDele()) {
+          wb->ActionDelete();
         }
       }
       if (NewWorldButton.isClicked()) {
@@ -145,6 +151,7 @@ void Game::Drawing() {
       }
       for (auto &wb : wbs) {
         wb->Draw(scrollofset);
+        wb->DrawDelete(scrollofset);
       }
       NewWorldButton.Draw();
       BackButton.Draw();
@@ -170,10 +177,12 @@ void Game::CreateButtonReadWorld() {
   int y = -120;
   for (const auto& d : ws.datas) {
     y += 60;
-    wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, d, [this](const WorldInfo& wi) {
+    wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, iconTexture, d, [this](const WorldInfo& wi) {
           SavePlayer sp = readbinaryPlayer(wi.path);
           world = std::make_unique<World>(sp, wi.path, playerTextures);
           gs = PlayState;
+    }, [this]() {
+    CreateButtonReadWorld();
     }));
   }
 }

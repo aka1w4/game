@@ -22,7 +22,7 @@ class Game {
     bool quit = false;
     GameState gs = MenuState;
     std::unique_ptr<World> world = nullptr;
-    Texture2D buttonTexture, inputTextTexture;
+    Texture2D buttonTexture, inputTextTexture, iconTexture;
     bool pauseGame = false;
     readWorldlist ws;
     int scrollofset = 0;

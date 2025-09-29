@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <functional>
 #include <raylib.h>
 #include "button.hpp"
@@ -34,4 +35,27 @@ bool Button::isClicked() {
 
 void Button::Action() {
   if(action) action();
+}
+
+void WorldButton::DrawDelete(int offScrollY) {
+  int screenWidth = GetScreenWidth();
+  int screenHeight = GetScreenHeight();
+  int h2 = h * 2;
+
+  screenX = (screenWidth) / 2 + x + 190;
+  screenY = (screenHeight - h2) / 2 + y + offScrollY;
+
+  DrawTexturePro(*imgicon, Rectangle{16, 48, 16, 16}, Rectangle{(float)screenX, (float)screenY, 50, 50}, Vector2{0,0}, 0.0f, WHITE);
+}
+
+bool WorldButton::isClickedDele() {
+  return IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && 
+    CheckCollisionPointRec(GetMousePosition(), Rectangle{float(screenX), float(screenY), float(50), float(50)});
+}
+
+void WorldButton::ActionDelete() {
+  if (std::filesystem::exists(path)) {
+    std::filesystem::remove_all(path);
+    if (actionDelete) actionDelete();
+  }
 }

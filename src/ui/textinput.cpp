@@ -50,7 +50,7 @@ void Textinput::EditInputText() {
     key = GetCharPressed();
   }
 
-  if ((IsKeyPressed(KEY_BACKSPACE)) && !text.empty()) {
+  if ((IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE)) && !text.empty()) {
     text.pop_back();
   }
 
