@@ -16,10 +16,10 @@ NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(Sav
   textinput_name(std::make_unique<Textinput>(240, 60, 183, 29, 40, inputT)), 
   submit(std::make_unique<Button>(240,120, 183, 29, 40, "submit", buttonT, [this]()
         {
-        SavePlayer sp = SavePlayer{Vector2{100, 100}, Down, false};
-        createNewWorld(textinput_name->GetText(), 1, sp);
+        SavePlayer sp = SavePlayer{Vector2{100, 100}, Down, false}; // membuat data player baru
+        createNewWorld(textinput_name->GetText(), 1, sp);           // mebuat world baru
 
-        if (this->play) this->play(sp, textinput_name->GetText());
+        if (this->play) this->play(sp, textinput_name->GetText());  // menjalankan world
         })) 
   {
     if(!std::filesystem::exists("world")) {
@@ -28,36 +28,41 @@ NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(Sav
   }
 
 void NewWorld::Update() {
-  textinput_name->checkPos();
-
+  textinput_name->checkPos(); // mengecek apakah di clic;
+  // mengecek apakah textinput sudah di click
   if (textinput_name->inTextInput()) {
-    textinput_name->EditInputText();
+    textinput_name->EditInputText(); // edit text di textinput
   }
 
+  // mengecek apakah text >= 5 
   if (textinput_name->GetText().size() >= 5) {
+    // mengecek apakah button di click
     if (submit->isClicked()) {
-      submit->Action();
-      textinput_name->ClearText();
+      submit->Action();             // menjalankan Action
+      textinput_name->ClearText();  // menghapus text
     }
   }
  }
 
 void NewWorld::Draw() {
+  // draw textinput dan submit
   textinput_name->Draw();
   submit->Draw();
 }
 
 void NewWorld::ClearText() {
-  textinput_name->ClearText();
+  textinput_name->ClearText(); // menghapus text
 }
 
 World::World(SavePlayer& sp, const std::string& path, std::array<Texture2D, 2>& imgs) : 
   wb(path)
 {
+  // loadmap di thread
   std::thread loadmap([this]() {
        m = std::make_unique<Map>("assets/map/map.json");
   });
 
+  // loadplayer di thread
   std::thread loadplayer([this, sp, &imgs]() {
       player = std::make_unique<Player>(sp.pos, sp.f, sp.facingright, imgs);
       cam = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 2.0f};
@@ -74,8 +79,10 @@ World::~World() {
 }
 
 void World::Update(bool& pauseGame) {
+  // waktu sekarang
   auto now = std::chrono::steady_clock::now();
 
+  // oldpos dan newpos player
   Rectangle oldPos = player->GetRec();
   if (!pauseGame) player->Update();
   Rectangle newPos = player->GetRec();
@@ -83,6 +90,7 @@ void World::Update(bool& pauseGame) {
   Rectangle recX = oldPos;
   recX.x = newPos.x;
   for (const auto &c : m->collisions) {
+    // mengecek apakah posisi player x bertabrakan dengan c.box
     if (CheckCollisionRecs(recX, c.box)) {
       newPos.x = oldPos.x;
       break;
@@ -92,23 +100,25 @@ void World::Update(bool& pauseGame) {
   Rectangle recY = oldPos;
   recY.y = newPos.y;
   for (const auto &c : m->collisions) {
+    // mengecek apakah posisi player y bertabrakan dengan c.box
     if (CheckCollisionRecs(recY, c.box)) {
       newPos.y = oldPos.y;
       break;
     }
   }
 
-  player->UpdatePos(Vector2{newPos.x, newPos.y});
-  cam.target = Vector2{newPos.x, newPos.y};
+  player->UpdatePos(Vector2{newPos.x, newPos.y}); // mengupdate posisi baru player
+  cam.target = Vector2{newPos.x, newPos.y};       // mengikuti posisi player
+
+  // mengecek apakah waktu sekarang sudah lebih dari 5 menit
   if (std::chrono::duration_cast<std::chrono::minutes>(now - lastSave).count() >= 5) {
     WriteWorld();
-    lastSave = now;
+    lastSave = now; // menyimpan waktu sekarang ke lastsave
   }
 }
 
 void World::Draw() {
   BeginMode2D(cam);
-    //DrawRectangle(100, 100, 100, 100, BLACK);
     m->Draw();
     player->Draw();
   EndMode2D();
