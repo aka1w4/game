@@ -2,7 +2,6 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
-#include <leveldb/status.h>
 #include <memory>
 #include <string>
 #include <filesystem>

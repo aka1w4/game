@@ -39,7 +39,7 @@ class World {
 
   public:
     /// @brief membuat world
-    World(SavePlayer& sp, const std::string& path, std::array<Texture2D, 2>& imgs);
+    World(SavePlayer& sp, const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg);
     /// @brief menghapus world
     ~World();
     /** @brief update logika world

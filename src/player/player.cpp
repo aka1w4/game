@@ -3,10 +3,10 @@
 #include <cstdlib>
 #include <raylib.h>
 
-Player::Player(Vector2 pos, Focus f, bool facingright, std::array<Texture2D, 2>& imgs) : pos(pos), f(f), facingright(facingright), imgs(&imgs) {}
+Player::Player(SavePlayer sp, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : pos(sp.pos), f(sp.f), facingright(sp.facingright), health(sp.health), maxHealth(sp.maxHealth), imgs(&imgs), healthimg(&healthimg) {}
 
 SavePlayer Player::GetPlayer() {
-  return SavePlayer{pos, f, facingright};
+  return SavePlayer{pos, f, facingright, health, maxHealth};
 }
 
 const Vector2& Player::GetPlayerpos() {
@@ -40,7 +40,7 @@ void Player::Update() {
   if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {    // gerak ke atas 
     dy = -2;
     if (IsKeyDown(KEY_A)) {                       // serong kiri-atas
-      right = UpLeft;
+      newFocus = UpLeft;
       dx = -2;
     } else if (IsKeyDown(KEY_D)) {                // serong kanan-atas
       newFocus = UpLeft;
@@ -140,4 +140,18 @@ const Rectangle Player::GetRec() {
 void Player::UpdatePos(Vector2 posNew) {
   // menyimpan posisi baru 
   pos = posNew;
+}
+
+void Player::DrawHeart() {
+  for (int i=0; i < maxHealth/2; i++) {
+    int screenX = i * 33; // menentukan posisi screen x
+    int hpIndex = i * 2;  // menentukan nilai awal dari hp(2 hp)
+    if (health > hpIndex + 1) {
+      DrawTexturePro(*healthimg, Rectangle{0, 0, 11, 11}, Rectangle{(float)screenX, 0, 33, 33}, Vector2{0,0}, 0.0f, WHITE); // full health
+    } else if (health == hpIndex + 1) {
+      DrawTexturePro(*healthimg, Rectangle{11, 0, 11, 11}, Rectangle{(float)screenX, 0, 33, 33}, Vector2{0,0}, 0.0f, WHITE); // half health
+    } else {
+      DrawTexturePro(*healthimg, Rectangle{22, 0, 11, 11}, Rectangle{(float)screenX, 0, 33, 33}, Vector2{0,0}, 0.0f, WHITE); // empty health
+    }
+  }
 }

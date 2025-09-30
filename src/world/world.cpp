@@ -16,10 +16,10 @@ NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(Sav
   textinput_name(std::make_unique<Textinput>(240, 60, 183, 29, 40, inputT)), 
   submit(std::make_unique<Button>(240,120, 183, 29, 40, "submit", buttonT, [this]()
         {
-        SavePlayer sp = SavePlayer{Vector2{100, 100}, Down, false}; // membuat data player baru
-        createNewWorld(textinput_name->GetText(), 1, sp);           // mebuat world baru
+        SavePlayer sp = SavePlayer{Vector2{100, 100}, Down, false, 10, 10}; // membuat data player baru
+        createNewWorld(textinput_name->GetText(), 1, sp);                 // mebuat world baru
 
-        if (this->play) this->play(sp, textinput_name->GetText());  // menjalankan world
+        if (this->play) this->play(sp, textinput_name->GetText());        // menjalankan world
         })) 
   {
     if(!std::filesystem::exists("world")) {
@@ -54,7 +54,7 @@ void NewWorld::ClearText() {
   textinput_name->ClearText(); // menghapus text
 }
 
-World::World(SavePlayer& sp, const std::string& path, std::array<Texture2D, 2>& imgs) : 
+World::World(SavePlayer& sp, const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : 
   wb(path)
 {
   // loadmap di thread
@@ -63,8 +63,8 @@ World::World(SavePlayer& sp, const std::string& path, std::array<Texture2D, 2>& 
   });
 
   // loadplayer di thread
-  std::thread loadplayer([this, sp, &imgs]() {
-      player = std::make_unique<Player>(sp.pos, sp.f, sp.facingright, imgs);
+  std::thread loadplayer([this, sp, &imgs, &healthimg]() {
+      player = std::make_unique<Player>(sp, imgs, healthimg);
       cam = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 2.0f};
   });
 
@@ -122,6 +122,7 @@ void World::Draw() {
     m->Draw();
     player->Draw();
   EndMode2D();
+  player->DrawHeart();
 }
 
 void World::WriteWorld() {

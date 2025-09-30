@@ -24,6 +24,7 @@ struct SavePlayer {
   Vector2 pos;
   Focus f;
   bool facingright;
+  int health, maxHealth;
 };
 
 /// @brief Representasi objek player
@@ -38,10 +39,12 @@ class Player {
     int frameCount = 4;               // jumlah frame animasi
     int frameWidth = 16;              // lebar sprite per frame
     int frameHeight = 32;             // tinggi sprite per frame
+    int health, maxHealth;
+    Texture2D* healthimg;
 
   public:
     /// @brief membuat player baru dengan posisi, arah, dan sprite
-    Player(Vector2 pos, Focus f, bool facingright, std::array<Texture2D, 2>& imgs);
+    Player(SavePlayer sp, std::array<Texture2D, 2>& imgs, Texture2D& healthimg);
     /// @brief update logika player
     void Update();
     /// @brief draw sprite player
@@ -61,6 +64,8 @@ class Player {
     const Rectangle GetRec();
     /// @brief update posisi player
     void UpdatePos(Vector2 posNew);
+    /// @brief draw health player
+    void DrawHeart();
 };
 
 #endif // !PLAYER

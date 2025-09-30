@@ -11,6 +11,7 @@ Game::Game() :
   buttonTexture(LoadTexture("assets/button.png")),
   inputTextTexture(LoadTexture("assets/inputtext.png")),
   iconTexture(LoadTexture("assets/ui.png")),
+  healthTexture(LoadTexture("assets/health.png")),
   startButton(Button(0, 0, 183, 29, 40, "start", buttonTexture, [this]()
         {
         CreateButtonReadWorld();
@@ -50,7 +51,7 @@ Game::Game() :
         })),
   newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture, [this](SavePlayer& sp, const std::string& text)
         {
-        world = std::make_unique<World>(sp, std::string(WORLD_NAME) + text, playerTextures);
+        world = std::make_unique<World>(sp, std::string(WORLD_NAME) + text, playerTextures, healthTexture);
         gs = PlayState;
         })) {}
 
@@ -179,7 +180,7 @@ void Game::CreateButtonReadWorld() {
     y += 60;
     wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, iconTexture, d, [this](const WorldInfo& wi) {
           SavePlayer sp = readbinaryPlayer(wi.path);
-          world = std::make_unique<World>(sp, wi.path, playerTextures);
+          world = std::make_unique<World>(sp, wi.path, playerTextures, healthTexture);
           gs = PlayState;
     }, [this]() {
     CreateButtonReadWorld();
