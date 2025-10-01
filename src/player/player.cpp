@@ -3,10 +3,10 @@
 #include <cstdlib>
 #include <raylib.h>
 
-Player::Player(SavePlayer sp, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : pos(sp.pos), f(sp.f), facingright(sp.facingright), health(sp.health), maxHealth(sp.maxHealth), imgs(&imgs), healthimg(&healthimg) {}
+Player::Player(SavePlayer sp, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : pos(sp.pos), f(sp.f), facingright(sp.facingright), health(sp.health), maxHealth(sp.maxHealth), uuid(sp.uuid), imgs(&imgs), healthimg(&healthimg) {}
 
 SavePlayer Player::GetPlayer() {
-  return SavePlayer{pos, f, facingright, health, maxHealth};
+  return SavePlayer{pos, f, facingright, health, maxHealth, uuid};
 }
 
 const Vector2& Player::GetPlayerpos() {

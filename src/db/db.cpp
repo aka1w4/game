@@ -6,6 +6,7 @@
 #include <string>
 #include <filesystem>
 #include "../../inlcude/leveldb/db.h"
+//#include <boost/uuid/uuid_io.hpp>
 
 void createNewWorld(const std::string& name, unsigned int version, SavePlayer& sp) {
   // membuta directori baru

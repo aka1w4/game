@@ -10,13 +10,15 @@
 #include <filesystem>
 #include <chrono>
 #include <thread>
+#include <boost/uuid/uuid_generators.hpp>
 
 NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(SavePlayer&, const std::string&)> p) : 
   play(p),
   textinput_name(std::make_unique<Textinput>(240, 60, 183, 29, 40, inputT)), 
   submit(std::make_unique<Button>(240,120, 183, 29, 40, "submit", buttonT, [this]()
         {
-        SavePlayer sp = SavePlayer{Vector2{100, 100}, Down, false, 10, 10}; // membuat data player baru
+        boost::uuids::random_generator r;
+        SavePlayer sp = SavePlayer{Vector2{100, 100}, Down, false, 10, 10, r()}; // membuat data player baru
         createNewWorld(textinput_name->GetText(), 1, sp);                 // mebuat world baru
 
         if (this->play) this->play(sp, textinput_name->GetText());        // menjalankan world

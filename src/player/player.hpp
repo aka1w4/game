@@ -3,6 +3,7 @@
 
 #include <array>
 #include <raylib.h>
+#include <boost/uuid/uuid.hpp>
 
 /// @brief Arah hadap player (digunakan untuk animasi atau pergerakan)
 enum Focus {
@@ -25,6 +26,7 @@ struct SavePlayer {
   Focus f;
   bool facingright;
   int health, maxHealth;
+  boost::uuids::uuid uuid;
 };
 
 /// @brief Representasi objek player
@@ -39,8 +41,9 @@ class Player {
     int frameCount = 4;               // jumlah frame animasi
     int frameWidth = 16;              // lebar sprite per frame
     int frameHeight = 32;             // tinggi sprite per frame
-    int health, maxHealth;
-    Texture2D* healthimg;
+    int health, maxHealth;            // darah saat ini dan maksumal darah
+    Texture2D* healthimg;             // texture image health
+    boost::uuids::uuid uuid;          // identitas player
 
   public:
     /// @brief membuat player baru dengan posisi, arah, dan sprite
