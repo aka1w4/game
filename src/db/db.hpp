@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include "../../inlcude/leveldb/db.h"
-#include "../player/player.hpp"
+#include "../entity/entity.hpp"
 
 /// @brief lokasi folder utama untuk menyimpan world
 inline std::string_view WORLD_NAME = "world/";
@@ -14,12 +14,12 @@ inline std::string_view WORLD_NAME = "world/";
  *  @param version untuk memasukan versi game di world
  *  @param sp untuk menyimpan data player
  */ 
-void createNewWorld(const std::string& path, unsigned int version, SavePlayer& sp);
+void createNewWorld(const std::string& path, unsigned int version, SaveEntity& sp);
 /** @brief untuk membaca isi world
  *  @param path lokasi folder world yang dituju
  *  @retrun struct SavePlayer berisi posisi, arah 
  */ 
-SavePlayer readbinaryPlayer(const std::string& path);
+SaveEntity readbinaryPlayer(const std::string& path);
 
 /// @brief untuk menyimpan informasi world
 struct WorldInfo {
@@ -44,7 +44,7 @@ class WriteBinary {
     /// @brief membuat write binary baru dengan path world
     WriteBinary(const std::string& path);
     /// @brief menulis ke binary
-    void writeBinaryPlayer(SavePlayer& sp);
+    void writeBinaryPlayer(SaveEntity& sp);
 };
 
 #endif // !GAME_DB

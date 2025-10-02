@@ -4,6 +4,7 @@
 #include "../ui/textinput.hpp"
 #include "../db/db.hpp"
 #include "../player/player.hpp"
+#include "../entity/entity.hpp"
 #include <functional>
 #include <memory>
 #include <raylib.h>
@@ -12,13 +13,13 @@
 #include <thread>
 #include <boost/uuid/uuid_generators.hpp>
 
-NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(SavePlayer&, const std::string&)> p) : 
+NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(SaveEntity&, const std::string&)> p) : 
   play(p),
   textinput_name(std::make_unique<Textinput>(240, 60, 183, 29, 40, inputT)), 
   submit(std::make_unique<Button>(240,120, 183, 29, 40, "submit", buttonT, [this]()
         {
         boost::uuids::random_generator r;
-        SavePlayer sp = SavePlayer{Vector2{100, 100}, Down, false, 10, 10, r()}; // membuat data player baru
+        SaveEntity sp{Vector2{100, 100}, Down, false, 10, 10, r()}; // membuat data player baru
         createNewWorld(textinput_name->GetText(), 1, sp);                 // mebuat world baru
 
         if (this->play) this->play(sp, textinput_name->GetText());        // menjalankan world
@@ -56,7 +57,7 @@ void NewWorld::ClearText() {
   textinput_name->ClearText(); // menghapus text
 }
 
-World::World(SavePlayer& sp, const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : 
+World::World(SaveEntity& sp, const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : 
   wb(path)
 {
   // loadmap di thread
@@ -128,6 +129,6 @@ void World::Draw() {
 }
 
 void World::WriteWorld() {
-  SavePlayer sp = player->GetPlayer();
+  SaveEntity sp = player->GetPlayer();
   wb.writeBinaryPlayer(sp);
 }

@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 #include "db/db.hpp"
-#include "player/player.hpp"
+#include "entity/entity.hpp"
 #include "ui/button.hpp"
 #include "world/world.hpp"
 #include "game.hpp"
@@ -49,7 +49,7 @@ Game::Game() :
         {
         gs = CreateWorldState;
         })),
-  newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture, [this](SavePlayer& sp, const std::string& text)
+  newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture, [this](SaveEntity& sp, const std::string& text)
         {
         world = std::make_unique<World>(sp, std::string(WORLD_NAME) + text, playerTextures, healthTexture);
         gs = PlayState;
@@ -179,7 +179,7 @@ void Game::CreateButtonReadWorld() {
   for (const auto& d : ws.datas) {
     y += 60;
     wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, iconTexture, d, [this](const WorldInfo& wi) {
-          SavePlayer sp = readbinaryPlayer(wi.path);
+          SaveEntity sp = readbinaryPlayer(wi.path);
           world = std::make_unique<World>(sp, wi.path, playerTextures, healthTexture);
           gs = PlayState;
     }, [this]() {

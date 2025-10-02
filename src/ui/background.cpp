@@ -1,6 +1,6 @@
 #include <raylib.h>
 #include "background.hpp"
-#include "../player/player.hpp"
+#include "../entity/entity.hpp"
 
 Background::Background(int x, int y, bool sum, Focus f, MoveState ms, Vector2 origin, bool rotation, std::array<Texture2D, 2>& imgs) : x(x), y(y), sum(sum), pos(Vector2{(float)x, (float)y}), f(f), ms(ms), origin(origin), rotation(rotation), imgs(&imgs) {}
 

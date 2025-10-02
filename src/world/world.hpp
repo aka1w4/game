@@ -4,6 +4,7 @@
 #include "../ui/textinput.hpp"
 #include "../ui/button.hpp"
 #include "../player/player.hpp"
+#include "../entity/entity.hpp"
 #include "map.hpp"
 #include <memory>
 #include <chrono>
@@ -15,11 +16,11 @@ class NewWorld {
   private:
     std::unique_ptr<Textinput> textinput_name;                  // smart pointer textinput untuk mengelola instance text
     std::unique_ptr<Button> submit;                             // smart pointer button untuk membuat dunia baru
-    std::function<void(SavePlayer&, const std::string&)> play;  // untuk menjalankan permainan
+    std::function<void(SaveEntity&, const std::string&)> play;  // untuk menjalankan permainan
 
   public:
     /// @brief membuat dunia baru
-    NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(SavePlayer&, const std::string&)> p);
+    NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(SaveEntity&, const std::string&)> p);
     /// @brief draw textinput dan button
     void Draw();
     /// @brief update logika dunia baru
@@ -39,7 +40,7 @@ class World {
 
   public:
     /// @brief membuat world
-    World(SavePlayer& sp, const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg);
+    World(SaveEntity& sp, const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg);
     /// @brief menghapus world
     ~World();
     /** @brief update logika world

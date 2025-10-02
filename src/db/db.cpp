@@ -6,9 +6,10 @@
 #include <string>
 #include <filesystem>
 #include "../../inlcude/leveldb/db.h"
+#include "../entity/entity.hpp"
 //#include <boost/uuid/uuid_io.hpp>
 
-void createNewWorld(const std::string& name, unsigned int version, SavePlayer& sp) {
+void createNewWorld(const std::string& name, unsigned int version, SaveEntity& sp) {
   // membuta directori baru
   std::filesystem::create_directories(std::string(WORLD_NAME) + name);
   // mebuat file level.dat untuk menyimpan metadata world
@@ -30,7 +31,7 @@ void createNewWorld(const std::string& name, unsigned int version, SavePlayer& s
   if (!status.ok()) {
     std::cerr << "gagal membuat db: " << status.ToString() << std::endl; 
   }
-  // simpan awal data player 
+  // simpan awal data entity player
   status = db->Put(leveldb::WriteOptions(), "player", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
   if (!status.ok()) {
     std::cerr << "menyimpan player: " << status.ToString() << std::endl; 
@@ -69,7 +70,7 @@ void readWorldlist::readLevelWorld() {
   }
 }
 
-SavePlayer readbinaryPlayer(const std::string& path) {
+SaveEntity readbinaryPlayer(const std::string& path) {
   // membuat database levelDB baru
   leveldb::DB* db;
   leveldb::Options options;
@@ -77,20 +78,20 @@ SavePlayer readbinaryPlayer(const std::string& path) {
   if (!status.ok()) {
     std::cerr << "Gagal buka DB untuk read: " << status.ToString() << std::endl;
   }
-  // membaca data "player"
+  // membaca data "entity"
   std::string value;
   status = db->Get(leveldb::ReadOptions(), "player", &value);
   if (!status.ok()) {
     std::cerr << "gagal membaca player: " << status.ToString() << std::endl;
   }
-  SavePlayer sp;
+  SaveEntity sp;
   // memastikan ukuran data
   if (value.size() == sizeof(sp)) {
-    memcpy(&sp, value.data(), sizeof(sp)); // mengkonversi binary ke struct SavePlayer
+    memcpy(&sp, value.data(), sizeof(sp)); // mengkonversi binary ke struct SaveEntity
   }
 
   delete db; // menghapus database levelDB
-  return sp; // return SavePlayer
+  return sp; // return SaveEntity
 }
 
 WriteBinary::WriteBinary(const std::string& path) : path(path) {
@@ -105,8 +106,8 @@ WriteBinary::WriteBinary(const std::string& path) : path(path) {
   dbs.reset(raw_db);
 }
 
-void WriteBinary::writeBinaryPlayer(SavePlayer& sp) {
-  // menulis/menyimpan SavePlayer
+void WriteBinary::writeBinaryPlayer(SaveEntity& sp) {
+  // menulis/menyimpan SaveEntity
   leveldb::Status status = dbs->Put(leveldb::WriteOptions(), "player", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
   if (!status.ok()) {
     std::cerr << "menyimpan player: " << status.ToString() << std::endl; 

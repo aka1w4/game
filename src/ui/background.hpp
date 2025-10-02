@@ -3,7 +3,7 @@
 
 #include <array>
 #include <raylib.h>
-#include "../player/player.hpp"
+#include "../entity/entity.hpp"
 
 class Background {
   private:
