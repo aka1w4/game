@@ -15,11 +15,6 @@ inline std::string_view WORLD_NAME = "world/";
  *  @param sp untuk menyimpan data player
  */ 
 void createNewWorld(const std::string& path, unsigned int version, SaveEntity& sp);
-/** @brief untuk membaca isi world
- *  @param path lokasi folder world yang dituju
- *  @retrun struct SavePlayer berisi posisi, arah 
- */ 
-SaveEntity readbinaryPlayer(const std::string& path);
 
 /// @brief untuk menyimpan informasi world
 struct WorldInfo {
@@ -35,16 +30,22 @@ struct readWorldlist {
 }; 
 
 /// @brief Representasi menulis binary 
-class WriteBinary {
+class LoadAndSave {
   private:
     std::unique_ptr<leveldb::DB> dbs;
     std::string path;
 
   public:
     /// @brief membuat write binary baru dengan path world
-    WriteBinary(const std::string& path);
+    LoadAndSave(const std::string& path);
+    /** @brief untuk membaca isi world
+    *  @param path lokasi folder world yang dituju
+    *  @retrun struct SavePlayer berisi posisi, arah 
+    */ 
+    SaveEntity readbinaryPlayer();
     /// @brief menulis ke binary
     void writeBinaryPlayer(SaveEntity& sp);
+    //void writeBinaryEntity(SaveEntity& se);
 };
 
 #endif // !GAME_DB

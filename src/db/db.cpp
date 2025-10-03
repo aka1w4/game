@@ -70,31 +70,7 @@ void readWorldlist::readLevelWorld() {
   }
 }
 
-SaveEntity readbinaryPlayer(const std::string& path) {
-  // membuat database levelDB baru
-  leveldb::DB* db;
-  leveldb::Options options;
-  leveldb::Status status = leveldb::DB::Open(options, std::string(path) + "/db", &db);
-  if (!status.ok()) {
-    std::cerr << "Gagal buka DB untuk read: " << status.ToString() << std::endl;
-  }
-  // membaca data "entity"
-  std::string value;
-  status = db->Get(leveldb::ReadOptions(), "player", &value);
-  if (!status.ok()) {
-    std::cerr << "gagal membaca player: " << status.ToString() << std::endl;
-  }
-  SaveEntity sp;
-  // memastikan ukuran data
-  if (value.size() == sizeof(sp)) {
-    memcpy(&sp, value.data(), sizeof(sp)); // mengkonversi binary ke struct SaveEntity
-  }
-
-  delete db; // menghapus database levelDB
-  return sp; // return SaveEntity
-}
-
-WriteBinary::WriteBinary(const std::string& path) : path(path) {
+LoadAndSave::LoadAndSave(const std::string& path) : path(path) {
   // membuat database levelDB baru
   leveldb::Options options;
   leveldb::DB* raw_db = nullptr;
@@ -106,10 +82,34 @@ WriteBinary::WriteBinary(const std::string& path) : path(path) {
   dbs.reset(raw_db);
 }
 
-void WriteBinary::writeBinaryPlayer(SaveEntity& sp) {
-  // menulis/menyimpan SaveEntity
+void LoadAndSave::writeBinaryPlayer(SaveEntity& sp) {
+  // menulis/menyimpan SaveEntity player
   leveldb::Status status = dbs->Put(leveldb::WriteOptions(), "player", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
   if (!status.ok()) {
     std::cerr << "menyimpan player: " << status.ToString() << std::endl; 
   }
 }
+
+SaveEntity LoadAndSave::readbinaryPlayer() {
+  // membaca data "entity" player
+  std::string value;
+  leveldb::Status status = dbs->Get(leveldb::ReadOptions(), "player", &value);
+  if (!status.ok()) {
+    std::cerr << "gagal membaca player: " << status.ToString() << std::endl;
+  }
+  SaveEntity sp;
+  // memastikan ukuran data
+  if (value.size() == sizeof(sp)) {
+    memcpy(&sp, value.data(), sizeof(sp)); // mengkonversi binary ke struct SaveEntity
+  }
+
+  return sp; // return SaveEntity
+}
+
+/*void WriteBinary::writeBinaryEntity(SaveEntity& sp) {
+  // menulis/menyimpan SaveEntity
+  leveldb::Status status = dbs->Put(leveldb::WriteOptions(), "entity", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
+  if (!status.ok()) {
+    std::cerr << "menyimpan entity: " << status.ToString() << std::endl; 
+  }
+}*/
