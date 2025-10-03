@@ -58,7 +58,8 @@ void NewWorld::ClearText() {
 }
 
 World::World(SaveEntity& sp, const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : 
-  wb(path)
+  wb(path),
+  imgs(imgs)
 {
   // loadmap di thread
   std::thread loadmap([this]() {
@@ -84,6 +85,10 @@ World::~World() {
 void World::Update(bool& pauseGame) {
   // waktu sekarang
   auto now = std::chrono::steady_clock::now();
+
+  for (const auto &e : enemys) {
+      e->Update();
+  }
 
   // oldpos dan newpos player
   Rectangle oldPos = player->GetRec();
@@ -118,12 +123,21 @@ void World::Update(bool& pauseGame) {
     WriteWorld();
     lastSave = now; // menyimpan waktu sekarang ke lastsave
   }
+
+  if (IsKeyPressed(KEY_E)) {
+    boost::uuids::random_generator r;
+    SaveEntity se{player->GetPlayerpos(), Down, false, 10, 10, r()};
+    enemys.push_back(std::make_unique<Enemy>(se, imgs));
+  }
 }
 
 void World::Draw() {
   BeginMode2D(cam);
     m->Draw();
     player->Draw();
+    for (const auto &e : enemys) {
+      e->Draw();
+    }
   EndMode2D();
   player->DrawHeart();
 }

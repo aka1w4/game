@@ -4,7 +4,7 @@
 #include <raylib.h>
 
 SaveEntity Player::GetPlayer() {
-  return SaveEntity{e.pos, e.f, e.facingright, e.health, e.maxHealth, e.uuid};
+  return SaveEntity{e.pos, e.f, e.facingright, health, maxHealth, e.uuid};
 }
 
 const Vector2& Player::GetPlayerpos() {
@@ -140,15 +140,15 @@ void Player::UpdatePos(Vector2 posNew) {
 }
 
 void Player::DrawHeart() {
-  for (int i=0; i < e.maxHealth/2; i++) {
+  for (int i=0; i < maxHealth/2; i++) {
     int screenX = i * 33; // menentukan posisi screen x
     int hpIndex = i * 2;  // menentukan nilai awal dari hp(2 hp)
-    if (e.health > hpIndex + 1) {
-      DrawTexturePro(*e.healthimg, Rectangle{0, 0, 11, 11}, Rectangle{(float)screenX, 0, 33, 33}, Vector2{0,0}, 0.0f, WHITE); // full health
-    } else if (e.health == hpIndex + 1) {
-      DrawTexturePro(*e.healthimg, Rectangle{11, 0, 11, 11}, Rectangle{(float)screenX, 0, 33, 33}, Vector2{0,0}, 0.0f, WHITE); // half health
+    if (health > hpIndex + 1) {
+      DrawTexturePro(*healthimg, Rectangle{0, 0, 11, 11}, Rectangle{(float)screenX, 0, 33, 33}, Vector2{0,0}, 0.0f, WHITE); // full health
+    } else if (health == hpIndex + 1) {
+      DrawTexturePro(*healthimg, Rectangle{11, 0, 11, 11}, Rectangle{(float)screenX, 0, 33, 33}, Vector2{0,0}, 0.0f, WHITE); // half health
     } else {
-      DrawTexturePro(*e.healthimg, Rectangle{22, 0, 11, 11}, Rectangle{(float)screenX, 0, 33, 33}, Vector2{0,0}, 0.0f, WHITE); // empty health
+      DrawTexturePro(*healthimg, Rectangle{22, 0, 11, 11}, Rectangle{(float)screenX, 0, 33, 33}, Vector2{0,0}, 0.0f, WHITE); // empty health
     }
   }
 }

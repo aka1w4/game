@@ -10,6 +10,7 @@
 #include <chrono>
 #include <raylib.h>
 #include <string>
+#include <vector>
 
 /// @brief Representasi dunia baru
 class NewWorld {
@@ -37,6 +38,8 @@ class World {
     std::unique_ptr<Map> m;                                       // smart pointer mengelola instance map
     std::chrono::time_point<std::chrono::steady_clock> lastSave;  // waktu terakhir menyimpan
     WriteBinary wb;                                               // untuk menulis data binary
+    std::vector<std::unique_ptr<Enemy>> enemys;
+    std::array<Texture2D, 2>& imgs;
 
   public:
     /// @brief membuat world

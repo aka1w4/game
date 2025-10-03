@@ -9,11 +9,13 @@
 /// @brief Representasi objek player
 class Player {
   private:
-    Entity e;
+    Entity e;                         // struct Entity
+    int health, maxHealth;            // darah saat ini dan maksimal darah
+    Texture2D* healthimg;             // texture image health
 
   public:
     /// @brief membuat player baru dengan posisi, arah, dan sprite
-    Player(SaveEntity sp, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : e(Entity{sp.pos, sp.uuid, sp.health, sp.maxHealth, sp.f, sp.facingright, isIdle, &imgs, &healthimg, 0, 4, 16, 32}) {};
+    Player(SaveEntity sp, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : e(Entity{sp.pos, sp.uuid, sp.f, sp.facingright, isIdle, &imgs, 0, 4, 16, 32}), health(sp.health), maxHealth(sp.maxHealth), healthimg(&healthimg) {};
     /// @brief update logika player
     void Update();
     /// @brief draw sprite player
