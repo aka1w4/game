@@ -7,7 +7,8 @@
 #include <filesystem>
 #include "../../inlcude/leveldb/db.h"
 #include "../entity/entity.hpp"
-//#include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <vector>
 
 void createNewWorld(const std::string& name, unsigned int version, SaveEntity& sp) {
   // membuta directori baru
@@ -106,10 +107,28 @@ SaveEntity LoadAndSave::readbinaryPlayer() {
   return sp; // return SaveEntity
 }
 
-/*void WriteBinary::writeBinaryEntity(SaveEntity& sp) {
+void LoadAndSave::writeBinaryEntity(SaveEntity& se) {
   // menulis/menyimpan SaveEntity
-  leveldb::Status status = dbs->Put(leveldb::WriteOptions(), "entity", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
+  leveldb::Status status = dbs->Put(leveldb::WriteOptions(), "entity-" + boost::uuids::to_string(se.uuid), std::string(reinterpret_cast<char*>(&se), sizeof(se)));
   if (!status.ok()) {
     std::cerr << "menyimpan entity: " << status.ToString() << std::endl; 
   }
-}*/
+}
+
+std::vector<SaveEntity> LoadAndSave::readbinaryEntity() {
+  // membaca data "entity" player
+  std::vector<SaveEntity> entities;
+  leveldb::Iterator* it = dbs->NewIterator(leveldb::ReadOptions());
+  for (it->SeekToFirst(); it->Valid(); it->Next()) {
+    std::string key = it->key().ToString();
+    if (key.rfind("entity-", 0) == 0) {
+      const std::string& value = it->value().ToString();
+      SaveEntity se;
+      memcpy(&se, value.data(), sizeof(se));
+      entities.push_back(se);
+    }
+  }
+
+  delete it;
+  return entities; // return SaveEntity
+}

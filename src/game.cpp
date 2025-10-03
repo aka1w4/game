@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <memory>
 #include <string>
+#include <thread>
 #include "db/db.hpp"
 #include "ui/button.hpp"
 #include "world/world.hpp"
@@ -23,7 +24,12 @@ Game::Game() :
   exitButton(Button(0, 60, 183, 29, 40, "exit",  buttonTexture, [this]()
         {
         if (world) {
-        world->WriteWorld();
+        world->WritePlayer();
+        std::thread twriteentity([this](){
+          world->WriteEntity();
+        });
+
+        twriteentity.join();
         world.reset();
         }
         CreateButtonReadWorld();

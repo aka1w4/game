@@ -51,6 +51,7 @@ class Enemy {
     Enemy(SaveEntity sp, std::array<Texture2D, 2>& imgs) : e(Entity{sp.pos, sp.uuid, sp.f, sp.facingright, isIdle, &imgs, 0, 4, 16, 32}), health(sp.health), maxHealth(sp.maxHealth) {};
     void Draw();
     void Update();
+    SaveEntity GetEntity();
 };
 
 #endif // !ENTITY_PLAYER

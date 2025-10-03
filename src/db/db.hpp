@@ -43,9 +43,10 @@ class LoadAndSave {
     *  @retrun struct SavePlayer berisi posisi, arah 
     */ 
     SaveEntity readbinaryPlayer();
+    std::vector<SaveEntity> readbinaryEntity();
     /// @brief menulis ke binary
     void writeBinaryPlayer(SaveEntity& sp);
-    //void writeBinaryEntity(SaveEntity& se);
+    void writeBinaryEntity(SaveEntity& se);
 };
 
 #endif // !GAME_DB

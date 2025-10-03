@@ -32,3 +32,7 @@ void Enemy::Draw() {
 void Enemy::Update() {
   e.count++;
 }
+
+SaveEntity Enemy::GetEntity() {
+  return SaveEntity{e.pos, e.f, e.facingright, health, maxHealth, e.uuid};
+}

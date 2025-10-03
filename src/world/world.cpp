@@ -62,6 +62,14 @@ World::World(const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D&
   imgs(imgs)
 {
   SaveEntity sp = ls.readbinaryPlayer();
+
+  std::thread loadentity([this, &imgs]() {
+      std::vector<SaveEntity> entities = ls.readbinaryEntity();
+
+      for (auto &e : entities) {
+        enems.push_back(std::make_unique<Enemy>(e, imgs));
+      }
+  });
   // loadmap di thread
   std::thread loadmap([this]() {
        m = std::make_unique<Map>("assets/map/map.json");
@@ -75,21 +83,28 @@ World::World(const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D&
 
   loadplayer.join();
   loadmap.join();
+  loadentity.join();
   lastSave = std::chrono::steady_clock::now();
   m->LoadResources();
 }
 
 World::~World() {
-  if (player) WriteWorld();
+  if (player) WritePlayer();
+  std::thread twriteentity([this](){
+      WriteEntity();
+  });
+  twriteentity.join();
 }
 
 void World::Update(bool& pauseGame) {
   // waktu sekarang
   auto now = std::chrono::steady_clock::now();
 
-  for (const auto &e : enemys) {
-      e->Update();
-  }
+  std::thread tupdateeemy([this]() {
+      for (const auto &e : enems) {
+          e->Update();
+      }
+  });
 
   // oldpos dan newpos player
   Rectangle oldPos = player->GetRec();
@@ -118,17 +133,23 @@ void World::Update(bool& pauseGame) {
 
   player->UpdatePos(Vector2{newPos.x, newPos.y}); // mengupdate posisi baru player
   cam.target = Vector2{newPos.x, newPos.y};       // mengikuti posisi player
+  tupdateeemy.join();
 
   // mengecek apakah waktu sekarang sudah lebih dari 5 menit
   if (std::chrono::duration_cast<std::chrono::minutes>(now - lastSave).count() >= 5) {
-    WriteWorld();
+    WritePlayer();
+    std::thread twriteentity([this](){
+        WriteEntity();
+    });
+
+    twriteentity.join();
     lastSave = now; // menyimpan waktu sekarang ke lastsave
   }
 
   if (IsKeyPressed(KEY_E)) {
     boost::uuids::random_generator r;
     SaveEntity se{player->GetPlayerpos(), Down, false, 10, 10, r()};
-    enemys.push_back(std::make_unique<Enemy>(se, imgs));
+    enems.push_back(std::make_unique<Enemy>(se, imgs));
   }
 }
 
@@ -136,14 +157,24 @@ void World::Draw() {
   BeginMode2D(cam);
     m->Draw();
     player->Draw();
-    for (const auto &e : enemys) {
-      e->Draw();
-    }
+    std::thread tdrawenemy([this]() {
+        for (const auto &e : enems) {
+          e->Draw();
+        }
+    });
+    tdrawenemy.join();
   EndMode2D();
   player->DrawHeart();
 }
 
-void World::WriteWorld() {
+void World::WritePlayer() {
   SaveEntity sp = player->GetPlayer();
   ls.writeBinaryPlayer(sp);
+}
+
+void World::WriteEntity() {
+  for (const auto &e : enems) {
+    SaveEntity se = e->GetEntity();
+    ls.writeBinaryEntity(se);
+  }
 }

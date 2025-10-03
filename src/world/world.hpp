@@ -38,7 +38,7 @@ class World {
     std::unique_ptr<Map> m;                                       // smart pointer mengelola instance map
     std::chrono::time_point<std::chrono::steady_clock> lastSave;  // waktu terakhir menyimpan
     LoadAndSave ls;                                               // untuk menulis data binary
-    std::vector<std::unique_ptr<Enemy>> enemys;
+    std::vector<std::unique_ptr<Enemy>> enems;
     std::array<Texture2D, 2>& imgs;
 
   public:
@@ -53,7 +53,8 @@ class World {
     /// @brief draw texture world
     void Draw();
     /// @brief menyimpan data world ke db
-    void WriteWorld();
+    void WritePlayer();
+    void WriteEntity();
 };
 
 #endif // !WORLD
