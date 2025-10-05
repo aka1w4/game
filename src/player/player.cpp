@@ -36,43 +36,43 @@ void Player::Update() {
   
   // input handle untuk pergerakan
   if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {    // gerak ke atas 
-    dy = -2;
+    dy = -1.4;
     if (IsKeyDown(KEY_A)) {                       // serong kiri-atas
       newFocus = UpLeft;
-      dx = -2;
+      dx = -1.4;
     } else if (IsKeyDown(KEY_D)) {                // serong kanan-atas
       newFocus = UpLeft;
       right = true;
-      dx = 2;
+      dx = 1.4;
     } else {
       newFocus = Up;
       dx = 0;
     }
     Move(dx, dy, newFocus, right);
   } else if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) { // gerak ke bawah
-    dy = 2;
+    dy = 1.4;
     if (IsKeyDown(KEY_A)) {                             // serong ke kiri-bawah
       newFocus = DownLeft;
-      dx = -2;
+      dx = -1.4;
     } else if (IsKeyDown(KEY_D)) {                      // serong ke kanan-bawah
       newFocus = DownLeft;
       right = true;
-      dx = 2;
+      dx = 1.4;
     } else {
       newFocus = Down;
       dx = 0;
     }
     Move(dx, dy, newFocus, right);
   } else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) { // gerak ke kanan
-    dx = 2;
+    dx = 1.4;
     if (IsKeyDown(KEY_W)) {                              // serong ke atas-kanan 
       newFocus = UpLeft;
       right = true;
-      dy = -2;
+      dy = -1.4;
     } else if (IsKeyDown(KEY_S)) {                       // serong ke bawah-kanan
       newFocus = DownLeft;
       right = true;
-      dy = 2;
+      dy = 1.4;
     } else {
       newFocus = Left;
       right = true;
@@ -83,10 +83,10 @@ void Player::Update() {
     dx = -2;
     if (IsKeyDown(KEY_W)) {                             // serong atas-kiri
       newFocus = UpLeft;
-      dy = -2;
+      dy = -1.4;
     } else if (IsKeyDown(KEY_S)) {                      // serong atas-kanan
       newFocus = DownLeft;
-      dy = 2;
+      dy = 1.4;
     } else {
       newFocus = Left;
       dy = 0;

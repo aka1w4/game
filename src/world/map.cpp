@@ -58,24 +58,30 @@ void Map::LoadResources() {
         if (idx >= l.datas.size()) { continue; }
         int tileId = l.datas[idx];
         if (tileId == 0) continue;
-        int tileX = (tileId - tms[0].firstgid) % tms[0].columns;
-        int tileY = (tileId - tms[0].firstgid) / tms[0].columns;
+        for (auto &tm : tms) {
+          if (tileId >= tm.firstgid && tileId < tm.firstgid + tm.tilecount) {
+            int tileX = (tileId - tm.firstgid) % tm.columns;
+            int tileY = (tileId - tm.firstgid) / tm.columns;
 
-        Collisions c;
-        c.src.x = tileX * tms[0].tilewidth;
-        c.src.y = tileY * tms[0].tileheight;
-        c.src.width = tms[0].tilewidth;
-        c.src.height = tms[0].tileheight;
+            Collisions c;
+            c.src.x = tileX * tm.tilewidth;
+            c.src.y = tileY * tm.tileheight;
+            c.src.width = tm.tilewidth;
+            c.src.height = tm.tileheight;
 
-        c.pos.x = x * tms[0].tilewidth;
-        c.pos.y = y * tms[0].tileheight;
+            c.pos.x = x * tm.tilewidth;
+            c.pos.y = y * tm.tileheight;
 
-        c.box.x = c.pos.x;
-        c.box.y = c.pos.y;
-        c.box.width = c.src.width;
-        c.box.height = c.src.height;
+            c.box.x = c.pos.x;
+            c.box.y = c.pos.y;
+            c.box.width = c.src.width;
+            c.box.height = c.src.height;
 
-        collisions.push_back(c);
+            c.img = &tm.image;
+            collisions.push_back(c);
+            break;
+          }
+        }
       }
     }
    }
@@ -115,8 +121,6 @@ void Map::Draw() {
     }
   }
   for (const auto &c : collisions) {
-    for (const auto &tm : tms) {
-      DrawTextureRec(tm.image, c.src, c.pos, WHITE);
-    }
+      DrawTextureRec(*c.img, c.src, c.pos, WHITE);
   }
 }

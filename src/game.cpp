@@ -1,3 +1,4 @@
+#include <cmath>
 #include <raylib.h>
 #include <memory>
 #include <string>

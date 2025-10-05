@@ -18,9 +18,9 @@ struct Tilemap {
 };
 
 struct Collisions {
-  Rectangle src;
+  Rectangle src, box;
   Vector2 pos;
-  Rectangle box;
+  const Texture2D* img;
 };
 
 class Map {
