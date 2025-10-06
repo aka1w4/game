@@ -51,7 +51,7 @@ void Map::LoadResources() {
   }
 
   for (const auto &l : ls) {
-    if (l.name != "foreground") { continue; }
+    if (l.name != "collisions") { continue; }
     for (int y = 0; y < l.height; y++) {
       for (int x = 0; x < l.width; x++) {
         int idx = y * l.width + x;
@@ -93,7 +93,7 @@ Map::~Map() {
   }
 }
 
-void Map::Draw() {
+void Map::DrawBackground() {
   for (const auto &l : ls) {
     if (l.name != "background") { continue; }
     for (int y = 0; y < l.height; y++) {
@@ -122,5 +122,34 @@ void Map::Draw() {
   }
   for (const auto &c : collisions) {
       DrawTextureRec(*c.img, c.src, c.pos, WHITE);
+  }
+}
+
+void Map::DrawForeground() {
+  for (const auto &l : ls) {
+    if (l.name != "foreground") { continue; }
+    for (int y = 0; y < l.height; y++) {
+      for (int x = 0; x < l.width; x++) {
+        int idx = y * l.width + x;
+        if (idx >= l.datas.size()) { continue; }
+        int tileId = l.datas[idx];
+        if (tileId == 0) continue;
+
+        for (const auto &tm : tms) {
+          if (tileId >= tm.firstgid && tileId < tm.firstgid + tm.tilecount) {
+            int tileX = (tileId - tm.firstgid) % tm.columns;
+            int tileY = (tileId - tm.firstgid) / tm.columns;
+
+            Rectangle src = Rectangle{(float)tileX * tm.tilewidth, (float)tileY * tm.tileheight, (float)tm.tilewidth, (float)tm.tileheight};
+            Vector2 pos = Vector2{(float)x * tm.tilewidth, (float)y * tm.tileheight};
+            DrawTextureRec(
+                tm.image, 
+                src,
+                pos, 
+                WHITE);
+          } 
+        }
+      }
+    }
   }
 }

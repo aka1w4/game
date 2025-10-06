@@ -26,7 +26,7 @@ void Background::Update() {
 void Background::Draw() {
   int x0 = (count / 8) % frameCount * frameWidth;
 
-  Rectangle src = Rectangle{(float)x0, (float)frameHeight*f, (float)frameWidth, (float)frameHeight};
+  Rectangle src = Rectangle{(float)x0, (float)frameHeight*(float)f, (float)frameWidth, (float)frameHeight};
   Rectangle dst = Rectangle{pos.x, pos.y, (float)frameWidth*3, (float)frameHeight*3};
   
   if (rotation) {

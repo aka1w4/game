@@ -155,7 +155,7 @@ void World::Update(bool& pauseGame) {
 
 void World::Draw() {
   BeginMode2D(cam);
-    m->Draw();
+    m->DrawBackground();
     player->Draw();
     std::thread tdrawenemy([this]() {
         for (const auto &e : enems) {
@@ -163,6 +163,7 @@ void World::Draw() {
         }
     });
     tdrawenemy.join();
+    m->DrawForeground();
   EndMode2D();
   player->DrawHeart();
 }

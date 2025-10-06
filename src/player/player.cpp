@@ -110,7 +110,7 @@ void Player::Draw() {
 
   Rectangle src = Rectangle{
     (float)x0,             // posisi x frame
-    (float)e.frameHeight*e.f,  // posisi y frame
+    (float)e.frameHeight*(float)e.f,  // posisi y frame
     (float)e.frameWidth,     // lebar 1 frame
     (float)e.frameHeight     // tinggi 1 frame 
   };

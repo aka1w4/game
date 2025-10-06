@@ -32,7 +32,8 @@ class Map {
     std::vector<Collisions> collisions;
     Map(const std::string& pathmap);
     ~Map();
-    void Draw();
+    void DrawBackground();
+    void DrawForeground();
     void LoadResources();
 };
 
