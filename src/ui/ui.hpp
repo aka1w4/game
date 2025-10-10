@@ -1,9 +1,30 @@
-#ifndef BUTTON
-#define BUTTON
+#ifndef UI
+#define UI
 
-#include <functional>
+#include <array>
+#include <string>
 #include <raylib.h>
+#include <functional>
 #include "../db/db.hpp"
+#include "../entity/entity.hpp"
+
+class Background {
+  private:
+    int count, x, y = 0;
+    int frameCount = 4;
+    int frameWidth = 16; 
+    int frameHeight = 32;
+    Vector2 pos, origin;
+    bool rotation, sum;
+    Focus f;
+    MoveState ms;
+    std::array<Texture2D, 2>* imgs;
+
+  public:
+    Background(int x, int y, bool sum, Focus f, MoveState ms,Vector2 origin, bool rotation, std::array<Texture2D, 2>& imgs) : x(x), y(y), sum(sum), pos(Vector2{(float)x, (float)y}), f(f), ms(ms), origin(origin), rotation(rotation), imgs(&imgs) {};
+    void Update();
+    void Draw();
+};
 
 /// @brief Representasi Button
 class Button {
@@ -45,4 +66,22 @@ class WorldButton : public Button {
     // @brief aksi yang akan di jalankan
     void ActionDelete();
 };
-#endif // !BUTTON
+
+class Textinput {
+  private:
+    int x, y, w, h, fontsize, screenX, screenY;
+    std::string text;
+    bool inTextinput = false;
+    Texture2D* img;
+
+  public:
+    Textinput(int x, int y, int w, int h, int fontsize, Texture2D& img) : x(x), y(y), w(w), h(h), fontsize(fontsize), img(&img) {};
+    void checkPos();
+    void Draw();
+    bool inTextInput();
+    void EditInputText();
+    std::string GetText();
+    void ClearText();
+};
+
+#endif // !UI

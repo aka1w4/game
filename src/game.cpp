@@ -4,7 +4,7 @@
 #include <string>
 #include <thread>
 #include "db/db.hpp"
-#include "ui/button.hpp"
+#include "ui/ui.hpp"
 #include "world/world.hpp"
 #include "game.hpp"
 

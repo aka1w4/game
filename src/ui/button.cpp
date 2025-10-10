@@ -1,7 +1,7 @@
 #include <filesystem>
 #include <functional>
 #include <raylib.h>
-#include "button.hpp"
+#include "ui.hpp"
 
 Button::Button(int x, int y, int w, int h, int fontsize, const char* text, Texture2D& img, std::function<void()> action) : x(x), y(y), w(w), h(h), fontsize(fontsize), img(&img), text(text), action(action) {}
 

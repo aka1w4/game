@@ -1,7 +1,6 @@
 #include "world.hpp"
 #include "map.hpp"
-#include "../ui/button.hpp"
-#include "../ui/textinput.hpp"
+#include "../ui/ui.hpp"
 #include "../db/db.hpp"
 #include "../player/player.hpp"
 #include "../entity/entity.hpp"

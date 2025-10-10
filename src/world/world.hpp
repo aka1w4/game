@@ -1,8 +1,7 @@
 #ifndef WORLD
 #define WORLD
 
-#include "../ui/textinput.hpp"
-#include "../ui/button.hpp"
+#include "../ui/ui.hpp"
 #include "../player/player.hpp"
 #include "../entity/entity.hpp"
 #include "map.hpp"

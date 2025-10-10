@@ -1,9 +1,5 @@
-#include <cstdint>
 #include <raylib.h>
-#include "background.hpp"
-#include "../entity/entity.hpp"
-
-Background::Background(uint16_t x, uint16_t y, bool sum, Focus f, MoveState ms, Vector2 origin, bool rotation, std::array<Texture2D, 2>& imgs) : x(x), y(y), sum(sum), pos(Vector2{(float)x, (float)y}), f(f), ms(ms), origin(origin), rotation(rotation), imgs(&imgs) {}
+#include "ui.hpp"
 
 void Background::Update() {
   count++;

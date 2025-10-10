@@ -1,8 +1,6 @@
 #include <raylib.h>
 #include <string>
-#include "textinput.hpp"
-
-Textinput::Textinput(int x, int y, int w, int h, int fontsize,Texture2D& img) : x(x), y(y), w(w), h(h), fontsize(fontsize), img(&img) {}
+#include "ui.hpp"
 
 void Textinput::Draw() {
   int screenWidth = GetScreenWidth();

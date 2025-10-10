@@ -5,8 +5,8 @@
 #include <raylib.h>
 #include <memory>
 #include <vector>
-#include "ui/background.hpp"
-#include "ui/button.hpp"
+#include "ui/ui.hpp"
+#include "ui/ui.hpp"
 #include "db/db.hpp"
 #include "world/world.hpp"
 
