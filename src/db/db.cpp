@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 #include <filesystem>
-#include "../../inlcude/leveldb/db.h"
+#include "../../include/leveldb/db.h"
 #include "../entity/entity.hpp"
 #include <boost/uuid/uuid_io.hpp>
 #include <vector>

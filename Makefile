@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Werror -std=c++20 -L./lib/ -I./src -I./inlcude/ -g #-fsanitize=address,undefined -fno-omit-frame-pointer
+CXXFLAGS = -Werror -std=c++20 -L./lib/ -I./src -I./include/ -g --save-temps#-fsanitize=address,undefined -fno-omit-frame-pointer
 SRC = src/main.cpp src/player/player.cpp src/entity/entity.cpp src/ui/button.cpp src/ui/textinput.cpp src/ui/background.cpp src/world/world.cpp src/world/map.cpp src/db/db.cpp src/game.cpp
 OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
 LIBS = -lraylib -lm -ldl -lpthread -lGL -lrt -lX11 -lleveldb -lboost_system -lboost_random

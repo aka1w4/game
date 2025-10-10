@@ -2,7 +2,7 @@
 #include <raylib.h>
 #include <string>
 #include "map.hpp"
-#include "../../inlcude/json.hpp"
+#include "../../include/json.hpp"
 
 Map::Map(const std::string& pathmap) {
   std::ifstream file(pathmap);
