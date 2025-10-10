@@ -4,7 +4,7 @@
 #include <raylib.h>
 
 SaveEntity Player::GetPlayer() {
-  return SaveEntity{e.pos, e.f, e.facingright, health, maxHealth, e.uuid};
+  return SaveEntity{e.pos, e.f, e.facingright, health, maxHealth, e.uuid, e.count};
 }
 
 const Vector2& Player::GetPlayerpos() {

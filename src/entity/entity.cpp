@@ -34,5 +34,5 @@ void Enemy::Update() {
 }
 
 SaveEntity Enemy::GetEntity() {
-  return SaveEntity{e.pos, e.f, e.facingright, health, maxHealth, e.uuid};
+  return SaveEntity{e.pos, e.f, e.facingright, health, maxHealth, e.uuid, e.count};
 }

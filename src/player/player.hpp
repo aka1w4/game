@@ -2,6 +2,7 @@
 #define PLAYER
 
 #include <array>
+#include <cstdint>
 #include <raylib.h>
 #include <boost/uuid/uuid.hpp>
 #include "../entity/entity.hpp"
@@ -9,13 +10,13 @@
 /// @brief Representasi objek player
 class Player {
   private:
-    Entity e;                         // struct Entity
-    int health, maxHealth;            // darah saat ini dan maksimal darah
+    Entity e;                         // struct entity
+    uint8_t health, maxHealth;        // darah saat ini dan maksimal darah
     Texture2D* healthimg;             // texture image health
 
   public:
     /// @brief membuat player baru dengan posisi, arah, dan sprite
-    Player(SaveEntity sp, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : e(Entity{sp.pos, sp.uuid, sp.f, sp.facingright, isIdle, &imgs, 0, 4, 16, 32}), health(sp.health), maxHealth(sp.maxHealth), healthimg(&healthimg) {};
+    Player(SaveEntity sp, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : e(Entity{sp.pos, sp.uuid, sp.f, sp.facingright, isIdle, &imgs, sp.count, 4, 16, 32}), health(sp.health), maxHealth(sp.maxHealth), healthimg(&healthimg) {};
     /// @brief update logika player
     void Update();
     /// @brief draw sprite player

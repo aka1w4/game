@@ -1,6 +1,7 @@
 #ifndef ENTITY_PLAYER
 #define ENTITY_PLAYER
 
+#include <cstdint>
 #include <raylib.h>
 #include <array>
 #include <boost/uuid/uuid.hpp>
@@ -25,8 +26,9 @@ struct SaveEntity {
   Vector2 pos;
   Focus f;
   bool facingright;
-  int health, maxHealth;
+  uint8_t health, maxHealth;
   boost::uuids::uuid uuid;
+  uint8_t count;
 };
 
 struct Entity {
@@ -36,7 +38,7 @@ struct Entity {
   bool facingright;                 // arah hadap ke kanan
   MoveState ms;                     // status gerak player saat ini
   std::array<Texture2D, 2>* imgs;   // pointer array sprite image Entity
-  unsigned int count;               // pinghitungan frame
+  uint8_t count;                    // pinghitungan frame
   int frameCount;                   // jumlah frame animasi
   int frameWidth;                   // lebar sprite per frame
   int frameHeight;                  // tinggi sprite per frame
@@ -45,10 +47,10 @@ struct Entity {
 class Enemy {
   private:
     Entity e;
-    int health, maxHealth;
+    uint8_t health, maxHealth;
   
   public:
-    Enemy(SaveEntity sp, std::array<Texture2D, 2>& imgs) : e(Entity{sp.pos, sp.uuid, sp.f, sp.facingright, isIdle, &imgs, 0, 4, 16, 32}), health(sp.health), maxHealth(sp.maxHealth) {};
+    Enemy(SaveEntity sp, std::array<Texture2D, 2>& imgs) : e(Entity{sp.pos, sp.uuid, sp.f, sp.facingright, isIdle, &imgs, sp.count, 4, 16, 32}), health(sp.health), maxHealth(sp.maxHealth) {};
     void Draw();
     void Update();
     SaveEntity GetEntity();
