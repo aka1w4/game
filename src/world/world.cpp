@@ -71,7 +71,7 @@ World::World(const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D&
   });
   // loadmap di thread
   std::thread loadmap([this]() {
-       m = std::make_unique<Map>("assets/map/map.json");
+       m = std::make_unique<Map>("assets/map/map.bin");
   });
 
   // loadplayer di thread
