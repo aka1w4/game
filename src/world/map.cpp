@@ -2,7 +2,6 @@
 #include <raylib.h>
 #include <string>
 #include "map.hpp"
-//#include "../../include/json.hpp"
 
 Map::Map(const std::string& pathmap) {
   std::ifstream in(pathmap);
@@ -48,37 +47,6 @@ Map::Map(const std::string& pathmap) {
 
     ls.push_back(layer);
   }
-
-  /*nlohmann::json j;
-  file >> j;
-
-  for (auto& jl : j["layers"]) {
-    Layer l;
-    l.id = jl["id"];
-    l.name = jl["name"];
-    l.width = jl["width"];
-    l.height = jl["height"];
-    l.datas = jl["data"].get<std::vector<int>>();
-    ls.push_back(l);
-  }
-
-  for (auto& jtm : j["tilesets"]) {
-    Tilemap tm;
-    tm.columns = jtm["columns"];
-    tm.firstgid = jtm["firstgid"];
-    tm.pathimage = jtm["image"];
-    tm.tilecount = jtm["tilecount"];
-    tm.tilewidth = jtm["tilewidth"];
-    tm.tileheight = jtm["tileheight"];
-    tms.push_back(tm);
-  }
-
-  for (auto &tm : tms) {
-    while (tm.pathimage.rfind("../", 0) == 0) {
-      tm.pathimage.erase(0, 3);
-    }
-    tm.pathimage = std::string("assets/") + tm.pathimage;
-  }*/
 }
 
 void Map::LoadResources() {
