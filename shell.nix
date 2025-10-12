@@ -6,7 +6,7 @@ pkgs.mkShell {
     pkgs.raylib
     pkgs.leveldb
     pkgs.leveldb.dev
-    pkgs.boost
+    #pkgs.boost
   ];
 
   shellHook = ''

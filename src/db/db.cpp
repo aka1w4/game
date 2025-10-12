@@ -7,7 +7,7 @@
 #include <filesystem>
 #include "../../include/leveldb/db.h"
 #include "../entity/entity.hpp"
-#include <boost/uuid/uuid_io.hpp>
+#include "../../include/uuid.h"
 #include <vector>
 
 void createNewWorld(const std::string& name, unsigned int version, SaveEntity& sp) {
@@ -109,7 +109,7 @@ SaveEntity LoadAndSave::readbinaryPlayer() {
 
 void LoadAndSave::writeBinaryEntity(SaveEntity& se) {
   // menulis/menyimpan SaveEntity
-  leveldb::Status status = dbs->Put(leveldb::WriteOptions(), "entity-" + boost::uuids::to_string(se.uuid), std::string(reinterpret_cast<char*>(&se), sizeof(se)));
+  leveldb::Status status = dbs->Put(leveldb::WriteOptions(), "entity-" + uuids::to_string(se.uuid), std::string(reinterpret_cast<char*>(&se), sizeof(se)));
   if (!status.ok()) {
     std::cerr << "menyimpan entity: " << status.ToString() << std::endl; 
   }

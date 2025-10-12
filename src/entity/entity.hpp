@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <raylib.h>
 #include <array>
-#include <boost/uuid/uuid.hpp>
+#include "../../include/uuid.h"
 
 /// @brief Arah hadap player (digunakan untuk animasi atau pergerakan)
 enum Focus {
@@ -27,13 +27,13 @@ struct SaveEntity {
   Focus f;
   bool facingright;
   uint8_t health, maxHealth;
-  boost::uuids::uuid uuid;
+  uuids::uuid uuid;
   uint8_t count;
 };
 
 struct Entity {
   Vector2 pos;                      // posisi saat ini
-  boost::uuids::uuid uuid;          // identitas entity
+  uuids::uuid uuid;          // identitas entity
   Focus f = Down;                   // Arah player saat ini
   bool facingright;                 // arah hadap ke kanan
   MoveState ms;                     // status gerak player saat ini

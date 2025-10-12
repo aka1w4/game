@@ -2,13 +2,13 @@ CXX = g++
 CXXFLAGS = -Werror -std=c++20 -L./lib/ -I./src -I./include/ 
 SRC = src/main.cpp src/player/player.cpp src/entity/entity.cpp src/ui/button.cpp src/ui/textinput.cpp src/ui/background.cpp src/world/world.cpp src/world/map.cpp src/db/db.cpp src/game.cpp
 OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
-LIBS = -lraylib -lm -ldl -lpthread -lGL -lrt -lX11 -lleveldb -lboost_system -lboost_random
+LIBS = -lraylib -lm -ldl -lpthread -lGL -lrt -lX11 -lleveldb
 OUTPUT_DIR = build
 FILE = main
 TARGET = $(OUTPUT_DIR)/$(FILE)
 
 ifeq ($(OS),Windows_NT)
-    LIBS = -lraylib -lopengl32 -lgdi32 -lwinmm -lleveldb -lboost_system -lboost_random
+    LIBS = -lraylib -lopengl32 -lgdi32 -lwinmm -lleveldb
     FILE = main.exe
     TARGET = $(OUTPUT_DIR)/$(FILE)
 endif

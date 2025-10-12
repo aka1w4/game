@@ -4,7 +4,6 @@
 #include <array>
 #include <cstdint>
 #include <raylib.h>
-#include <boost/uuid/uuid.hpp>
 #include "../entity/entity.hpp"
 
 /// @brief Representasi objek player

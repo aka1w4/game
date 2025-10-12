@@ -10,15 +10,21 @@
 #include <filesystem>
 #include <chrono>
 #include <thread>
-#include <boost/uuid/uuid_generators.hpp>
+#include "../../include/uuid.h"
 
 NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(const std::string&)> p) : 
   play(p),
   textinput_name(std::make_unique<Textinput>(240, 60, 183, 29, 40, inputT)), 
   submit(std::make_unique<Button>(240,120, 183, 29, 40, "submit", buttonT, [this]()
         {
-        boost::uuids::random_generator r;
-        SaveEntity sp{Vector2{100, 100}, Down, false, 10, 10, r()}; // membuat data player baru
+        std::random_device rd;
+        auto seed_data = std::array<int, std::mt19937::state_size> {};
+        std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
+        std::seed_seq seq(std::begin(seed_data), std::end(seed_data));
+        std::mt19937 generator(seq);
+        uuids::uuid_random_generator gen{generator};
+        
+        SaveEntity sp{Vector2{100, 100}, Down, false, 10, 10, gen()}; // membuat data player baru
         createNewWorld(textinput_name->GetText(), 1, sp);                 // mebuat world baru
 
         if (this->play) this->play(textinput_name->GetText());        // menjalankan world
@@ -146,8 +152,14 @@ void World::Update(bool& pauseGame) {
   }
 
   if (IsKeyPressed(KEY_E)) {
-    boost::uuids::random_generator r;
-    SaveEntity se{player->GetPlayerpos(), Down, false, 10, 10, r()};
+    //boost::uuids::random_generator r;
+    std::random_device rd;
+    auto seed_data = std::array<int, std::mt19937::state_size> {};
+    std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
+    std::seed_seq seq(std::begin(seed_data), std::end(seed_data));
+    std::mt19937 generator(seq);
+    uuids::uuid_random_generator gen{generator};
+    SaveEntity se{player->GetPlayerpos(), Down, false, 10, 10, gen()};
     enems.push_back(std::make_unique<Enemy>(se, imgs));
   }
 }
