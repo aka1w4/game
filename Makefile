@@ -18,7 +18,7 @@ endif
 all: CXXFLAGS := $(CXXFLAGS) -g --save-temps
 all: $(TARGET)
 
-release: CXXFLAGS := $(CXXFLAGS) -O3 -s -fno-ident \
+release: CXXFLAGS := $(CXXFLAGS) -O3 -s -fno-ident -no-pie -fno-pie\
 	-Wl,--gc-sections \
 	-ffunction-sections -fdata-sections 
 release: $(OBJ) | $(OUTPUT_DIR)

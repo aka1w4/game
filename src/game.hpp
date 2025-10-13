@@ -2,7 +2,7 @@
 #define GAME
 
 #include <array>
-#include <raylib.h>
+#include "../include/raylib/raylib.h"
 #include <memory>
 #include <vector>
 #include "ui/ui.hpp"

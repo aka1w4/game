@@ -6,7 +6,7 @@
 #include "../entity/entity.hpp"
 #include <functional>
 #include <memory>
-#include <raylib.h>
+#include "../../include/raylib/raylib.h"
 #include <filesystem>
 #include <chrono>
 #include <thread>

@@ -3,7 +3,7 @@
 
 #include <array>
 #include <cstdint>
-#include <raylib.h>
+#include "../../include/raylib/raylib.h"
 #include "../entity/entity.hpp"
 
 /// @brief Representasi objek player

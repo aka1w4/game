@@ -1,7 +1,7 @@
 #include "player.hpp"
 #include "../entity/entity.hpp"
 #include <cstdlib>
-#include <raylib.h>
+#include "../../include/raylib/raylib.h"
 
 SaveEntity Player::GetPlayer() {
   return SaveEntity{e.pos, e.f, e.facingright, health, maxHealth, e.uuid, e.count};

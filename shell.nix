@@ -3,10 +3,11 @@ pkgs.mkShell {
   buildInputs = [
     pkgs.gcc
     pkgs.pkg-config
-    pkgs.raylib
-    pkgs.leveldb
-    pkgs.leveldb.dev
-    #pkgs.boost
+    #pkgs.raylib
+    pkgs.libGL
+    pkgs.xorg.libX11
+    #pkgs.leveldb
+    #pkgs.leveldb.dev
   ];
 
   shellHook = ''

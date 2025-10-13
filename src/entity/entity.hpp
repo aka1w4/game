@@ -2,7 +2,7 @@
 #define ENTITY_PLAYER
 
 #include <cstdint>
-#include <raylib.h>
+#include "../../include/raylib/raylib.h"
 #include <array>
 #include "../../include/uuid.h"
 
