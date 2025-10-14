@@ -1,5 +1,5 @@
 #include <fstream>
-#include "../../include/raylib/raylib.h"
+#include "raylib/raylib.h"
 #include <string>
 #include "map.hpp"
 

@@ -6,11 +6,11 @@
 #include "../entity/entity.hpp"
 #include <functional>
 #include <memory>
-#include "../../include/raylib/raylib.h"
+#include "raylib/raylib.h"
 #include <filesystem>
 #include <chrono>
 #include <thread>
-#include "../../include/uuid.h"
+#include "stduuid/uuid.h"
 
 NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(const std::string&)> p) : 
   play(p),

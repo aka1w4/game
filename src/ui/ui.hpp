@@ -3,7 +3,7 @@
 
 #include <array>
 #include <string>
-#include "../../include/raylib/raylib.h"
+#include "raylib/raylib.h"
 #include <functional>
 #include "../db/db.hpp"
 #include "../entity/entity.hpp"

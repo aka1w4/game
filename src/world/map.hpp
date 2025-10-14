@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "../../include/raylib/raylib.h"
+#include "raylib/raylib.h"
 
 struct Layer {
   int width, height, id;
