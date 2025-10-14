@@ -33,7 +33,7 @@ struct readWorldlist {
 class LoadAndSave {
   private:
     std::unique_ptr<leveldb::DB> dbs;
-    std::string path;
+    //std::string path;
 
   public:
     /// @brief membuat write binary baru dengan path world

@@ -8,6 +8,7 @@ pkgs.mkShell {
     pkgs.xorg.libX11
     #pkgs.leveldb
     #pkgs.leveldb.dev
+    pkgs.pkgsCross.mingwW64.buildPackages.gcc
   ];
 
   shellHook = ''

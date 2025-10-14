@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Werror -std=c++20 -L./lib/ -I./src -I./include/ 
+CXXFLAGS = -Werror -std=c++20 -I./src -I./include/ 
 SRC = src/main.cpp src/player/player.cpp src/entity/entity.cpp src/ui/button.cpp src/ui/textinput.cpp src/ui/background.cpp src/world/world.cpp src/world/map.cpp src/db/db.cpp src/game.cpp
 OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
 LIBS = -lraylib -lm -ldl -lpthread -lGL -lrt -lX11 -lleveldb
@@ -8,17 +8,20 @@ FILE = main
 TARGET = $(OUTPUT_DIR)/$(FILE)
 
 ifeq ($(OS),Windows_NT)
+		CXXFLAGS += -L./lib/windows/
     LIBS = -lraylib -lopengl32 -lgdi32 -lwinmm -lleveldb
     FILE = main.exe
     TARGET = $(OUTPUT_DIR)/$(FILE)
+else
+		CXXFLAGS += -L./lib/linux/
 endif
 
 .PHONY: all clean release
 
-all: CXXFLAGS := $(CXXFLAGS) -g --save-temps
+all: CXXFLAGS += -g --save-temps
 all: $(TARGET)
 
-release: CXXFLAGS := $(CXXFLAGS) -O3 -s -fno-ident -no-pie -fno-pie\
+release: CXXFLAGS += -O3 -s -fno-ident -no-pie -fno-pie\
 	-Wl,--gc-sections \
 	-ffunction-sections -fdata-sections 
 release: $(OBJ) | $(OUTPUT_DIR)

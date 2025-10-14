@@ -12,9 +12,10 @@
 
 void createNewWorld(const std::string& name, unsigned int version, SaveEntity& sp) {
   // membuta directori baru
-  std::filesystem::create_directories(std::string(WORLD_NAME) + name);
+  std::filesystem::path worldDir = std::filesystem::path(WORLD_NAME) / name;
+  std::filesystem::create_directories(worldDir);
   // mebuat file level.dat untuk menyimpan metadata world
-  std::ofstream levelfile(std::string(WORLD_NAME) + name + "/level.dat", std::ios::binary);
+  std::ofstream levelfile(worldDir / "level.dat", std::ios::binary);
   if (!levelfile) {
     std::cerr << "gagal membuat level.dat" << std::endl;
   }
@@ -25,10 +26,11 @@ void createNewWorld(const std::string& name, unsigned int version, SaveEntity& s
   levelfile.write(reinterpret_cast<char*>(&version), sizeof(version));
   levelfile.close();
   // membuat database levelDB untuk menyimpan world game
+  std::filesystem::path dbPath = worldDir / "db";
   leveldb::DB* db;
   leveldb::Options options;
   options.create_if_missing = true;
-  leveldb::Status status = leveldb::DB::Open(options, std::string(WORLD_NAME) + name + "/db", &db);
+  leveldb::Status status = leveldb::DB::Open(options, dbPath.string(), &db);
   if (!status.ok()) {
     std::cerr << "gagal membuat db: " << status.ToString() << std::endl; 
   }
@@ -71,11 +73,12 @@ void readWorldlist::readLevelWorld() {
   }
 }
 
-LoadAndSave::LoadAndSave(const std::string& path) : path(path) {
+LoadAndSave::LoadAndSave(const std::string& path)  {
   // membuat database levelDB baru
   leveldb::Options options;
   leveldb::DB* raw_db = nullptr;
-  leveldb::Status status = leveldb::DB::Open(options, std::string(path) + "/db", &raw_db);
+  std::filesystem::path worldDir = std::filesystem::path(path) / "db";
+  leveldb::Status status = leveldb::DB::Open(options, worldDir.string(), &raw_db);
   if (!status.ok()) {
     std::cerr << "Gagal buka DB untuk write: " << status.ToString() << std::endl;
   }
