@@ -1,5 +1,5 @@
 #include <cmath>
-#include "raylib/raylib.h"
+#include "../include/raylib/raylib.h"
 #include <memory>
 #include <string>
 #include <thread>

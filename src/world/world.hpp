@@ -7,7 +7,7 @@
 #include "map.hpp"
 #include <memory>
 #include <chrono>
-#include "raylib/raylib.h"
+#include "../../include/raylib/raylib.h"
 #include <string>
 #include <vector>
 

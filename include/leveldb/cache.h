@@ -20,8 +20,8 @@
 
 #include <cstdint>
 
-#include "leveldb/export.h"
-#include "leveldb/slice.h"
+#include "./export.h"
+#include "./slice.h"
 
 namespace leveldb {
 

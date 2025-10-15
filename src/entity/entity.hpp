@@ -2,9 +2,9 @@
 #define ENTITY_PLAYER
 
 #include <cstdint>
-#include "raylib/raylib.h"
+#include "../../include/raylib/raylib.h"
 #include <array>
-#include "stduuid/uuid.h"
+#include "../../include/stduuid/uuid.h"
 
 /// @brief Arah hadap player (digunakan untuk animasi atau pergerakan)
 enum Focus {

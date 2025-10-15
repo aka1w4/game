@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "leveldb/db.h"
+#include "../../include/leveldb/db.h"
 #include "../entity/entity.hpp"
 
 /// @brief lokasi folder utama untuk menyimpan world

@@ -18,8 +18,8 @@
 #include <string>
 #include <vector>
 
-#include "leveldb/export.h"
-#include "leveldb/status.h"
+#include "./export.h"
+#include "./status.h"
 
 // This workaround can be removed when leveldb::Env::DeleteFile is removed.
 #if defined(_WIN32)

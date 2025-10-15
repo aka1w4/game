@@ -1,4 +1,4 @@
-#include "raylib/raylib.h"
+#include "../include/raylib/raylib.h"
 #include "game.hpp"
 
 int main() {

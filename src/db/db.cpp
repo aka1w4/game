@@ -5,9 +5,9 @@
 #include <memory>
 #include <string>
 #include <filesystem>
-#include "leveldb/db.h"
+#include "../../include/leveldb/db.h"
 #include "../entity/entity.hpp"
-#include "stduuid/uuid.h"
+#include "../../include/stduuid/uuid.h"
 #include <vector>
 
 void createNewWorld(const std::string& name, unsigned int version, SaveEntity& sp) {

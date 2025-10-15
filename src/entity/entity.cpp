@@ -1,5 +1,5 @@
 #include "entity.hpp"
-#include "raylib/raylib.h"
+#include "../../include/raylib/raylib.h"
 
 void Enemy::Draw() {
   // hitung posisi x frame animasi 
