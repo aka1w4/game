@@ -4,13 +4,14 @@
 #include "../db/db.hpp"
 #include "../player/player.hpp"
 #include "../entity/entity.hpp"
+#include "../camera/camera.hpp"
 #include <functional>
 #include <memory>
-#include "../../include/raylib/raylib.h"
 #include <filesystem>
 #include <chrono>
 #include <thread>
 #include "../../include/stduuid/uuid.h"
+#include "../../include/raylib/raylib.h"
 
 NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(const std::string&)> p) : 
   play(p),
@@ -64,7 +65,8 @@ void NewWorld::ClearText() {
 
 World::World(const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : 
   ls(path),
-  imgs(imgs)
+  imgs(imgs),
+  camGame(Camera2D{})
 {
   SaveEntity sp = ls.readbinaryPlayer();
 
@@ -83,7 +85,7 @@ World::World(const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D&
   // loadplayer di thread
   std::thread loadplayer([this, sp, &imgs, &healthimg]() {
       player = std::make_unique<Player>(sp, imgs, healthimg);
-      cam = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 2.0f};
+      camGame = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 2.0f};
   });
 
   loadplayer.join();
@@ -137,7 +139,8 @@ void World::Update(bool& pauseGame) {
   }
 
   player->UpdatePos(Vector2{newPos.x, newPos.y}); // mengupdate posisi baru player
-  cam.target = Vector2{newPos.x, newPos.y};       // mengikuti posisi player
+  //cam.target = Vector2{newPos.x, newPos.y};       // mengikuti posisi player
+  camGame.Update(Vector2{newPos.x, newPos.y});
   tupdateeemy.join();
 
   // mengecek apakah waktu sekarang sudah lebih dari 5 menit
@@ -165,7 +168,7 @@ void World::Update(bool& pauseGame) {
 }
 
 void World::Draw() {
-  BeginMode2D(cam);
+  BeginMode2D(camGame.cam);
     m->DrawBackground();
     player->Draw();
     std::thread tdrawenemy([this]() {

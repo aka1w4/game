@@ -5,6 +5,7 @@
 #include "../player/player.hpp"
 #include "../entity/entity.hpp"
 #include "map.hpp"
+#include "../camera/camera.hpp"
 #include <memory>
 #include <chrono>
 #include "../../include/raylib/raylib.h"
@@ -33,7 +34,7 @@ class NewWorld {
 class World {
   private:
     std::unique_ptr<Player> player;                               // smart pointer mengelola instance Player
-    Camera2D cam;                                                 // kamera utama untuk mengatur posisi tampilan game
+    CameraGame camGame;                                           // kamera utama untuk mengatur posisi tampilan game
     std::unique_ptr<Map> m;                                       // smart pointer mengelola instance map
     std::chrono::time_point<std::chrono::steady_clock> lastSave;  // waktu terakhir menyimpan
     LoadAndSave ls;                                               // untuk menulis data binary
