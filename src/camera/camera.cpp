@@ -1,12 +1,6 @@
 #include "camera.hpp"
 #include "../../include/raylib/raylib.h"
-
-float CameraGame::clamp(float playerpos, float min, float max) {
-  if (playerpos < min) return min;
-  if (playerpos > max) return max;
-
-  return playerpos;
-}
+#include <algorithm>
 
 void CameraGame::Update(Vector2 playerpos) {
   float ViewW = (GetScreenWidth() * 0.5f)  / cam.zoom;
@@ -20,12 +14,12 @@ void CameraGame::Update(Vector2 playerpos) {
   if (mapMax <= GetScreenWidth() / cam.zoom) {
     cam.target.x = mapMax * 0.5f;
   } else {
-    cam.target.x = clamp(playerpos.x, minCamX, maxCamX);
+    cam.target.x = std::clamp(playerpos.x, minCamX, maxCamX);
   }
 
   if (mapMax <= GetScreenHeight() / cam.zoom) {
     cam.target.y = mapMax * 0.5f;
   } else {
-    cam.target.y = clamp(playerpos.y, minCamY, maxCamY);
+    cam.target.y = std::clamp(playerpos.y, minCamY, maxCamY);
   }
 }
