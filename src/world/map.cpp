@@ -90,8 +90,8 @@ void Map::LoadResources() {
               c.src.width = tm.tilewidth;
               c.src.height = tm.tileheight;
 
-              c.pos.x = x * tm.tilewidth;
-              c.pos.y = y * tm.tileheight;
+              c.pos.x = float(x + m.x) * tm.tilewidth;
+              c.pos.y = float(y + m.y) * tm.tileheight;
 
               c.box.x = c.pos.x;
               c.box.y = c.pos.y;
@@ -168,7 +168,7 @@ void Map::DrawForeground() {
               int tileY = (tileId - tm.firstgid) / tm.columns;
 
               Rectangle src = Rectangle{(float)tileX * tm.tilewidth, (float)tileY * tm.tileheight, (float)tm.tilewidth, (float)tm.tileheight};
-              Vector2 pos = Vector2{(float)x * tm.tilewidth, (float)y * tm.tileheight};
+              Vector2 pos = Vector2{(float)(x + m.x) * tm.tilewidth, (float)(y + m.y) * tm.tileheight};
               DrawTextureRec(
                   tm.image, 
                   src,
