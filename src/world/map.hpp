@@ -23,10 +23,15 @@ struct Collisions {
   const Texture2D* img;
 };
 
+struct StructMap {
+  int x, y;
+  std::vector<Layer> ls;
+  std::vector<Tilemap> tms;
+};
+
 class Map {
   private:
-    std::vector<Layer> ls;
-    std::vector<Tilemap> tms;
+    std::vector<StructMap> maps;
 
   public:
     std::vector<Collisions> collisions;
