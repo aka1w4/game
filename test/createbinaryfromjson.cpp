@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 #include "../include/json.hpp"
@@ -15,18 +16,20 @@ struct Tilemap {
 };
 
 struct Map {
-  int x, y;
+  int x, y, map;
   std::vector<Layer> layers;
   std::vector<Tilemap> Tilemaps;
 };
 
-Map LoadMap(std::string& path) {
+Map LoadMap(std::string& path, int i) {
   std::ifstream input(path);
   nlohmann::json j;
 
   input >> j;
   Map m;
 
+  std::cout << i << std::endl;
+  m.map = i;
   m.x = j["layers"][0]["x"];
   m.y = j["layers"][0]["y"];
 
@@ -67,8 +70,9 @@ int main() {
   out.write((char*)&mapCount, sizeof(int));
 
   for (int i=0; i < mapCount; i++) {
-    Map m = LoadMap(maps[i]);
+    Map m = LoadMap(maps[i], i);
 
+    out.write((char*)&m.map, sizeof(int));
     out.write((char*)&m.x, sizeof(int));
     out.write((char*)&m.y, sizeof(int));
 

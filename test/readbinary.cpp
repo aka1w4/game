@@ -14,7 +14,7 @@ struct Tilemap {
 };
 
 struct Map {
-  int x, y;
+  int x, y, map;
   std::vector<Layer> layers;
   std::vector<Tilemap> Tilemaps;
 };
@@ -32,6 +32,7 @@ int main() {
   for(int i=0; i < mapCount; i++) {
     Map m;
 
+    in.read((char*)&m.map, sizeof(int));
     in.read((char*)&m.x, sizeof(int));
     in.read((char*)&m.y, sizeof(int));
 
@@ -79,7 +80,7 @@ int main() {
   }
 
   for (const auto &m : maps) {
-    std::cout << "x: " << m.x << std::endl;
+    std::cout << "map ke: " << m.map << std::endl;
   }
   
   return 0;

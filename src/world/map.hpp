@@ -24,7 +24,7 @@ struct Collisions {
 };
 
 struct StructMap {
-  int x, y;
+  int x, y, map;
   std::vector<Layer> ls;
   std::vector<Tilemap> tms;
 };
@@ -34,6 +34,7 @@ class Map {
     std::vector<StructMap> maps;
     Vector2 sizeMap{0,0};
     std::vector<Collisions> collisions;
+    int location = 0;
 
   public:
     Map(const std::string& pathmap);
@@ -43,6 +44,7 @@ class Map {
     void DrawBackground();
     void DrawForeground();
     void LoadResources();
+    void Update(Vector2& playerpos);
 };
 
 #endif // !LAYER

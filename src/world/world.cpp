@@ -140,6 +140,7 @@ void World::Update(bool& pauseGame) {
 
   Vector2 posPlayer{newPos.x, newPos.y};
   player->UpdatePos(posPlayer); // mengupdate posisi baru player
+  m->Update(posPlayer);
   //cam.target = Vector2{newPos.x, newPos.y};       // mengikuti posisi player
   camGame.Update(posPlayer, m->GetSizeMap());
   tupdateeemy.join();

@@ -15,6 +15,7 @@ Map::Map(const std::string& pathmap) {
   for(int i=0; i < mapCount; i++) {
     StructMap m;
 
+    in.read((char*)&m.map, sizeof(int));
     in.read((char*)&m.x, sizeof(int));
     in.read((char*)&m.y, sizeof(int));
 
@@ -122,6 +123,7 @@ Map::~Map() {
 
 void Map::DrawBackground() {
   for (const auto &m : maps) {
+    if (m.map != location) { continue; }
     for (const auto &l : m.ls) {
       if (l.name != "background") { continue; }
       for (int y = 0; y < l.height; y++) {
@@ -156,6 +158,7 @@ void Map::DrawBackground() {
 
 void Map::DrawForeground() {
   for (const auto &m : maps) {
+    if (m.map != location) { continue; }
     for (const auto &l : m.ls) {
       if (l.name != "foreground") { continue; }
       for (int y = 0; y < l.height; y++) {
@@ -182,6 +185,26 @@ void Map::DrawForeground() {
           }
         }
       }
+    }
+  }
+}
+
+void Map::Update(Vector2& playerpos) {
+  if (playerpos.x > 100 * 16) {
+    if (playerpos.y > 100 * 16) {
+      sizeMap = Vector2{100, 100};
+      location = 3;
+    } else {
+      sizeMap = Vector2{100, 0};
+      location = 1;
+    }
+  } else {
+    if (playerpos.y > 100 * 16) {
+      sizeMap = Vector2{0, 100};
+      location = 2;
+    } else {
+      sizeMap = Vector2{0, 0};
+      location = 0;
     }
   }
 }
