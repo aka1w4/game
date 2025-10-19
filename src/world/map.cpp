@@ -18,6 +18,9 @@ Map::Map(const std::string& pathmap) {
     in.read((char*)&m.x, sizeof(int));
     in.read((char*)&m.y, sizeof(int));
 
+    sizeMap.x += m.x;
+    sizeMap.y += m.y;
+
     int layerCount;
     int tilemapCount;
     in.read((char*)&tilemapCount, sizeof(int));
@@ -181,4 +184,12 @@ void Map::DrawForeground() {
       }
     }
   }
+}
+
+std::vector<Collisions>& Map::GetCollisions() {
+  return collisions;
+}
+
+Vector2& Map::GetSizeMap() {
+  return sizeMap;
 }

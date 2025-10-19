@@ -32,11 +32,14 @@ struct StructMap {
 class Map {
   private:
     std::vector<StructMap> maps;
+    Vector2 sizeMap{0,0};
+    std::vector<Collisions> collisions;
 
   public:
-    std::vector<Collisions> collisions;
     Map(const std::string& pathmap);
     ~Map();
+    std::vector<Collisions>& GetCollisions();
+    Vector2& GetSizeMap();
     void DrawBackground();
     void DrawForeground();
     void LoadResources();

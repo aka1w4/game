@@ -120,7 +120,7 @@ void World::Update(bool& pauseGame) {
 
   Rectangle recX = oldPos;
   recX.x = newPos.x;
-  for (const auto &c : m->collisions) {
+  for (const auto &c : m->GetCollisions()) {
     // mengecek apakah posisi player x bertabrakan dengan c.box
     if (CheckCollisionRecs(recX, c.box)) {
       newPos.x = oldPos.x;
@@ -130,7 +130,7 @@ void World::Update(bool& pauseGame) {
 
   Rectangle recY = oldPos;
   recY.y = newPos.y;
-  for (const auto &c : m->collisions) {
+  for (const auto &c : m->GetCollisions()) {
     // mengecek apakah posisi player y bertabrakan dengan c.box
     if (CheckCollisionRecs(recY, c.box)) {
       newPos.y = oldPos.y;
@@ -138,9 +138,10 @@ void World::Update(bool& pauseGame) {
     }
   }
 
-  player->UpdatePos(Vector2{newPos.x, newPos.y}); // mengupdate posisi baru player
+  Vector2 posPlayer{newPos.x, newPos.y};
+  player->UpdatePos(posPlayer); // mengupdate posisi baru player
   //cam.target = Vector2{newPos.x, newPos.y};       // mengikuti posisi player
-  camGame.Update(Vector2{newPos.x, newPos.y});
+  camGame.Update(posPlayer, m->GetSizeMap());
   tupdateeemy.join();
 
   // mengecek apakah waktu sekarang sudah lebih dari 5 menit

@@ -3,15 +3,11 @@
 
 #include "../../include/raylib/raylib.h"
 
-// ukuran map dikali pixel tile
-const float mapMax  = 100 * 16.0f;
-//const float mapHeight = 100 * 16.0f;
-
 class CameraGame {
   public:
     Camera2D cam;
     CameraGame(Camera2D cam) : cam(cam) {}
-    void Update(Vector2 playerpos);
+    void Update(Vector2& playerpos, Vector2& sizeMap);
 };
 
 #endif // !CAMERA_CPP

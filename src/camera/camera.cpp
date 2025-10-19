@@ -2,23 +2,26 @@
 #include "../../include/raylib/raylib.h"
 #include <algorithm>
 
-void CameraGame::Update(Vector2 playerpos) {
+void CameraGame::Update(Vector2& playerpos, Vector2& sizeMap) {
   float halfViewW = cam.offset.x / cam.zoom;
   float halfViewH = cam.offset.y / cam.zoom;
+  
+  float MapX = sizeMap.x * 16.0f;
+  float MapY = sizeMap.y * 16.0f;
 
   float minCamX = halfViewW;
-  float maxCamX = mapMax - halfViewW;
+  float maxCamX = MapX - halfViewW;
   float minCamY = halfViewH;
-  float maxCamY = mapMax - halfViewH;
+  float maxCamY = MapY - halfViewH;
 
-  if (mapMax <= GetScreenWidth() / cam.zoom) {
-    cam.target.x = mapMax / 2.0f;
+  if (MapX <= GetScreenWidth() / cam.zoom) {
+    cam.target.x = MapX / 2.0f;
   } else {
     cam.target.x = std::clamp(playerpos.x, minCamX, maxCamX);
   }
 
-  if (mapMax <= GetScreenHeight() / cam.zoom) {
-    cam.target.y = mapMax / 2.0f;
+  if (MapY <= GetScreenHeight() / cam.zoom) {
+    cam.target.y = MapY / 2.0f;
   } else {
     cam.target.y = std::clamp(playerpos.y, minCamY, maxCamY);
   }

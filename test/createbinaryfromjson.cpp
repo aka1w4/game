@@ -57,7 +57,9 @@ Map LoadMap(std::string& path) {
 int main() {
   std::vector<std::string> maps = {
     "../assets/map/map.json",
-    "../assets/map/map2.json"
+    "../assets/map/map2.json",
+    "../assets/map/map3.json",
+    "../assets/map/map4.json",
   };
   
   int mapCount = maps.size();

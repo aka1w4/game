@@ -34,7 +34,7 @@ class Player {
     /// @brief Rectangle player
     const Rectangle GetRec();
     /// @brief update posisi player
-    void UpdatePos(Vector2 posNew);
+    void UpdatePos(Vector2& posNew);
     /// @brief draw health player
     void DrawHeart();
 };

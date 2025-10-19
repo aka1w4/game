@@ -134,7 +134,7 @@ const Rectangle Player::GetRec() {
   };
 }
 
-void Player::UpdatePos(Vector2 posNew) {
+void Player::UpdatePos(Vector2& posNew) {
   // menyimpan posisi baru 
   e.pos = posNew;
 }
