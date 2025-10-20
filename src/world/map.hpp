@@ -14,7 +14,7 @@ struct Layer {
 struct Tilemap {
   int firstgid, columns, tilecount, tilewidth, tileheight;
   std::string pathimage;
-  Texture2D image;
+  Texture2D* image;
 };
 
 struct Collisions {
@@ -29,9 +29,15 @@ struct StructMap {
   std::vector<Tilemap> tms;
 };
 
+struct ResourceMap {
+  std::string pathimage;
+  Texture2D texture;
+};
+
 class Map {
   private:
     std::vector<StructMap> maps;
+    std::vector<ResourceMap> resourceMap;
     Vector2 sizeMap{0,0};
     std::vector<Collisions> collisions;
     int location = 0;

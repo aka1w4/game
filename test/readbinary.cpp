@@ -25,6 +25,18 @@ int main() {
     std::cout << "error" << std::endl;
   }
 
+  std::vector<std::string> images;
+
+  int lenImages;
+  in.read((char*)&lenImages, sizeof(int));
+  images.resize(lenImages);
+  for (int i=0; i < lenImages; i++) {
+    int len;
+    in.read(reinterpret_cast<char*>(&len), sizeof(int));
+    images[i].resize(len);
+    in.read(&images[i][0], len);
+  }
+
   std::vector<Map> maps;
   int mapCount;
   in.read((char*)&mapCount, sizeof(int));
@@ -81,6 +93,10 @@ int main() {
 
   for (const auto &m : maps) {
     std::cout << "map ke: " << m.map << std::endl;
+  }
+
+  for (const auto &image : images) {
+    std::cout << "path: " << image << std::endl;
   }
   
   return 0;

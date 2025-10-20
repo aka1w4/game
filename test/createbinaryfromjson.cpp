@@ -15,18 +15,18 @@ struct Tilemap {
   std::string pathimage;
 };
 
-struct Map {
+struct StructMap {
   int x, y, map;
   std::vector<Layer> layers;
   std::vector<Tilemap> Tilemaps;
 };
 
-Map LoadMap(std::string& path, int i) {
+StructMap LoadMap(std::string& path, int i) {
   std::ifstream input(path);
   nlohmann::json j;
 
   input >> j;
-  Map m;
+  StructMap m;
 
   std::cout << i << std::endl;
   m.map = i;
@@ -64,13 +64,33 @@ int main() {
     "../assets/map/map3.json",
     "../assets/map/map4.json",
   };
-  
-  int mapCount = maps.size();
+
+  std::vector<std::string> images = {
+    "assets/tilemap_packed.png",
+    "assets/TilesetField.png"
+  };
+
   std::ofstream out("map.bin", std::ios::binary);
+  
+  int lenImages = images.size();
+  out.write((char*)&lenImages, sizeof(int));
+
+  for (const auto &image : images) {
+    int len = image.size();
+    out.write(reinterpret_cast<const char*>(&len), sizeof(int));
+    out.write(image.data(), len);
+  }
+
+  //int dataCount = layer.datas.size();
+  //out.write((char*)&dataCount, sizeof(int));
+  //out.write(reinterpret_cast<const char*>(layer.datas.data()), dataCount * sizeof(int));
+
+
+  int mapCount = maps.size(); 
   out.write((char*)&mapCount, sizeof(int));
 
   for (int i=0; i < mapCount; i++) {
-    Map m = LoadMap(maps[i], i);
+    StructMap m = LoadMap(maps[i], i);
 
     out.write((char*)&m.map, sizeof(int));
     out.write((char*)&m.x, sizeof(int));

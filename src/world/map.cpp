@@ -9,6 +9,20 @@ Map::Map(const std::string& pathmap) {
     throw std::runtime_error("gagal membaca");
   } 
 
+  std::vector<std::string> images;
+  int lenImages;
+  in.read((char*)&lenImages, sizeof(int));
+  images.resize(lenImages);
+  for (int i=0; i < lenImages; i++) {
+    int len;
+    in.read(reinterpret_cast<char*>(&len), sizeof(int));
+    images[i].resize(len);
+    in.read(&images[i][0], len);
+
+    ResourceMap resource{images[i]};
+    resourceMap.push_back(resource);
+  }
+
   int mapCount;
   in.read((char*)&mapCount, sizeof(int));
 
@@ -67,11 +81,15 @@ Map::Map(const std::string& pathmap) {
 }
 
 void Map::LoadResources() {
+  for (auto &resource : resourceMap) {
+    resource.texture = LoadTexture(resource.pathimage.c_str());
+  }
+
   for (auto &m : maps) {
     for (auto &tm : m.tms) {
-      tm.image = LoadTexture(tm.pathimage.c_str());
-      if (tm.image.id == 0) {
-        throw std::runtime_error("gagal load image");
+      for (auto &resource : resourceMap) {
+        if (resource.pathimage != tm.pathimage) { continue; }
+        tm.image = &resource.texture;
       }
     }
 
@@ -102,7 +120,7 @@ void Map::LoadResources() {
               c.box.width = c.src.width;
               c.box.height = c.src.height;
 
-              c.img = &tm.image;
+              c.img = tm.image;
               collisions.push_back(c);
               break;
           }
@@ -114,10 +132,8 @@ void Map::LoadResources() {
 }
 
 Map::~Map() {
-  for (auto &m : maps) {
-    for (auto &tm : m.tms) {
-      UnloadTexture(tm.image);
-    }
+  for (auto &resource : resourceMap) {
+    UnloadTexture(resource.texture);
   }
 }
 
@@ -141,7 +157,7 @@ void Map::DrawBackground() {
             Rectangle src = Rectangle{(float)tileX * tm.tilewidth, (float)tileY * tm.tileheight, (float)tm.tilewidth, (float)tm.tileheight};
             Vector2 pos = Vector2{(float)(x + m.x) * tm.tilewidth, (float)(y + m.y) * tm.tileheight};
             DrawTextureRec(
-                tm.image, 
+                *tm.image, 
                 src,
                 pos, 
                 WHITE);
@@ -176,7 +192,7 @@ void Map::DrawForeground() {
               Rectangle src = Rectangle{(float)tileX * tm.tilewidth, (float)tileY * tm.tileheight, (float)tm.tilewidth, (float)tm.tileheight};
               Vector2 pos = Vector2{(float)(x + m.x) * tm.tilewidth, (float)(y + m.y) * tm.tileheight};
               DrawTextureRec(
-                  tm.image, 
+                  *tm.image, 
                   src,
                   pos, 
                   WHITE
