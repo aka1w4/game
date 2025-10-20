@@ -138,11 +138,18 @@ void World::Update(bool& pauseGame) {
     }
   }
 
+  if (newPos.x > 3180 || newPos.x < 0) {
+    newPos.x = oldPos.x;
+  }
+
+  if (newPos.y > 3170 || newPos.y < 0) {
+    newPos.y = oldPos.y;  
+  }
+
   Vector2 posPlayer{newPos.x, newPos.y};
   player->UpdatePos(posPlayer); // mengupdate posisi baru player
   m->Update(posPlayer);
-  //cam.target = Vector2{newPos.x, newPos.y};       // mengikuti posisi player
-  camGame.Update(posPlayer, m->GetSizeMap());
+  camGame.Update(posPlayer, m->GetSizeMap());  // mengikuti posisi player
   tupdateeemy.join();
 
   // mengecek apakah waktu sekarang sudah lebih dari 5 menit
