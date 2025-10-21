@@ -152,3 +152,22 @@ void Player::DrawHeart() {
     }
   }
 }
+
+void Player::RespwanPlayer(Vector2& setpoint) {
+  e.pos = setpoint;
+  health = maxHealth;
+  death = false;
+}
+
+void Player::Death() {
+  health = 0;
+  death = true;
+}
+
+bool Player::GetPlayerDeath() {
+  if (health == 0) {
+    return true;
+  }
+
+  return false;
+}

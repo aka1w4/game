@@ -63,12 +63,16 @@ void NewWorld::ClearText() {
   textinput_name->ClearText(); // menghapus text
 }
 
-World::World(const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg) : 
+World::World(const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg, Texture2D& buttonTexture) : 
   ls(path),
   imgs(imgs),
-  camGame(Camera2D{})
+  camGame(Camera2D{}),
+  respwanButton(Button(0, 0, 183, 29, 40, "resume", buttonTexture,[this]() {
+        player->RespwanPlayer(setPoint);
+  }))
 {
   SaveEntity sp = ls.readbinaryPlayer();
+  setPoint = sp.pos;
 
   std::thread loadentity([this, &imgs]() {
       std::vector<SaveEntity> entities = ls.readbinaryEntity();
@@ -113,43 +117,56 @@ void World::Update(bool& pauseGame) {
       }
   });
 
-  // oldpos dan newpos player
-  Rectangle oldPos = player->GetRec();
-  if (!pauseGame) player->Update();
-  Rectangle newPos = player->GetRec();
+  // test death player
+  if (IsKeyPressed(KEY_F)) {
+    player->Death();
+  }
 
-  Rectangle recX = oldPos;
-  recX.x = newPos.x;
-  for (const auto &c : m->GetCollisions()) {
-    // mengecek apakah posisi player x bertabrakan dengan c.box
-    if (CheckCollisionRecs(recX, c.box)) {
+ 
+  if (!player->GetPlayerDeath()) {
+    // oldpos dan newpos player
+    Rectangle oldPos = player->GetRec();
+    if (!pauseGame) player->Update();
+    Rectangle newPos = player->GetRec();
+    
+    Rectangle recX = oldPos;
+    recX.x = newPos.x;
+    for (const auto &c : m->GetCollisions()) {
+      // mengecek apakah posisi player x bertabrakan dengan c.box
+      if (CheckCollisionRecs(recX, c.box)) {
+        newPos.x = oldPos.x;
+        break;
+      }
+    }
+
+    Rectangle recY = oldPos;
+    recY.y = newPos.y;
+    for (const auto &c : m->GetCollisions()) {
+      // mengecek apakah posisi player y bertabrakan dengan c.box
+      if (CheckCollisionRecs(recY, c.box)) {
+        newPos.y = oldPos.y;
+        break;
+      }
+    }
+
+    if (newPos.x > 3180 || newPos.x < 0) {
       newPos.x = oldPos.x;
-      break;
+    }
+
+    if (newPos.y > 3170 || newPos.y < 0) {
+      newPos.y = oldPos.y;  
+    }
+
+    Vector2 posPlayer{newPos.x, newPos.y};
+    player->UpdatePos(posPlayer); // mengupdate posisi baru player
+    m->Update(posPlayer);
+    camGame.Update(posPlayer, m->GetSizeMap());  // mengikuti posisi player
+  } else {
+    if (respwanButton.isClicked()) {
+      respwanButton.Action();
     }
   }
 
-  Rectangle recY = oldPos;
-  recY.y = newPos.y;
-  for (const auto &c : m->GetCollisions()) {
-    // mengecek apakah posisi player y bertabrakan dengan c.box
-    if (CheckCollisionRecs(recY, c.box)) {
-      newPos.y = oldPos.y;
-      break;
-    }
-  }
-
-  if (newPos.x > 3180 || newPos.x < 0) {
-    newPos.x = oldPos.x;
-  }
-
-  if (newPos.y > 3170 || newPos.y < 0) {
-    newPos.y = oldPos.y;  
-  }
-
-  Vector2 posPlayer{newPos.x, newPos.y};
-  player->UpdatePos(posPlayer); // mengupdate posisi baru player
-  m->Update(posPlayer);
-  camGame.Update(posPlayer, m->GetSizeMap());  // mengikuti posisi player
   tupdateeemy.join();
 
   // mengecek apakah waktu sekarang sudah lebih dari 5 menit
@@ -189,6 +206,10 @@ void World::Draw() {
     m->DrawForeground();
   EndMode2D();
   player->DrawHeart();
+  if (player->GetPlayerDeath()) {
+    DrawRectangleRec(Rectangle{0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()}, Fade(RED, 0.5f));
+    respwanButton.Draw();
+  }
 }
 
 void World::WritePlayer() {

@@ -12,6 +12,7 @@ class Player {
     Entity e;                         // struct entity
     uint8_t health, maxHealth;        // darah saat ini dan maksimal darah
     Texture2D* healthimg;             // texture image health
+    bool death;
 
   public:
     /// @brief membuat player baru dengan posisi, arah, dan sprite
@@ -37,6 +38,9 @@ class Player {
     void UpdatePos(Vector2& posNew);
     /// @brief draw health player
     void DrawHeart();
+    void RespwanPlayer(Vector2& setpoint);
+    void Death();
+    bool GetPlayerDeath();
 };
 
 #endif // !PLAYER

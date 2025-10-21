@@ -40,10 +40,12 @@ class World {
     LoadAndSave ls;                                               // untuk menulis data binary
     std::vector<std::unique_ptr<Enemy>> enems;
     std::array<Texture2D, 2>& imgs;
+    Vector2 setPoint;
+    Button respwanButton;
 
   public:
     /// @brief membuat world
-    World(const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg);
+    World(const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg, Texture2D& buttonTexture);
     /// @brief menghapus world
     ~World();
     /** @brief update logika world

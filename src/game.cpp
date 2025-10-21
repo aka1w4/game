@@ -57,7 +57,7 @@ Game::Game() :
         })),
   newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture, [this](const std::string& text)
         {
-        world = std::make_unique<World>(std::string(WORLD_NAME) + text, playerTextures, healthTexture);
+        world = std::make_unique<World>(std::string(WORLD_NAME) + text, playerTextures, healthTexture, buttonTexture);
         gs = PlayState;
         })) {}
 
@@ -186,7 +186,7 @@ void Game::CreateButtonReadWorld() {
     y += 60;
     wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, iconTexture, d, [this](const WorldInfo& wi) {
           //SaveEntity sp = readbinaryPlayer(wi.path);
-          world = std::make_unique<World>(wi.path, playerTextures, healthTexture);
+          world = std::make_unique<World>(wi.path, playerTextures, healthTexture, buttonTexture);
           gs = PlayState;
     }, [this]() {
     CreateButtonReadWorld();
