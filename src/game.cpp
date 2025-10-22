@@ -12,7 +12,6 @@ Game::Game() :
   buttonTexture(LoadTexture("assets/button.png")),
   inputTextTexture(LoadTexture("assets/inputtext.png")),
   iconTexture(LoadTexture("assets/ui.png")),
-  healthTexture(LoadTexture("assets/health.png")),
   startButton(Button(0, 0, 183, 29, 40, "start", buttonTexture, [this]()
         {
         CreateButtonReadWorld();
@@ -57,7 +56,7 @@ Game::Game() :
         })),
   newworld(std::make_unique<NewWorld>(inputTextTexture, buttonTexture, [this](const std::string& text)
         {
-        world = std::make_unique<World>(std::string(WORLD_NAME) + text, playerTextures, healthTexture, buttonTexture);
+        world = std::make_unique<World>(std::string(WORLD_NAME) + text, buttonTexture);
         gs = PlayState;
         })) {}
 
@@ -65,9 +64,6 @@ Game::~Game() {
   UnloadTexture(buttonTexture);
   UnloadTexture(inputTextTexture);
   UnloadTexture(iconTexture);
-  for (auto &p : playerTextures) {
-    UnloadTexture(p);
-  }
 }
 
 void Game::Update() { 
@@ -91,9 +87,6 @@ void Game::Update() {
       }
       break;
     case MenuState:
-      for (auto &b : bs) {
-        b.Update();
-      }
       if (startButton.isClicked()) {
         startButton.Action();
       }
@@ -143,9 +136,6 @@ void Game::Drawing() {
       }
       break;
     case MenuState:
-      for (auto &b : bs) {
-        b.Draw();
-      }
       startButton.Draw();
       closeButton.Draw();
       break;
@@ -185,8 +175,7 @@ void Game::CreateButtonReadWorld() {
   for (const auto& d : ws.datas) {
     y += 60;
     wbs.push_back(std::make_unique<WorldButton>(0, y, 183, 29, 40, buttonTexture, iconTexture, d, [this](const WorldInfo& wi) {
-          //SaveEntity sp = readbinaryPlayer(wi.path);
-          world = std::make_unique<World>(wi.path, playerTextures, healthTexture, buttonTexture);
+          world = std::make_unique<World>(wi.path, buttonTexture);
           gs = PlayState;
     }, [this]() {
     CreateButtonReadWorld();

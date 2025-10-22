@@ -1,30 +1,10 @@
 #ifndef UI
 #define UI
 
-#include <array>
 #include <string>
 #include "../../include/raylib/raylib.h"
 #include <functional>
 #include "../db/db.hpp"
-#include "../entity/entity.hpp"
-
-class Background {
-  private:
-    int count, x, y = 0;
-    int frameCount = 4;
-    int frameWidth = 16; 
-    int frameHeight = 32;
-    Vector2 pos, origin;
-    bool rotation, sum;
-    Focus f;
-    MoveState ms;
-    std::array<Texture2D, 2>* imgs;
-
-  public:
-    Background(int x, int y, bool sum, Focus f, MoveState ms,Vector2 origin, bool rotation, std::array<Texture2D, 2>& imgs) : x(x), y(y), sum(sum), pos(Vector2{(float)x, (float)y}), f(f), ms(ms), origin(origin), rotation(rotation), imgs(&imgs) {};
-    void Update();
-    void Draw();
-};
 
 /// @brief Representasi Button
 class Button {

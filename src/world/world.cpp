@@ -63,32 +63,35 @@ void NewWorld::ClearText() {
   textinput_name->ClearText(); // menghapus text
 }
 
-World::World(const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg, Texture2D& buttonTexture) : 
+World::World(const std::string& path, Texture2D& buttonTexture) : 
   ls(path),
-  imgs(imgs),
   camGame(Camera2D{}),
+  healthTexture(LoadTexture("assets/health.png")),
   respwanButton(Button(0, 0, 183, 29, 40, "resume", buttonTexture,[this]() {
         player->RespwanPlayer(setPoint);
   }))
 {
   SaveEntity sp = ls.readbinaryPlayer();
   setPoint = sp.pos;
+  playerTextures[isIdle] = LoadTexture("assets/16x32idle.png");
+  playerTextures[isWalk] = LoadTexture("assets/16x32walk.png");
 
-  std::thread loadentity([this, &imgs]() {
+  std::thread loadentity([this]() {
       std::vector<SaveEntity> entities = ls.readbinaryEntity();
 
       for (auto &e : entities) {
-        enems.push_back(std::make_unique<Enemy>(e, imgs));
+        enems.push_back(std::make_unique<Enemy>(e, playerTextures));
       }
   });
+
   // loadmap di thread
   std::thread loadmap([this]() {
        m = std::make_unique<Map>("assets/map/map.bin");
   });
 
   // loadplayer di thread
-  std::thread loadplayer([this, sp, &imgs, &healthimg]() {
-      player = std::make_unique<Player>(sp, imgs, healthimg);
+  std::thread loadplayer([this, sp]() {
+      player = std::make_unique<Player>(sp, playerTextures, healthTexture);
       camGame = Camera2D{Vector2{GetScreenWidth()/2.0f, GetScreenHeight()/2.0f}, sp.pos, 0.0f, 2.0f};
   });
 
@@ -104,6 +107,11 @@ World::~World() {
   std::thread twriteentity([this](){
       WriteEntity();
   });
+
+  for (auto &texture : playerTextures) {
+    UnloadTexture(texture);
+  }
+  UnloadTexture(healthTexture);
   twriteentity.join();
 }
 
@@ -189,7 +197,7 @@ void World::Update(bool& pauseGame) {
     std::mt19937 generator(seq);
     uuids::uuid_random_generator gen{generator};
     SaveEntity se{player->GetPlayerpos(), Down, false, 10, 10, gen()};
-    enems.push_back(std::make_unique<Enemy>(se, imgs));
+    enems.push_back(std::make_unique<Enemy>(se, playerTextures));
   }
 }
 

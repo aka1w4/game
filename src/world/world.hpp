@@ -6,6 +6,7 @@
 #include "../entity/entity.hpp"
 #include "map.hpp"
 #include "../camera/camera.hpp"
+#include <array>
 #include <memory>
 #include <chrono>
 #include "../../include/raylib/raylib.h"
@@ -39,13 +40,15 @@ class World {
     std::chrono::time_point<std::chrono::steady_clock> lastSave;  // waktu terakhir menyimpan
     LoadAndSave ls;                                               // untuk menulis data binary
     std::vector<std::unique_ptr<Enemy>> enems;
-    std::array<Texture2D, 2>& imgs;
+    //std::array<Texture2D, 2>& imgs;
+    Texture2D healthTexture;
     Vector2 setPoint;
     Button respwanButton;
+    std::array<Texture2D, 2> playerTextures;
 
   public:
     /// @brief membuat world
-    World(const std::string& path, std::array<Texture2D, 2>& imgs, Texture2D& healthimg, Texture2D& buttonTexture);
+    World(const std::string& path, Texture2D& buttonTexture);
     /// @brief menghapus world
     ~World();
     /** @brief update logika world
