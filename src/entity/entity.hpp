@@ -4,6 +4,7 @@
 #include <cstdint>
 #include "../../include/raylib/raylib.h"
 #include <array>
+#include <iterator>
 #include "../../include/stduuid/uuid.h"
 
 /// @brief Arah hadap player (digunakan untuk animasi atau pergerakan)
@@ -54,6 +55,8 @@ class Enemy {
     void Draw();
     void Update();
     SaveEntity GetEntity();
+    Vector2& GetPosEntity();
+    void FollowPlayer(Vector2& posPlayer);
 };
 
 #endif // !ENTITY_PLAYER

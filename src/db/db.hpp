@@ -9,12 +9,16 @@
 
 /// @brief lokasi folder utama untuk menyimpan world
 inline std::string_view WORLD_NAME = "world/";
+
 /** @brief membuat world baru
  *  @param path untuk lokasi folder
  *  @param version untuk memasukan versi game di world
  *  @param sp untuk menyimpan data player
  */ 
 void createNewWorld(const std::string& path, unsigned int version, SaveEntity& sp);
+
+/// @brief membuat uuid baru
+uuids::uuid CreateUUID();
 
 /// @brief untuk menyimpan informasi world
 struct WorldInfo {

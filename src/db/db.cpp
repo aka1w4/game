@@ -10,6 +10,17 @@
 #include "../../include/stduuid/uuid.h"
 #include <vector>
 
+uuids::uuid CreateUUID() {
+  std::random_device rd;
+  auto seed_data = std::array<int, std::mt19937::state_size> {};
+  std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
+  std::seed_seq seq(std::begin(seed_data), std::end(seed_data));
+  static std::mt19937 generator(seq);
+  static uuids::uuid_random_generator gen{generator};
+
+  return gen();
+}
+
 void createNewWorld(const std::string& name, unsigned int version, SaveEntity& sp) {
   // membuta directori baru
   std::filesystem::path worldDir = std::filesystem::path(WORLD_NAME) / name;
@@ -19,12 +30,14 @@ void createNewWorld(const std::string& name, unsigned int version, SaveEntity& s
   if (!levelfile) {
     std::cerr << "gagal membuat level.dat" << std::endl;
   }
+
   // tulis nama world dan level ke level.dat
   uint32_t len = static_cast<uint32_t>(name.size());
   levelfile.write(reinterpret_cast<char*>(&len), sizeof(len));
   levelfile.write(name.c_str(), len);
   levelfile.write(reinterpret_cast<char*>(&version), sizeof(version));
   levelfile.close();
+
   // membuat database levelDB untuk menyimpan world game
   std::filesystem::path dbPath = worldDir / "db";
   leveldb::DB* db;
@@ -34,11 +47,23 @@ void createNewWorld(const std::string& name, unsigned int version, SaveEntity& s
   if (!status.ok()) {
     std::cerr << "gagal membuat db: " << status.ToString() << std::endl; 
   }
+
   // simpan awal data entity player
   status = db->Put(leveldb::WriteOptions(), "player", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
   if (!status.ok()) {
-    std::cerr << "menyimpan player: " << status.ToString() << std::endl; 
+    std::cerr << "gagal menyimpan player: " << status.ToString() << std::endl; 
   }
+
+  // testing enemy
+  for (int i=0; i < 4; i++) {
+    uuids::uuid uuid = CreateUUID();
+    SaveEntity se{float(20*i), 100, Down, false, 10, 10, uuid};
+    status = db->Put(leveldb::WriteOptions(), "entity-" + uuids::to_string(se.uuid), std::string(reinterpret_cast<char*>(&se), sizeof(se)));
+    if (!status.ok()) {
+      std::cerr << "gagal menyimpan enemy: " << status.ToString() << std::endl; 
+    }
+  }
+
   // delete database leveldb
   delete db; 
 }
@@ -90,7 +115,7 @@ void LoadAndSave::writeBinaryPlayer(SaveEntity& sp) {
   // menulis/menyimpan SaveEntity player
   leveldb::Status status = dbs->Put(leveldb::WriteOptions(), "player", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
   if (!status.ok()) {
-    std::cerr << "menyimpan player: " << status.ToString() << std::endl; 
+    std::cerr << "gagal menyimpan player: " << status.ToString() << std::endl; 
   }
 }
 
@@ -114,7 +139,7 @@ void LoadAndSave::writeBinaryEntity(SaveEntity& se) {
   // menulis/menyimpan SaveEntity
   leveldb::Status status = dbs->Put(leveldb::WriteOptions(), "entity-" + uuids::to_string(se.uuid), std::string(reinterpret_cast<char*>(&se), sizeof(se)));
   if (!status.ok()) {
-    std::cerr << "menyimpan entity: " << status.ToString() << std::endl; 
+    std::cerr << "gagal menyimpan entity: " << status.ToString() << std::endl; 
   }
 }
 

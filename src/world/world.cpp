@@ -12,20 +12,15 @@
 #include <thread>
 #include "../../include/stduuid/uuid.h"
 #include "../../include/raylib/raylib.h"
+#include "../../include/raylib/raymath.h"
 
 NewWorld::NewWorld(Texture2D& inputT, Texture2D& buttonT, std::function<void(const std::string&)> p) : 
   play(p),
   textinput_name(std::make_unique<Textinput>(240, 60, 183, 29, 40, inputT)), 
   submit(std::make_unique<Button>(240,120, 183, 29, 40, "submit", buttonT, [this]()
         {
-        std::random_device rd;
-        auto seed_data = std::array<int, std::mt19937::state_size> {};
-        std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
-        std::seed_seq seq(std::begin(seed_data), std::end(seed_data));
-        std::mt19937 generator(seq);
-        uuids::uuid_random_generator gen{generator};
-        
-        SaveEntity sp{Vector2{100, 100}, Down, false, 10, 10, gen()}; // membuat data player baru
+        uuids::uuid uuid = CreateUUID();
+        SaveEntity sp{Vector2{100, 100}, Down, false, 10, 10, uuid}; // membuat data player baru
         createNewWorld(textinput_name->GetText(), 1, sp);                 // mebuat world baru
 
         if (this->play) this->play(textinput_name->GetText());        // menjalankan world
@@ -129,7 +124,6 @@ void World::Update(bool& pauseGame) {
   if (IsKeyPressed(KEY_F)) {
     player->Death();
   }
-
  
   if (!player->GetPlayerDeath()) {
     // oldpos dan newpos player
@@ -168,7 +162,18 @@ void World::Update(bool& pauseGame) {
     Vector2 posPlayer{newPos.x, newPos.y};
     player->UpdatePos(posPlayer); // mengupdate posisi baru player
     m->Update(posPlayer);
-    camGame.Update(posPlayer, m->GetSizeMap());  // mengikuti posisi player
+    camGame.Update(posPlayer, m->GetSizeMap());  // mengikuti posisi player 
+    
+    // testing
+    std::thread tfollowplayer([this, &posPlayer]() {
+        for (const auto &e : enems) {
+          if (Vector2Distance(posPlayer, e->GetPosEntity()) < 100.0f) {
+            e->FollowPlayer(posPlayer);
+          }
+        }
+    });
+
+    tfollowplayer.join();
   } else {
     if (respwanButton.isClicked()) {
       respwanButton.Action();
@@ -186,18 +191,6 @@ void World::Update(bool& pauseGame) {
 
     twriteentity.join();
     lastSave = now; // menyimpan waktu sekarang ke lastsave
-  }
-
-  if (IsKeyPressed(KEY_E)) {
-    //boost::uuids::random_generator r;
-    std::random_device rd;
-    auto seed_data = std::array<int, std::mt19937::state_size> {};
-    std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
-    std::seed_seq seq(std::begin(seed_data), std::end(seed_data));
-    std::mt19937 generator(seq);
-    uuids::uuid_random_generator gen{generator};
-    SaveEntity se{player->GetPlayerpos(), Down, false, 10, 10, gen()};
-    enems.push_back(std::make_unique<Enemy>(se, playerTextures));
   }
 }
 

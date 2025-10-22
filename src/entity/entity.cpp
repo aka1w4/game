@@ -36,3 +36,29 @@ void Enemy::Update() {
 SaveEntity Enemy::GetEntity() {
   return SaveEntity{e.pos, e.f, e.facingright, health, maxHealth, e.uuid, e.count};
 }
+
+Vector2& Enemy::GetPosEntity() {
+  return e.pos;
+}
+
+void Enemy::FollowPlayer(Vector2& posPlayer) {  
+  if (e.pos.x < posPlayer.x) {
+    e.pos.x += 1.2;
+    e.f = Left;
+    e.facingright = true;
+  } else if (e.pos.x > posPlayer.x){
+    e.pos.x -= 1.2;
+    e.f = Left;
+    e.facingright = false;
+  }
+
+  if (e.pos.y < posPlayer.y) {
+    e.pos.y += 1.2;
+    e.f = Down;
+     e.facingright = false;
+  } else if (e.pos.y > posPlayer.y){
+    e.pos.y -= 1.2;
+    e.f = Up;
+     e.facingright = false;
+  }
+}
