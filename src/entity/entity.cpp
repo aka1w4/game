@@ -59,7 +59,7 @@ void Enemy::FollowPlayer(Vector2& posPlayer) {
   }
 
   float speed = 1.2f; // speed entity
-  direction = Vector2Scale(direction, 1.0f / len); // mengatur kecepatan gerak
+  direction = Vector2Normalize(direction); // normalisasi arah
   e.pos = Vector2Add(e.pos, Vector2Scale(direction, speed)); // menentukan posisi
 
   e.facingright = (direction.x > 0.0f); // menentukan flip entity
