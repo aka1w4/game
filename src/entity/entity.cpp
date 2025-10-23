@@ -1,5 +1,6 @@
 #include "entity.hpp"
 #include "../../include/raylib/raylib.h"
+#include "../../include/raylib/raymath.h"
 
 void Enemy::Draw() {
   // hitung posisi x frame animasi 
@@ -41,24 +42,33 @@ Vector2& Enemy::GetPosEntity() {
   return e.pos;
 }
 
-void Enemy::FollowPlayer(Vector2& posPlayer) {  
-  if (e.pos.x < posPlayer.x) {
-    e.pos.x += 1.2;
-    e.f = Left;
-    e.facingright = true;
-  } else if (e.pos.x > posPlayer.x){
-    e.pos.x -= 1.2;
-    e.f = Left;
-    e.facingright = false;
+void Enemy::Idle() {
+  e.ms = isIdle;
+}
+
+void Enemy::FollowPlayer(Vector2& posPlayer) { 
+  e.ms = isWalk;
+
+  Vector2 direction = Vector2Subtract(posPlayer, e.pos); // arah player ke entity
+  float len = Vector2Distance(e.pos, posPlayer); //jarak antar entity dengan player
+
+  // memberhentikan entity
+  if (len <= 10.0f) {
+    e.ms = isIdle;
+    return;
   }
 
-  if (e.pos.y < posPlayer.y) {
-    e.pos.y += 1.2;
-    e.f = Down;
-     e.facingright = false;
-  } else if (e.pos.y > posPlayer.y){
-    e.pos.y -= 1.2;
-    e.f = Up;
-     e.facingright = false;
+  float speed = 1.2f; // speed entity
+  direction = Vector2Scale(direction, 1.0f / len); // mengatur kecepatan gerak
+  e.pos = Vector2Add(e.pos, Vector2Scale(direction, speed)); // menentukan posisi
+
+  e.facingright = (direction.x > 0.0f); // menentukan flip entity
+
+  // menentukan menghadap kemana
+  if (std::fabs(direction.x) > std::fabs(direction.y)) {
+    e.f = Left;
+  } else {
+    if (direction.y > 0) e.f = DownLeft;
+    else e.f = UpLeft;
   }
-}
+} 

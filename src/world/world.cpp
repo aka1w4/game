@@ -169,6 +169,8 @@ void World::Update(bool& pauseGame) {
         for (const auto &e : enems) {
           if (Vector2Distance(posPlayer, e->GetPosEntity()) < 100.0f) {
             e->FollowPlayer(posPlayer);
+          } else {
+            e->Idle();
           }
         }
     });
@@ -197,13 +199,13 @@ void World::Update(bool& pauseGame) {
 void World::Draw() {
   BeginMode2D(camGame.cam);
     m->DrawBackground();
-    player->Draw();
     std::thread tdrawenemy([this]() {
         for (const auto &e : enems) {
           e->Draw();
         }
     });
     tdrawenemy.join();
+    player->Draw();
     m->DrawForeground();
   EndMode2D();
   player->DrawHeart();
