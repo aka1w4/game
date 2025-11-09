@@ -1,9 +1,9 @@
 #ifndef LAYER
 #define LAYER
 
-#include <vector>
-#include <string>
 #include "../../include/raylib/raylib.h"
+#include <string>
+#include <vector>
 
 struct Layer {
   int width, height, id;
@@ -14,13 +14,13 @@ struct Layer {
 struct Tilemap {
   int firstgid, columns, tilecount, tilewidth, tileheight;
   std::string pathimage;
-  Texture2D* image;
+  Texture2D *image;
 };
 
 struct Collisions {
   Rectangle src, box;
   Vector2 pos;
-  const Texture2D* img;
+  const Texture2D *img;
 };
 
 struct StructMap {
@@ -35,22 +35,22 @@ struct ResourceMap {
 };
 
 class Map {
-  private:
-    std::vector<StructMap> maps;
-    std::vector<ResourceMap> resourceMap;
-    Vector2 sizeMap{0,0};
-    std::vector<Collisions> collisions;
-    int location = 0;
+private:
+  std::vector<StructMap> maps;
+  std::vector<ResourceMap> resourceMap;
+  Vector2 sizeMap{0, 0};
+  std::vector<Collisions> collisions;
+  int location = 0;
 
-  public:
-    Map(const std::string& pathmap);
-    ~Map();
-    std::vector<Collisions>& GetCollisions();
-    Vector2& GetSizeMap();
-    void DrawBackground();
-    void DrawForeground();
-    void LoadResources();
-    void Update(Vector2& playerpos);
+public:
+  Map(const std::string &pathmap);
+  ~Map();
+  std::vector<Collisions> &GetCollisions();
+  Vector2 &GetSizeMap();
+  void DrawBackground();
+  void DrawForeground();
+  void LoadResources();
+  void Update(Vector2 &playerpos);
 };
 
 #endif // !LAYER

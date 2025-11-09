@@ -6,13 +6,13 @@ int main() {
 #ifdef __linux__
   enable_nvidia_gpu();
 #endif // __linux__
-  
+
   InitWindow(GetScreenWidth(), GetScreenHeight(), "Test game");
   SetExitKey(KEY_NULL);
   SetTargetFPS(60);
 
-  Game* g = new Game();
- 
+  Game *g = new Game();
+
   g->Run();
 
   delete g;

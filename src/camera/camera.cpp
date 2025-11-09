@@ -2,7 +2,7 @@
 #include "../../include/raylib/raylib.h"
 #include <algorithm>
 
-void CameraGame::Update(Vector2& playerpos, Vector2& sizeMap) {
+void CameraGame::Update(Vector2 &playerpos, Vector2 &sizeMap) {
   float halfViewW = cam.offset.x / cam.zoom;
   float halfViewH = cam.offset.y / cam.zoom;
 
@@ -14,15 +14,15 @@ void CameraGame::Update(Vector2& playerpos, Vector2& sizeMap) {
   float worldStartX = sizeMap.x * 16.0f;
   float worldStartY = sizeMap.y * 16.0f;
 
-  // menghitung worldEnd 
+  // menghitung worldEnd
   float worldEndX = worldStartX + MAP_WIDTH;
   float worldEndY = worldStartY + MAP_HEIGHT;
 
   // menentukan minimal offset camera
   float minCamX = worldStartX + halfViewW;
   float minCamY = worldStartY + halfViewH;
- 
-  // menentukan maksimal offset camera 
+
+  // menentukan maksimal offset camera
   float maxCamX = worldEndX - halfViewW;
   float maxCamY = worldEndY - halfViewH;
 

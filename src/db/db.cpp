@@ -1,18 +1,18 @@
 #include "db.hpp"
+#include "../../include/leveldb/db.h"
+#include "../../include/stduuid/uuid.h"
+#include "../entity/entity.hpp"
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <memory>
 #include <string>
-#include <filesystem>
-#include "../../include/leveldb/db.h"
-#include "../entity/entity.hpp"
-#include "../../include/stduuid/uuid.h"
 #include <vector>
 
 uuids::uuid CreateUUID() {
   std::random_device rd;
-  auto seed_data = std::array<int, std::mt19937::state_size> {};
+  auto seed_data = std::array<int, std::mt19937::state_size>{};
   std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
   std::seed_seq seq(std::begin(seed_data), std::end(seed_data));
   static std::mt19937 generator(seq);
@@ -21,7 +21,8 @@ uuids::uuid CreateUUID() {
   return gen();
 }
 
-void createNewWorld(const std::string& name, unsigned int version, SaveEntity& sp) {
+void createNewWorld(const std::string &name, unsigned int version,
+                    SaveEntity &sp) {
   // membuta directori baru
   std::filesystem::path worldDir = std::filesystem::path(WORLD_NAME) / name;
   std::filesystem::create_directories(worldDir);
@@ -33,61 +34,68 @@ void createNewWorld(const std::string& name, unsigned int version, SaveEntity& s
 
   // tulis nama world dan level ke level.dat
   uint32_t len = static_cast<uint32_t>(name.size());
-  levelfile.write(reinterpret_cast<char*>(&len), sizeof(len));
+  levelfile.write(reinterpret_cast<char *>(&len), sizeof(len));
   levelfile.write(name.c_str(), len);
-  levelfile.write(reinterpret_cast<char*>(&version), sizeof(version));
+  levelfile.write(reinterpret_cast<char *>(&version), sizeof(version));
   levelfile.close();
 
   // membuat database levelDB untuk menyimpan world game
   std::filesystem::path dbPath = worldDir / "db";
-  leveldb::DB* db;
+  leveldb::DB *db;
   leveldb::Options options;
   options.create_if_missing = true;
   leveldb::Status status = leveldb::DB::Open(options, dbPath.string(), &db);
   if (!status.ok()) {
-    std::cerr << "gagal membuat db: " << status.ToString() << std::endl; 
+    std::cerr << "gagal membuat db: " << status.ToString() << std::endl;
   }
 
   // simpan awal data entity player
-  status = db->Put(leveldb::WriteOptions(), "player", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
+  status = db->Put(leveldb::WriteOptions(), "player",
+                   std::string(reinterpret_cast<char *>(&sp), sizeof(sp)));
   if (!status.ok()) {
-    std::cerr << "gagal menyimpan player: " << status.ToString() << std::endl; 
+    std::cerr << "gagal menyimpan player: " << status.ToString() << std::endl;
   }
 
   // testing enemy
-  for (int i=0; i < 4; i++) {
+  for (int i = 0; i < 4; i++) {
     uuids::uuid uuid = CreateUUID();
-    SaveEntity se{float(20*i), 100, Down, false, 10, 10, uuid};
-    status = db->Put(leveldb::WriteOptions(), "entity-" + uuids::to_string(se.uuid), std::string(reinterpret_cast<char*>(&se), sizeof(se)));
+    SaveEntity se{float(20 * i), 100, Down, false, 10, 10, uuid};
+    status =
+        db->Put(leveldb::WriteOptions(), "entity-" + uuids::to_string(se.uuid),
+                std::string(reinterpret_cast<char *>(&se), sizeof(se)));
     if (!status.ok()) {
-      std::cerr << "gagal menyimpan enemy: " << status.ToString() << std::endl; 
+      std::cerr << "gagal menyimpan enemy: " << status.ToString() << std::endl;
     }
   }
 
   // delete database leveldb
-  delete db; 
+  delete db;
 }
 
 void readWorldlist::readLevelWorld() {
   // menghapus semua vector yang ada saat ini untuk menyimpan yang baru
   datas.clear();
   // mengecek folder, dan file level.dat
-  if (std::filesystem::exists(WORLD_NAME) && std::filesystem::is_directory(WORLD_NAME)) {
-    for (const auto& dirEntry : std::filesystem::directory_iterator(WORLD_NAME)) {
+  if (std::filesystem::exists(WORLD_NAME) &&
+      std::filesystem::is_directory(WORLD_NAME)) {
+    for (const auto &dirEntry :
+         std::filesystem::directory_iterator(WORLD_NAME)) {
       if (std::filesystem::is_directory(dirEntry)) {
-        for (const auto& fileEntry : std::filesystem::directory_iterator(dirEntry)) {
-          if (std::filesystem::is_regular_file(fileEntry) && fileEntry.path().filename() == "level.dat") {
+        for (const auto &fileEntry :
+             std::filesystem::directory_iterator(dirEntry)) {
+          if (std::filesystem::is_regular_file(fileEntry) &&
+              fileEntry.path().filename() == "level.dat") {
             std::ifstream in(fileEntry.path().string(), std::ios::binary);
             if (!in) {
               std::cerr << "gagal membaca" << std::endl;
             }
             // membaca nama world, version
             uint32_t len;
-            in.read(reinterpret_cast<char*>(&len), sizeof(len));
+            in.read(reinterpret_cast<char *>(&len), sizeof(len));
             std::string name(len, '\0');
             unsigned int version;
             in.read(name.data(), len);
-            in.read(reinterpret_cast<char*>(&version), sizeof(version));
+            in.read(reinterpret_cast<char *>(&version), sizeof(version));
             in.close();
             // menyimpan ke worldinfo: name, version, path folder
             datas.push_back(WorldInfo{name, version, dirEntry.path().string()});
@@ -98,24 +106,28 @@ void readWorldlist::readLevelWorld() {
   }
 }
 
-LoadAndSave::LoadAndSave(const std::string& path)  {
+LoadAndSave::LoadAndSave(const std::string &path) {
   // membuat database levelDB baru
   leveldb::Options options;
-  leveldb::DB* raw_db = nullptr;
+  leveldb::DB *raw_db = nullptr;
   std::filesystem::path worldDir = std::filesystem::path(path) / "db";
-  leveldb::Status status = leveldb::DB::Open(options, worldDir.string(), &raw_db);
+  leveldb::Status status =
+      leveldb::DB::Open(options, worldDir.string(), &raw_db);
   if (!status.ok()) {
-    std::cerr << "Gagal buka DB untuk write: " << status.ToString() << std::endl;
+    std::cerr << "Gagal buka DB untuk write: " << status.ToString()
+              << std::endl;
   }
   // memasukan raw levedb ke unique_ptr
   dbs.reset(raw_db);
 }
 
-void LoadAndSave::writeBinaryPlayer(SaveEntity& sp) {
+void LoadAndSave::writeBinaryPlayer(SaveEntity &sp) {
   // menulis/menyimpan SaveEntity player
-  leveldb::Status status = dbs->Put(leveldb::WriteOptions(), "player", std::string(reinterpret_cast<char*>(&sp), sizeof(sp)));
+  leveldb::Status status =
+      dbs->Put(leveldb::WriteOptions(), "player",
+               std::string(reinterpret_cast<char *>(&sp), sizeof(sp)));
   if (!status.ok()) {
-    std::cerr << "gagal menyimpan player: " << status.ToString() << std::endl; 
+    std::cerr << "gagal menyimpan player: " << status.ToString() << std::endl;
   }
 }
 
@@ -129,28 +141,31 @@ SaveEntity LoadAndSave::readbinaryPlayer() {
   SaveEntity sp;
   // memastikan ukuran data
   if (value.size() == sizeof(sp)) {
-    memcpy(&sp, value.data(), sizeof(sp)); // mengkonversi binary ke struct SaveEntity
+    memcpy(&sp, value.data(),
+           sizeof(sp)); // mengkonversi binary ke struct SaveEntity
   }
 
   return sp; // return SaveEntity
 }
 
-void LoadAndSave::writeBinaryEntity(SaveEntity& se) {
+void LoadAndSave::writeBinaryEntity(SaveEntity &se) {
   // menulis/menyimpan SaveEntity
-  leveldb::Status status = dbs->Put(leveldb::WriteOptions(), "entity-" + uuids::to_string(se.uuid), std::string(reinterpret_cast<char*>(&se), sizeof(se)));
+  leveldb::Status status =
+      dbs->Put(leveldb::WriteOptions(), "entity-" + uuids::to_string(se.uuid),
+               std::string(reinterpret_cast<char *>(&se), sizeof(se)));
   if (!status.ok()) {
-    std::cerr << "gagal menyimpan entity: " << status.ToString() << std::endl; 
+    std::cerr << "gagal menyimpan entity: " << status.ToString() << std::endl;
   }
 }
 
 std::vector<SaveEntity> LoadAndSave::readbinaryEntity() {
   // membaca data "entity" player
   std::vector<SaveEntity> entities;
-  leveldb::Iterator* it = dbs->NewIterator(leveldb::ReadOptions());
+  leveldb::Iterator *it = dbs->NewIterator(leveldb::ReadOptions());
   for (it->SeekToFirst(); it->Valid(); it->Next()) {
     std::string key = it->key().ToString();
     if (key.rfind("entity-", 0) == 0) {
-      const std::string& value = it->value().ToString();
+      const std::string &value = it->value().ToString();
       SaveEntity se;
       memcpy(&se, value.data(), sizeof(se));
       entities.push_back(se);
